@@ -1,6 +1,6 @@
 [![datahugger_repo.png](datahugger_repo.png)](github.com/j535d165/datahugger)
 
-# datahugger
+# Datahugger - Where DOI :open_hands: Data
 
 > The easiest way to get from DOI to data!
 
