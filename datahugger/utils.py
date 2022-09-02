@@ -94,6 +94,36 @@ def get_datapublisher_from_doi(doi):
     return None
 
 
+def get_re3data_repositories():
+
+    r = requests.get(
+        "https://www.re3data.org/api/v1/repositories",
+    )
+
+    if r.status_code != 200:
+        raise Exception("Failed to download Re3data reposities.")
+
+    tree = ET.fromstring(r.content)
+
+    for node in tree:
+        yield {elem.tag: elem.text for elem in node if not elem.tag == "link"}
+
+
+def get_re3data_repository(re3data_id):
+
+    namespaces = {"r3d": "http://www.re3data.org/schema/2-2"}
+    r = requests.get(f"https://www.re3data.org/api/v1/repository/{re3data_id}")
+
+    tree = ET.fromstring(r.content)
+
+    return (
+        tree[0]
+        .find("r3d:software", namespaces)
+        .find("r3d:softwareName", namespaces)
+        .text
+    )
+
+
 def get_url_from_doi(doi):
     """Get the url from the DOI.
     Arguments

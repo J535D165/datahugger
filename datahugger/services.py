@@ -69,12 +69,11 @@ class DataverseDownload(BaseRepoDownloader):
 
     REGEXP_ID = r"dataset\.xhtml\?persistentId=(.*)"
 
-    def __init__(self, base_url, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(DataverseDownload, self).__init__(*args, **kwargs)
 
-        self.base_url = base_url
-        self.api = NativeApi(base_url)
-        self.data_api = DataAccessApi(base_url)
+        self.api = NativeApi(self.base_url)
+        self.data_api = DataAccessApi(self.base_url)
 
     def download(self, file_id, base_output_folder, output_fp, file_size=None):
 

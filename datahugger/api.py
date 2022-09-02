@@ -1,7 +1,6 @@
 import logging
 from urllib.parse import urlparse
 
-from pyDataverse.api import NativeApi
 import requests
 
 from datahugger.services import DataDryadDownload
@@ -15,6 +14,9 @@ from datahugger.services import OSFDownload
 from datahugger.services import ZenodoDownload
 from datahugger.utils import _is_doi
 from datahugger.utils import _is_url
+from datahugger.utils import get_datapublisher_from_doi
+from datahugger.utils import get_re3data_repositories
+from datahugger.utils import get_re3data_repository
 
 URL_RESOLVE = ["doi.org"]
 
@@ -46,6 +48,20 @@ SERVICES_NETLOC = {
     "doi.pangaea.de": DataOneDownload,
     "rvdata.us": DataOneDownload,
     "sead-published.ncsa.illinois.edu": DataOneDownload,
+}
+
+RE3DATA_SOFTWARE = {
+    "DataVerse": DataverseDownload,  # Hits on re3data 2022-09-02: (145)
+    # "DSpace": DSpaceDownload,  # Hits on re3data 2022-09-02: (115)
+    # "CKAN": CKANDownload,  # Hits on re3data 2022-09-02: (89)
+    # "MySQL": MySQLDownload,  # Hits on re3data 2022-09-02: (86)
+    # "Fedora": FedoraDownload,  # Hits on re3data 2022-09-02: (43)
+    # "EPrints": EPrintsDownload,  # Hits on re3data 2022-09-02: (34)
+    # "Nesstar": NesstarDownload,  # Hits on re3data 2022-09-02: (19)
+    # "DigitalCommons": DigitalCommonsDownload,  # Hits on re3data 2022-09-02: (4)
+    # "eSciDoc": eSciDocDownload,  # Hits on re3data 2022-09-02: (3)
+    # "Opus": OpusDownload,  # Hits on re3data 2022-09-02: (2)
+    # "dLibra": dLibraDownload,  # Hits on re3data 2022-09-02: (2)
 }
 
 
@@ -102,31 +118,65 @@ def load_repository(
             **kwargs,
         )
 
-    # match uri to services and initiate class
-    if uri.netloc in SERVICES_NETLOC.keys():
-        logging.info("Service found: " + uri.netloc)
-        return SERVICES_NETLOC[uri.netloc](
-            max_file_size=max_file_size, download_mode=download_mode, *args, **kwargs
-        ).get(url, output_folder, doi=doi)
+    service_class = _resolve_service(url, doi)
 
-    # Unknown services
-    #
-    # The service is not in the list of known domains. Do a check if it belong
-    # to self hosted data repositories like Dataverse.
-    if uri.netloc.startswith("dataverse"):
-        return DataverseDownload(
-            uri.scheme + "://" + uri.netloc,
-            max_file_size=max_file_size,
-            download_mode=download_mode,
-            *args,
-            **kwargs,
-        ).get(url, output_folder, doi=doi)
+    if service_class is None:
+        raise ValueError(f"Data service for {url} is not supported.")
 
-    # check if api returns dataverse instance
-    try:
-        NativeApi(uri.scheme + "://" + uri.netloc).get_info_version()
-    except Exception:
-        # not a dataverse instance
-        pass
+    logging.debug("Service found: " + str(service_class))
+
+    return service_class(
+        base_url=uri.scheme + "://" + uri.netloc,
+        max_file_size=max_file_size,
+        download_mode=download_mode,
+        *args,
+        **kwargs,
+    ).get(url, output_folder, doi=doi)
 
     raise ValueError(f"Data service for {url} is not supported.")
+
+
+def _resolve_service(url, doi):
+
+    # initial attempt to resolve service
+    service_class = _resolve_service_from_netloc(url)
+
+    if service_class is not None:
+        return service_class
+
+    # try to resolve from re3data
+    service_class = _resolve_service_with_re3data(doi)
+
+    if service_class is not None:
+        return service_class
+
+    return None
+
+
+def _resolve_service_from_netloc(url):
+
+    uri = urlparse(url)
+
+    if uri.netloc in SERVICES_NETLOC.keys():
+        logging.debug("Service found: " + uri.netloc)
+
+        return SERVICES_NETLOC[uri.netloc]
+
+
+def _resolve_service_with_re3data(doi):
+
+    publisher = get_datapublisher_from_doi(doi)
+    logging.debug(f"Publisher of dataset: {publisher}")
+
+    if not publisher:
+        raise ValueError("Can't resolve the publisher from the DOI.")
+
+    data_repos = get_re3data_repositories()
+
+    for repo in data_repos:
+
+        if publisher.lower() == repo["name"].lower():
+
+            r_software = get_re3data_repository(repo["id"])
+
+            return RE3DATA_SOFTWARE[r_software]

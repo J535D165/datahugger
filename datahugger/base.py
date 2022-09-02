@@ -13,8 +13,11 @@ from datahugger.utils import _is_url
 class BaseRepoDownloader(object):
     """Base class for downloading resources from repositories."""
 
-    def __init__(self, max_file_size=None, download_mode="skip_if_exists"):
+    def __init__(
+        self, base_url=None, max_file_size=None, download_mode="skip_if_exists"
+    ):
         super(BaseRepoDownloader, self).__init__()
+        self.base_url = base_url
         self.max_file_size = max_file_size
         self.download_mode = download_mode
 
