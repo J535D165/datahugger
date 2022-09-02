@@ -2,8 +2,6 @@
 
 # Datahugger - Where DOI :open_hands: Data
 
-> The easiest way to get from DOI to data!
-
 Datahugger is a tool to download scientific datasets, software and code from a large number of repositories based on their DOI [(wiki)](https://en.wikipedia.org/wiki/Digital_object_identifier) or URL. With Datahugger, you can improve the reproducibility of your analysis and eliminitate manual downloading of data for your research. Datahugger provides a straightforward [Python interface](#download-with-python) as well as an intuitive [Command Line Interface](#download-with-command-line) (CLI).
 
 ## Supported repositories
