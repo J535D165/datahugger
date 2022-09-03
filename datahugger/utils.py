@@ -54,6 +54,13 @@ def _is_doi(s: str) -> bool:
     return match is not None and match.group() is not None
 
 
+def get_base_url(url):
+
+    uri = urlparse(url)
+
+    return uri.scheme + "://" + uri.netloc
+
+
 def get_id_from_url(regexp, url):
     match = re.search(regexp, url)
 

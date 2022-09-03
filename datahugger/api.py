@@ -14,6 +14,7 @@ from datahugger.services import OSFDownload
 from datahugger.services import ZenodoDownload
 from datahugger.utils import _is_doi
 from datahugger.utils import _is_url
+from datahugger.utils import get_base_url
 from datahugger.utils import get_datapublisher_from_doi
 from datahugger.utils import get_re3data_repositories
 from datahugger.utils import get_re3data_repository
@@ -126,7 +127,7 @@ def load_repository(
     logging.debug("Service found: " + str(service_class))
 
     return service_class(
-        base_url=uri.scheme + "://" + uri.netloc,
+        base_url=get_base_url(url),
         max_file_size=max_file_size,
         download_mode=download_mode,
         *args,
