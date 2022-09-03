@@ -94,11 +94,9 @@ def get_datapublisher_from_doi(doi):
     return None
 
 
-def get_re3data_repositories():
+def get_re3data_repositories(url="https://www.re3data.org/api/v1/repositories"):
 
-    r = requests.get(
-        "https://www.re3data.org/api/v1/repositories",
-    )
+    r = requests.get(url)
 
     if r.status_code != 200:
         raise Exception("Failed to download Re3data reposities.")
