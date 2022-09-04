@@ -1,4 +1,4 @@
-[![datahugger_repo.png](datahugger_repo.png)](github.com/j535d165/datahugger)
+[![datahugger_repo.png](images/datahugger_repo.png)](github.com/j535d165/datahugger)
 
 # Datahugger - Where DOI :open_hands: Data
 
