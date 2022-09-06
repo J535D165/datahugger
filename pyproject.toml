@@ -1,10 +1,10 @@
+[project]
 name = "datahugger"
 description = "One downloader for many scientific data and code repositories!"
-authors = ["Jonathan de Bruin <jonathandebruinos@gmail.com>"]
+authors = [
+    { name = "Jonathan de Bruin", email = "jonathandebruinos@gmail.com" }
+]
 readme = "README.md"
-repository = "https://github.com/J535D165/datahugger"
-homepage = "https://github.com/J535D165/datahugger"
-license = "MIT"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: MIT License",
@@ -14,17 +14,24 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10"
 ]
-packages = ["datahugger"]
+license = {text = "MIT"}
+dependencies = ["requests", "pyDataverse", "tqdm"]
+dynamic = ["version"]
+requires-python = ">=3.6"
 
-install_requires = ["requests", "pyDataverse", "tqdm"]
-extras_require = {"all" = ["datasets"]}
-setup_requires = ["flake8", "flake8-import-order"]
-tests_require = ["pytest"]
-entry_points = {"console_scripts" = ["datahugger=datahugger.__main__:main"]}
+[project.scripts]
+datahugger = "datahugger.__main__:main"
+
+[project.optional-dependencies]
+all = ["datasets"]
+lint = ["flake8", "flake8-import-order"]
+test = ["pytest"]
 
 [build-system]
 build-backend = 'setuptools.build_meta'
 requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
 
-# pyproject.toml
+[tool.setuptools]
+packages = ["datahugger"]
+
 [tool.setuptools_scm]
