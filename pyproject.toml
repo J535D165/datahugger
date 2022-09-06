@@ -1,0 +1,30 @@
+name = "datahugger"
+description = "One downloader for many scientific data and code repositories!"
+authors = ["Jonathan de Bruin <jonathandebruinos@gmail.com>"]
+readme = "README.md"
+repository = "https://github.com/J535D165/datahugger"
+homepage = "https://github.com/J535D165/datahugger"
+license = "MIT"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10"
+]
+packages = ["datahugger"]
+
+install_requires = ["requests", "pyDataverse", "tqdm"]
+extras_require = {"all" = ["datasets"]}
+setup_requires = ["flake8", "flake8-import-order"]
+tests_require = ["pytest"]
+entry_points = {"console_scripts" = ["datahugger=datahugger.__main__:main"]}
+
+[build-system]
+build-backend = 'setuptools.build_meta'
+requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
+
+# pyproject.toml
+[tool.setuptools_scm]
