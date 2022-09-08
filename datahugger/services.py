@@ -1,5 +1,4 @@
 import io
-import logging
 import os
 import xml.etree.ElementTree as ET
 import zipfile
@@ -7,8 +6,6 @@ from pathlib import Path
 from typing import Union
 from urllib.parse import quote
 
-from pyDataverse.api import DataAccessApi
-from pyDataverse.api import NativeApi
 import requests
 
 from datahugger.base import BaseRepoDownloader
@@ -69,12 +66,6 @@ class DataverseDownload(BaseRepoDownloader):
 
     REGEXP_ID = r"dataset\.xhtml\?persistentId=(.*)"
 
-    def __init__(self, *args, **kwargs):
-        super(DataverseDownload, self).__init__(*args, **kwargs)
-
-        self.api = NativeApi(self.base_url)
-        self.data_api = DataAccessApi(self.base_url)
-
     def _get(
         self,
         record_id: Union[str, int],
@@ -82,7 +73,8 @@ class DataverseDownload(BaseRepoDownloader):
         **kwargs,
     ):
 
-        dataset_metadata_url = self.base_url + "/api/datasets/:persistentId/?persistentId=" + record_id
+        dataset_metadata_url = self.base_url + \
+            "/api/datasets/:persistentId/?persistentId=" + record_id
 
         res = requests.get(dataset_metadata_url)
         files = res.json()["data"]["latestVersion"]["files"]
