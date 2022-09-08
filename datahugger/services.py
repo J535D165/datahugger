@@ -75,21 +75,6 @@ class DataverseDownload(BaseRepoDownloader):
         self.api = NativeApi(self.base_url)
         self.data_api = DataAccessApi(self.base_url)
 
-    def download(self, file_id, base_output_folder, output_fp, file_size=None):
-
-        if (
-            file_size is not None
-            and self.max_file_size is not None
-            and file_size >= self.max_file_size
-        ):
-            logging.info("Skipping large file {}".format(file_id))
-            return
-
-        res = self.data_api.get_datafile(file_id)
-
-        with open(Path(base_output_folder, output_fp), "wb") as f:
-            f.write(res.content)
-
     def _get(
         self,
         record_id: Union[str, int],
@@ -97,13 +82,15 @@ class DataverseDownload(BaseRepoDownloader):
         **kwargs,
     ):
 
-        dataset = self.api.get_dataset(record_id)
-        files = dataset.json()["data"]["latestVersion"]["files"]
+        dataset_metadata_url = self.base_url + "/api/datasets/:persistentId/?persistentId=" + record_id
+
+        res = requests.get(dataset_metadata_url)
+        files = res.json()["data"]["latestVersion"]["files"]
 
         for f in files:
 
             self.download(
-                f["dataFile"]["id"],
+                self.base_url + "/api/access/datafile/{}".format(f["dataFile"]["id"]),
                 output_folder,
                 f["dataFile"]["filename"],
                 file_size=f["dataFile"]["filesize"],
