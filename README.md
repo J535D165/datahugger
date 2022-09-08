@@ -2,7 +2,7 @@
 
 # Datahugger - Where DOI :open_hands: Data
 
-Datahugger is a tool to download scientific datasets, software and code from a large number of repositories based on their DOI [(wiki)](https://en.wikipedia.org/wiki/Digital_object_identifier) or URL. With Datahugger, you can improve the reproducibility of your analysis and eliminitate manual downloading of data for your research. Datahugger provides a straightforward [Python interface](#download-with-python) as well as an intuitive [Command Line Interface](#download-with-command-line) (CLI).
+Datahugger is a tool to download scientific datasets, software, and code from a large number of repositories based on their DOI [(wiki)](https://en.wikipedia.org/wiki/Digital_object_identifier) or URL. With Datahugger, you can automate the downloading of data and improve the reproducibility of your research. Datahugger provides a straightforward [Python interface](#download-with-python) as well as an intuitive [Command Line Interface](#download-with-command-line) (CLI).
 
 ## Supported repositories
 
@@ -98,10 +98,9 @@ available on the local system. To change this behavior, use the argument
 
 ## Interesting reads
 
-- The Datahugger challenge explained in [From DOI to Data](https://docs.google.com/presentation/d/1K2ck7zAKsQozpLcptRyHxQCJOEzODToJIcUoKVqtSaE/edit?usp=sharing)
 - https://www.crossref.org/blog/urls-and-dois-a-complicated-relationship/
-- Harvey MJ, Mason NJ, McLean A, Rzepa HS. Standards-based metadata procedures for retrieving data for display or mining utilizing persistent (data-DOI) identifiers. J Cheminform. 2015 Aug 8;7:37. doi: [10.1186/s13321-015-0081-7](https://doi.org/10.1186%2Fs13321-015-0081-7). PMID: 26257829; PMCID: PMC4528360.
-- https://citation.crosscite.org/docs.html
+- *Harvey MJ, Mason NJ, McLean A, Rzepa HS. Standards-based metadata procedures for retrieving data for display or mining utilizing persistent (data-DOI) identifiers. J Cheminform. 2015 Aug 8;7:37. doi: [10.1186/s13321-015-0081-7](https://doi.org/10.1186%2Fs13321-015-0081-7). PMID: 26257829; PMCID: PMC4528360.*
+- [DOI Content Negotiation (Crosscite.org](https://citation.crosscite.org/docs.html) 
 
 ## License
 
