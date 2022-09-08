@@ -44,18 +44,13 @@ def main():
     parser.add_argument(
         "-V",
         "--version",
-        action="store_true",
-        help="Print the Datahugger version number and exit",
+        action="version",
+        version='%(prog)s {version}'.format(version=__version__)
     )
 
     args, _ = parser.parse_known_args()
 
     logging.basicConfig(level=args.log)
-
-    # output the version
-    if args.version:
-        print(__version__)
-        exit()
 
     # Start downloading
     load_repository(
