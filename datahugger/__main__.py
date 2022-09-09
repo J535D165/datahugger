@@ -60,7 +60,7 @@ def main():
         download_mode=args.download_mode,
     )
 
-    print("\u001b[32mRepository content succesfully downloaded.\u001b[0m")
+    print("\u001b[32mDataset succesfully downloaded.\u001b[0m")
 
 
 if __name__ == "__main__":
