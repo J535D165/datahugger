@@ -3,20 +3,60 @@ import re
 from pathlib import Path
 from typing import Union
 
+import natsort as ns
 import requests
+import seedir as sd
 from tqdm import tqdm
 
 from datahugger.utils import _format_filename
 from datahugger.utils import _is_url
 
+FILE_RANKING = [
+    ["readme", "read_me", "read-me"],
+    ["license"],
+    ["installation", "install", "setup"],
+]
 
-class BaseRepoDownloader(object):
+
+def _scientific_sort(f, alg=ns.PATH):
+
+    for rank, names in enumerate(FILE_RANKING):
+        if Path(f).stem.lower() in names:
+            prio = rank
+            break
+    else:
+        prio = len(FILE_RANKING)
+
+    x = (prio,) + ns.natsort_keygen(alg=alg)(f)
+
+    return x
+
+
+class DatasetResult(object):
+    """Result class after downloading the dataset."""
+
+    def __init__(self, output_folder):
+        self.output_folder = output_folder
+
+    def tree(self, sort=True, first="files", sort_key=_scientific_sort, *args, **kwargs):
+
+        return sd.seedir(
+            str(self.output_folder),
+            sort=sort,
+            first=first,
+            sort_key=sort_key,
+            *args,
+            **kwargs,
+        )
+
+
+class DatasetDownloader(object):
     """Base class for downloading resources from repositories."""
 
     def __init__(
         self, base_url=None, max_file_size=None, download_mode="skip_if_exists"
     ):
-        super(BaseRepoDownloader, self).__init__()
+        super(DatasetDownloader, self).__init__()
         self.base_url = base_url
         self.max_file_size = max_file_size
         self.download_mode = download_mode
@@ -27,7 +67,7 @@ class BaseRepoDownloader(object):
     def download(
         self, url, base_output_folder, output_fn, file_size=None, file_hash=None
     ):
-
+        """Download the dataset to the local folder."""
         if (
             file_size is not None
             and self.max_file_size is not None
@@ -105,3 +145,5 @@ class BaseRepoDownloader(object):
             record_id, version = record_id_or_url, version
 
         self._get(record_id, output_folder, version=version, **kwargs)
+
+        return DatasetResult(output_folder)

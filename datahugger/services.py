@@ -8,10 +8,10 @@ from urllib.parse import quote
 
 import requests
 
-from datahugger.base import BaseRepoDownloader
+from datahugger.base import DatasetDownloader
 
 
-class ZenodoDownload(BaseRepoDownloader):
+class ZenodoDownload(DatasetDownloader):
     """Downloader for Zenodo repositories.
 
     Parameters
@@ -61,7 +61,7 @@ class ZenodoDownload(BaseRepoDownloader):
             )
 
 
-class DataverseDownload(BaseRepoDownloader):
+class DataverseDownload(DatasetDownloader):
     """Downloader for Dataverse repositories."""
 
     REGEXP_ID = r"dataset\.xhtml\?persistentId=(.*)"
@@ -89,7 +89,7 @@ class DataverseDownload(BaseRepoDownloader):
             )
 
 
-class GitHubDownload(BaseRepoDownloader):
+class GitHubDownload(DatasetDownloader):
     """Downloader for GitHub repositories."""
 
     API_URL = "https://github.com/"
@@ -102,7 +102,7 @@ class GitHubDownload(BaseRepoDownloader):
         z.extractall(output_folder)
 
 
-class FigShareDownload(BaseRepoDownloader):
+class FigShareDownload(DatasetDownloader):
     """Downloader for FigShare repositories."""
 
     API_URL = "https://api.figshare.com/v2"
@@ -127,7 +127,7 @@ class FigShareDownload(BaseRepoDownloader):
             )
 
 
-class DataDryadDownload(BaseRepoDownloader):
+class DataDryadDownload(DatasetDownloader):
     """Downloader for DataDryad repositories.
 
     Note
@@ -171,7 +171,7 @@ class DataDryadDownload(BaseRepoDownloader):
             )
 
 
-class HuggingFaceDownload(BaseRepoDownloader):
+class HuggingFaceDownload(DatasetDownloader):
     """Downloader for Huggingface repositories."""
 
     REGEXP_ID = r"huggingface.co/datasets/(.*)"
@@ -194,7 +194,7 @@ class HuggingFaceDownload(BaseRepoDownloader):
         load_dataset(record_id, cache_dir=output_folder, **kwargs)
 
 
-class DataOneDownload(BaseRepoDownloader):
+class DataOneDownload(DatasetDownloader):
     """Downloader for DataOne repositories."""
 
     API_URL = "https://cn.dataone.org/cn/v2/object/"
@@ -223,7 +223,7 @@ class DataOneDownload(BaseRepoDownloader):
                 )
 
 
-class OSFDownload(BaseRepoDownloader):
+class OSFDownload(DatasetDownloader):
     """Downloader for OSF repositories."""
 
     API_URL = "https://api.osf.io/v2/registrations/"
@@ -250,7 +250,7 @@ class OSFDownload(BaseRepoDownloader):
             )
 
 
-class MendeleyDownload(BaseRepoDownloader):
+class MendeleyDownload(DatasetDownloader):
     """Downloader for Mendeley repositories."""
 
     REGEXP_ID_WITH_VERSION = r"data\.mendeley\.com\/datasets\/([0-9a-z]+)\/(\d+)"
