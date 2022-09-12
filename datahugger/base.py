@@ -1,5 +1,6 @@
 import logging
 import re
+import os
 from pathlib import Path
 from typing import Union
 
@@ -37,6 +38,17 @@ class DatasetResult(object):
 
     def __init__(self, output_folder):
         self.output_folder = output_folder
+
+    def __str__(self):
+
+        return f"<{self.__class__.__name__} n_files={len(self)} >"
+
+    def __len__(self):
+        count = 0
+        for root_dir, cur_dir, files in os.walk(self.output_folder):
+            count += len(files)
+
+        return count
 
     def tree(self, sort=True, first="files", sort_key=_scientific_sort, *args, **kwargs):
 
