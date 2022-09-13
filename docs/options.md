@@ -34,9 +34,8 @@ Disable auto unzip function
 
 === "Python"
 
-
     ``` python
-    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", auto_unzip=False)
+    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", unzip=False)
     ```
 
 

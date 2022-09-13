@@ -143,6 +143,7 @@ def load_repository(
     doi=None,
     max_file_size=None,
     download_mode="skip_if_exists",
+    unzip=True,
     *args,
     **kwargs,
 ):
@@ -186,6 +187,7 @@ def load_repository(
             max_file_size=max_file_size,
             doi=doi,
             download_mode=download_mode,
+            unzip=unzip,
             *args,
             **kwargs,
         )

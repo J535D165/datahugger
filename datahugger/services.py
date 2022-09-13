@@ -16,7 +16,7 @@ class ZenodoDownload(DatasetDownloader):
 
     Parameters
     ----------
-    auto_unzip: True
+    unzip: True
         Unzip the repository if it is a single zipped file.
         This is often the case for repos published via the
         GitHub-Zenodo integration.
@@ -26,10 +26,10 @@ class ZenodoDownload(DatasetDownloader):
     API_URL = "https://zenodo.org/api/"
     REGEXP_ID = r"zenodo\.org\/record\/(\d+).*"
 
-    def __init__(self, auto_unzip=True, *args, **kwargs):
+    def __init__(self, unzip=True, *args, **kwargs):
         super(ZenodoDownload, self).__init__(*args, **kwargs)
 
-        self.auto_unzip = auto_unzip
+        self.unzip = unzip
 
     def _is_single_file(self, zip_url, output_folder):
 
