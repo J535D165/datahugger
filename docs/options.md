@@ -19,7 +19,7 @@ number of bytes. For example, you want to skip files larger than 50Mb.
     ```
 
 
-### Extract single zip
+## Extract single zip
 
 Some services like [Zenodo](zenodo.org) don't offer an option to preserve
 folder structures. Therefore, the content is often zipped before being
