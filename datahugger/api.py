@@ -144,6 +144,7 @@ def load_repository(
     max_file_size=None,
     download_mode="skip_if_exists",
     unzip=True,
+    progress=True,
     *args,
     **kwargs,
 ):
@@ -188,6 +189,7 @@ def load_repository(
             doi=doi,
             download_mode=download_mode,
             unzip=unzip,
+            progress=progress,
             *args,
             **kwargs,
         )
@@ -203,6 +205,8 @@ def load_repository(
         base_url=get_base_url(url),
         max_file_size=max_file_size,
         download_mode=download_mode,
+        unzip=unzip,
+        progress=progress,
         *args,
         **kwargs,
     ).get(url, output_folder, doi=doi)

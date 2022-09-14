@@ -54,20 +54,37 @@ class DatasetDownloader(object):
     """Base class for downloading resources from repositories."""
 
     def __init__(
-        self, base_url=None, max_file_size=None, download_mode="skip_if_exists"
+        self, base_url=None, max_file_size=None, download_mode="skip_if_exists", progress=True, unzip=True
     ):
         super(DatasetDownloader, self).__init__()
         self.base_url = base_url
         self.max_file_size = max_file_size
         self.download_mode = download_mode
+        self.progress = progress
+        self.unzip = unzip
 
         if download_mode not in ["skip_if_exists", "force_redownload"]:
             raise ValueError(f"Download mode {download_mode} not recognised")
 
     def download(
-        self, url, base_output_folder, output_fn, file_size=None, file_hash=None
+        self, url, base_output_folder, output_fn, file_size=None, file_hash=None, file_hash_type=None
     ):
-        """Download the dataset to the local folder."""
+        """Download a single file.
+
+        Arguments
+        ---------
+        url: str
+            Path to the file to download.
+        base_output_folder: str
+            The folder to store the downloaded file.
+        output_fn: str
+            The filename of the downloaded file.
+        file_size: int
+            The size of the file in bytes.
+        file_hash: str
+            The MD5 hash of the file.
+
+        """
         if (
             file_size is not None
             and self.max_file_size is not None
@@ -85,15 +102,19 @@ class DatasetDownloader(object):
             print("File already exists:", output_fn)
             return
 
-        with tqdm.wrapattr(
-            open(output_fp, "wb"),
-            "write",
-            miniters=1,
-            desc=_format_filename(output_fn),
-            total=int(res.headers.get("content-length", 0)),
-        ) as fout:
-            for chunk in res.iter_content(chunk_size=4096):
-                fout.write(chunk)
+        if self.progress:
+            with tqdm.wrapattr(
+                open(output_fp, "wb"),
+                "write",
+                miniters=1,
+                desc=_format_filename(output_fn),
+                total=int(res.headers.get("content-length", 0)),
+            ) as fout:
+                for chunk in res.iter_content(chunk_size=4096):
+                    fout.write(chunk)
+        else:
+            with open(output_fp, "wb") as f:
+                f.write(res.content)
 
     def _parse_url(self, url):
         if not isinstance(url, str) or not _is_url(url):
