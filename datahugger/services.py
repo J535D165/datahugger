@@ -87,7 +87,7 @@ class DataverseDownload(DatasetDownloader):
                 output_folder,
                 f["dataFile"]["filename"],
                 file_size=f["dataFile"]["filesize"],
-                file_hash=f["md5"],
+                file_hash=f["dataFile"]["md5"],
                 file_hash_type="md5"
             )
 
