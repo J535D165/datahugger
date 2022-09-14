@@ -1,0 +1,17 @@
+site_name: Datahugger Documentation
+
+nav:
+    - Home: index.md
+    - Options: options.md
+    - Supported repositories: repositories.md
+    - Development: development.md
+
+theme:
+  name: material
+  features:
+    - content.tabs.link
+
+markdown_extensions:
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
