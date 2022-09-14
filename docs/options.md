@@ -40,8 +40,6 @@ Disable auto unzip function
     ```
 
 
-
-
 ## Download mode
 
 By default, Datahugger skips the download of files and datasets that are
@@ -59,4 +57,23 @@ are: "skip_if_exists", "force_redownload".
 
     ``` python
     datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", download_mode="force_redownload")
+    ```
+
+
+## Progress
+
+By default, Datahugger shows the download progress. You can disable the
+progress indicator.
+
+
+=== "CLI"
+
+    ``` bash
+    datahugger 10.5061/dryad.31zcrjdm5 data --no-progress
+    ```
+
+=== "Python"
+
+    ``` python
+    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", progress=False)
     ```
