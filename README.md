@@ -1,4 +1,4 @@
-[![datahugger_repo.png](https://github.com/J535D165/datahugger/raw/main/images/datahugger_repo.png)](github.com/j535d165/datahugger)
+[![datahugger_repo.png](https://github.com/J535D165/datahugger/raw/main/docs/images/datahugger_repo.png)](github.com/j535d165/datahugger)
 
 # Datahugger - Where DOI :open_hands: Data
 
@@ -8,7 +8,7 @@ Datahugger is a tool to download scientific datasets, software, and code from a 
 
 Datahugger offers support for more than [150 generic and specific (scientific) repositories](https://github.com/J535D165/datahugger/blob/main/docs/repositories.md) (and more to come!).
 
-[![Datahugger support Zenodo, Dataverse, DataOne, GitHub, FigShare, HuggingFace, Mendeley Data, Dryad, OSF, and many more](https://github.com/J535D165/datahugger/raw/main/images/logos.png)](https://github.com/J535D165/datahugger/blob/main/docs/repositories.md)
+[![Datahugger support Zenodo, Dataverse, DataOne, GitHub, FigShare, HuggingFace, Mendeley Data, Dryad, OSF, and many more](https://github.com/J535D165/datahugger/raw/main/docs/images/logos.png)](https://github.com/J535D165/datahugger/blob/main/docs/repositories.md)
 
 We are still expanding Datahugger with support for more repositories. You can
 help by [requesting support for a repository](https://github.com/J535D165/datahugger/issues/new/choose) in the issue tracker. Pull Requests are very
