@@ -82,7 +82,7 @@ number of bytes. For `load_repositories` use the argument `max_file_size`
 Some services like [Zenodo](zenodo.org) don't offer an option to preserve
 folder structures. Therefore, the content is often zipped before being
 uploaded to the service. In this case, Datahugger will unzip the file to the
-output folder by default. Set this option to False to disable(`auto_unzip`).
+output folder by default. Set this option to False to disable(`unzip`).
 
 ### Download mode
 

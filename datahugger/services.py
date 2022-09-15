@@ -1,4 +1,5 @@
 import io
+import logging
 import os
 import xml.etree.ElementTree as ET
 import zipfile
@@ -12,11 +13,11 @@ from datahugger.base import DatasetDownloader
 
 
 class ZenodoDownload(DatasetDownloader):
-    """Downloader for Zenodo repositories.
+    """Downloader for Zenodo repository.
 
     Parameters
     ----------
-    auto_unzip: True
+    unzip: True
         Unzip the repository if it is a single zipped file.
         This is often the case for repos published via the
         GitHub-Zenodo integration.
@@ -25,11 +26,6 @@ class ZenodoDownload(DatasetDownloader):
 
     API_URL = "https://zenodo.org/api/"
     REGEXP_ID = r"zenodo\.org\/record\/(\d+).*"
-
-    def __init__(self, auto_unzip=True, *args, **kwargs):
-        super(ZenodoDownload, self).__init__(*args, **kwargs)
-
-        self.auto_unzip = auto_unzip
 
     def _is_single_file(self, zip_url, output_folder):
 
@@ -56,8 +52,14 @@ class ZenodoDownload(DatasetDownloader):
             return
 
         for f in files:
+            logging.debug(f)
             self.download(
-                f["links"]["self"], output_folder, f["key"], file_size=f["size"]
+                f["links"]["self"],
+                output_folder,
+                f["key"],
+                file_size=f["size"],
+                file_hash=f["checksum"].split(":")[1],
+                file_hash_type=f["checksum"].split(":")[0],
             )
 
 
@@ -73,37 +75,38 @@ class DataverseDownload(DatasetDownloader):
         **kwargs,
     ):
 
-        dataset_metadata_url = self.base_url + \
-            "/api/datasets/:persistentId/?persistentId=" + record_id
+        dataset_metadata_url = f"{self.base_url}/api/datasets/:persistentId/?persistentId={record_id}"  # noqa
 
         res = requests.get(dataset_metadata_url)
         files = res.json()["data"]["latestVersion"]["files"]
 
         for f in files:
-
+            logging.debug(f)
             self.download(
                 self.base_url + "/api/access/datafile/{}".format(f["dataFile"]["id"]),
                 output_folder,
                 f["dataFile"]["filename"],
                 file_size=f["dataFile"]["filesize"],
+                file_hash=f["dataFile"]["md5"],
+                file_hash_type="md5"
             )
 
 
 class GitHubDownload(DatasetDownloader):
-    """Downloader for GitHub repositories."""
+    """Downloader for GitHub repository."""
 
     API_URL = "https://github.com/"
     REGEXP_ID = r"github\.com\/([a-zA-Z0-9]+\/[a-zA-Z0-9]+)[\/]*.*"
 
     def _get(self, record_id: str, output_folder: Union[Path, str], *args, **kwargs):
 
-        res = requests.get(self.API_URL + record_id + "/archive/refs/heads/master.zip")
+        res = requests.get(f"{self.API_URL}{record_id}/archive/refs/heads/master.zip")
         z = zipfile.ZipFile(io.BytesIO(res.content))
         z.extractall(output_folder)
 
 
 class FigShareDownload(DatasetDownloader):
-    """Downloader for FigShare repositories."""
+    """Downloader for FigShare repository."""
 
     API_URL = "https://api.figshare.com/v2"
     REGEXP_ID_AND_VERSION = r"figshare\.com\/articles\/dataset\/.*\/(\d+)\/(\d+)"
@@ -122,13 +125,16 @@ class FigShareDownload(DatasetDownloader):
         # TODO skip is_link_only
 
         for f in files:
+            logging.debug(f)
             self.download(
-                f["download_url"], output_folder, f["name"], file_size=f["size"]
+                f["download_url"], output_folder, f["name"], file_size=f["size"],
+                file_hash=f["computed_md5"],
+                file_hash_type="md5"
             )
 
 
 class DataDryadDownload(DatasetDownloader):
-    """Downloader for DataDryad repositories.
+    """Downloader for DataDryad repository.
 
     Note
     ----
@@ -163,16 +169,19 @@ class DataDryadDownload(DatasetDownloader):
         files_metadata = res_files.json()
 
         for f in files_metadata["_embedded"]["stash:files"]:
+            logging.debug(f)
             self.download(
                 "https://datadryad.org" + f["_links"]["stash:file-download"]["href"],
                 output_folder,
                 f["path"],
                 file_size=f["size"],
+                file_hash=None,
+                file_hash_type=None
             )
 
 
 class HuggingFaceDownload(DatasetDownloader):
-    """Downloader for Huggingface repositories."""
+    """Downloader for Huggingface repository."""
 
     REGEXP_ID = r"huggingface.co/datasets/(.*)"
 
@@ -213,6 +222,7 @@ class DataOneDownload(DatasetDownloader):
 
         for data_elem in meta_tree.find("dataset"):
             if data_elem.tag in ["otherEntity", "dataTable"]:
+                logging.debug(data_elem)
                 self.download(
                     data_elem.find(
                         "./physical/distribution/online/url[@function='download']"
@@ -224,7 +234,7 @@ class DataOneDownload(DatasetDownloader):
 
 
 class OSFDownload(DatasetDownloader):
-    """Downloader for OSF repositories."""
+    """Downloader for OSF repository."""
 
     API_URL = "https://api.osf.io/v2/registrations/"
     REGEXP_ID = r"osf\.io\/(.*)/"
@@ -242,16 +252,19 @@ class OSFDownload(DatasetDownloader):
         dataset_metadata = r_meta.json()
 
         for f in dataset_metadata["data"]:
+            logging.debug(f)
             self.download(
                 f["links"]["download"],
                 output_folder,
                 f["attributes"]["name"],
                 file_size=f["attributes"]["size"],
+                file_hash=f["attributes"]["extra"]["hashes"]["sha256"],
+                file_hash_type="sha256"
             )
 
 
 class MendeleyDownload(DatasetDownloader):
-    """Downloader for Mendeley repositories."""
+    """Downloader for Mendeley repository."""
 
     REGEXP_ID_WITH_VERSION = r"data\.mendeley\.com\/datasets\/([0-9a-z]+)\/(\d+)"
     REGEXP_ID = r"data\.mendeley\.com\/datasets\/([0-9a-z]+)"
@@ -275,9 +288,12 @@ class MendeleyDownload(DatasetDownloader):
         dataset_metadata = r_meta.json()
 
         for f in dataset_metadata:
+            logging.debug(f)
             self.download(
                 f["content_details"]["download_url"],
                 output_folder,
                 f["filename"],
                 file_size=f["size"],
+                file_hash=f["content_details"]["sha256_hash"],
+                file_hash_type="sha256"
             )

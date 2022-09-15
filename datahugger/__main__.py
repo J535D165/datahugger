@@ -37,6 +37,14 @@ def main():
         help="Skip files if they already exist.",
     )
 
+    parser.add_argument('--unzip', action='store_true')
+    parser.add_argument('--no-unzip', dest='unzip', action='store_false')
+    parser.set_defaults(unzip=True)
+
+    parser.add_argument('--progress', action='store_true')
+    parser.add_argument('--no-progress', dest='progress', action='store_false')
+    parser.set_defaults(progress=True)
+
     parser.add_argument(
         "--log", default="WARNING", help="Python based log levels. Default: WARNING."
     )
@@ -59,6 +67,8 @@ def main():
         args.output_dir,
         max_file_size=args.max_file_size,
         download_mode=args.download_mode,
+        unzip=args.unzip,
+        progress=args.progress,
     )
 
     print("\u001b[32mDataset succesfully downloaded.\u001b[0m")
