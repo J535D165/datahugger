@@ -20,6 +20,10 @@ def test_load_zenodo_6614829(url_or_id, tmpdir):
 
     assert "quasiperiod.m" in s_tree
 
+    # test count
+    assert "n_files=12" in str(dataset)
+    assert 12 == len(dataset)
+
 
 def test_load_github_cbsodata(tmpdir):
     dataset = load_repository("https://github.com/j535d165/cbsodata", tmpdir)

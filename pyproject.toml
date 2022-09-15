@@ -26,6 +26,7 @@ datahugger = "datahugger.__main__:main"
 all = ["datasets"]
 lint = ["flake8", "flake8-import-order"]
 test = ["pytest"]
+docs = ["mkdocs-material"]
 
 [build-system]
 build-backend = 'setuptools.build_meta'

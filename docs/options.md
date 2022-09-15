@@ -19,7 +19,7 @@ number of bytes. For example, you want to skip files larger than 50Mb.
     ```
 
 
-### Extract single zip
+## Extract single zip
 
 Some services like [Zenodo](zenodo.org) don't offer an option to preserve
 folder structures. Therefore, the content is often zipped before being
@@ -34,11 +34,10 @@ Disable auto unzip function
 
 === "Python"
 
+
     ``` python
-    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", unzip=False)
+    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", auto_unzip=False)
     ```
-
-
 
 
 ## Download mode
@@ -58,4 +57,23 @@ are: "skip_if_exists", "force_redownload".
 
     ``` python
     datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", download_mode="force_redownload")
+    ```
+
+
+## Progress
+
+By default, Datahugger shows the download progress. You can disable the
+progress indicator.
+
+
+=== "CLI"
+
+    ``` bash
+    datahugger 10.5061/dryad.31zcrjdm5 data --no-progress
+    ```
+
+=== "Python"
+
+    ``` python
+    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", progress=False)
     ```
