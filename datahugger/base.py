@@ -50,7 +50,9 @@ class DatasetResult(object):
 
         return count
 
-    def tree(self, sort=True, first="files", sort_key=_scientific_sort, *args, **kwargs):
+    def tree(
+        self, sort=True, first="files", sort_key=_scientific_sort, *args, **kwargs
+    ):
 
         return sd.seedir(
             str(self.output_folder),
@@ -66,7 +68,12 @@ class DatasetDownloader(object):
     """Base class for downloading resources from repositories."""
 
     def __init__(
-        self, base_url=None, max_file_size=None, download_mode="skip_if_exists", progress=True, unzip=True
+        self,
+        base_url=None,
+        max_file_size=None,
+        download_mode="skip_if_exists",
+        progress=True,
+        unzip=True,
     ):
         super(DatasetDownloader, self).__init__()
         self.base_url = base_url
@@ -79,7 +86,13 @@ class DatasetDownloader(object):
             raise ValueError(f"Download mode {download_mode} not recognised")
 
     def download(
-        self, url, base_output_folder, output_fn, file_size=None, file_hash=None, file_hash_type=None
+        self,
+        url,
+        base_output_folder,
+        output_fn,
+        file_size=None,
+        file_hash=None,
+        file_hash_type=None,
     ):
         """Download a single file.
 
