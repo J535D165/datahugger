@@ -3,6 +3,7 @@ import logging
 
 from datahugger import __version__
 from datahugger import load_repository
+from datahugger.exceptions import DOIError
 
 # test with
 # python -m datahugger https://doi.org/10.5061/dryad.31zcrjdm5 tmp/my_test; rm -r tmp/my_test
@@ -37,12 +38,12 @@ def main():
         help="Skip files if they already exist.",
     )
 
-    parser.add_argument('--unzip', action='store_true')
-    parser.add_argument('--no-unzip', dest='unzip', action='store_false')
+    parser.add_argument("--unzip", action="store_true")
+    parser.add_argument("--no-unzip", dest="unzip", action="store_false")
     parser.set_defaults(unzip=True)
 
-    parser.add_argument('--progress', action='store_true')
-    parser.add_argument('--no-progress', dest='progress', action='store_false')
+    parser.add_argument("--progress", action="store_true")
+    parser.add_argument("--no-progress", dest="progress", action="store_false")
     parser.set_defaults(progress=True)
 
     parser.add_argument(
@@ -54,22 +55,40 @@ def main():
         "-V",
         "--version",
         action="version",
-        version='%(prog)s {version}'.format(version=__version__)
+        version="%(prog)s {version}".format(version=__version__),
     )
 
     args, _ = parser.parse_known_args()
 
     logging.basicConfig(level=args.log)
 
-    # Start downloading
-    load_repository(
-        args.url_or_doi,
-        args.output_dir,
-        max_file_size=args.max_file_size,
-        download_mode=args.download_mode,
-        unzip=args.unzip,
-        progress=args.progress,
-    )
+    try:
+
+        # Start downloading
+        load_repository(
+            args.url_or_doi,
+            args.output_dir,
+            max_file_size=args.max_file_size,
+            download_mode=args.download_mode,
+            unzip=args.unzip,
+            progress=args.progress,
+        )
+
+    except DOIError as doi_err:
+        # raise error when log level is DEBUG
+        if logging.DEBUG == logging.root.level:
+            raise doi_err
+        else:
+            print(f"\u001b[31mDOI Error: {doi_err}\u001b[0m")
+            exit(1)
+
+    except Exception as err:
+        # raise error when log level is DEBUG
+        if logging.DEBUG == logging.root.level:
+            raise err
+        else:
+            print(f"\u001b[31mFailed to download: {err}\u001b[0m")
+            exit(1)
 
     print("\u001b[32mDataset succesfully downloaded.\u001b[0m")
 
