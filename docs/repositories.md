@@ -53,18 +53,3 @@ supported by Datahugger.
 
 See [https://dataverse.org/institutions](https://dataverse.org/institutions) and [DataVerse on Re3data.org](https://www.re3data.org/search?query=&software%5B%5D=DataVerse) for an overview of DataVerse repositories.
 
-## Not supported
-
-When a repository is not supported, the following is returned.
-
-=== "CLI"
-
-    ``` bash
-    datahugger 10.5061/dryad.31zcrjdm5 data
-    ```
-
-=== "Python"
-
-    ``` python
-    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data")
-    ```

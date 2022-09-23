@@ -1,15 +1,26 @@
 site_name: Datahugger Documentation
+repo_url: https://github.com/J535D165/datahugger
+repo_name: J535D165/datahugger
 
 nav:
     - Home: index.md
-    - Options: options.md
-    - Supported repositories: repositories.md
-    - Development: development.md
+    - Getting started: options.md
+    - Repositories:
+      - repositories.md
+      - repositories_not_supported.md
+    - Development:
+      - development.md
+    - FAQ:
+      - faq.md
 
 theme:
   name: material
   features:
     - content.tabs.link
+    - navigation.tabs
+  icon:
+    repo: fontawesome/brands/github
+
 
 markdown_extensions:
   - pymdownx.superfences
