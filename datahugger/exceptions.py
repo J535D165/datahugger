@@ -1,0 +1,2 @@
+class DOIError(ValueError):
+    pass

@@ -88,7 +88,7 @@ class DataverseDownload(DatasetDownloader):
                 f["dataFile"]["filename"],
                 file_size=f["dataFile"]["filesize"],
                 file_hash=f["dataFile"]["md5"],
-                file_hash_type="md5"
+                file_hash_type="md5",
             )
 
 
@@ -127,9 +127,12 @@ class FigShareDownload(DatasetDownloader):
         for f in files:
             logging.debug(f)
             self.download(
-                f["download_url"], output_folder, f["name"], file_size=f["size"],
+                f["download_url"],
+                output_folder,
+                f["name"],
+                file_size=f["size"],
                 file_hash=f["computed_md5"],
-                file_hash_type="md5"
+                file_hash_type="md5",
             )
 
 
@@ -176,7 +179,7 @@ class DataDryadDownload(DatasetDownloader):
                 f["path"],
                 file_size=f["size"],
                 file_hash=None,
-                file_hash_type=None
+                file_hash_type=None,
             )
 
 
@@ -259,7 +262,7 @@ class OSFDownload(DatasetDownloader):
                 f["attributes"]["name"],
                 file_size=f["attributes"]["size"],
                 file_hash=f["attributes"]["extra"]["hashes"]["sha256"],
-                file_hash_type="sha256"
+                file_hash_type="sha256",
             )
 
 
@@ -295,5 +298,5 @@ class MendeleyDownload(DatasetDownloader):
                 f["filename"],
                 file_size=f["size"],
                 file_hash=f["content_details"]["sha256_hash"],
-                file_hash_type="sha256"
+                file_hash_type="sha256",
             )
