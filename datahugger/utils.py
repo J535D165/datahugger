@@ -89,16 +89,14 @@ def get_datapublisher_from_doi(doi):
         allow_redirects=True,
     )
 
-    if r.status_code != 200:
-        raise ValueError("DOI not found")
+    if r.status_code == 406:
+        raise ValueError("Publisher not known to DataCite")
 
     tree = ET.fromstring(r.content)
 
     node_pub = tree.find("{http://datacite.org/schema/kernel-4}publisher")
     if node_pub is not None:
         return node_pub.text
-
-    return None
 
 
 def get_re3data_repositories(url="https://www.re3data.org/api/v1/repositories"):

@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 
 import requests
 
+from datahugger.exceptions import DOIError
 from datahugger.services import DataDryadDownload
 from datahugger.services import DataOneDownload
 from datahugger.services import DataverseDownload
@@ -181,7 +182,15 @@ def load_repository(
     # if netloc is doi.org, follow the redirect
     if uri.netloc in URL_RESOLVE:
         r = requests.head(url, allow_redirects=True)
+        if r.status_code == 404:
+            raise DOIError(
+                f"DOI cannot be found in the DOI System, see https://doi.org/{doi}"
+            )
+        if r.status_code != 200:
+            raise ValueError("Error")
+
         logging.info(f"Redirect from {url} to {r.url}")
+
         return load_repository(
             r.url,
             output_folder,
@@ -210,8 +219,6 @@ def load_repository(
         *args,
         **kwargs,
     ).get(url, output_folder, doi=doi)
-
-    raise ValueError(f"Data service for {url} is not supported.")
 
 
 def _resolve_service(url, doi):
