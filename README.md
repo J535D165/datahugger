@@ -1,4 +1,6 @@
-[![datahugger_repo.png](https://github.com/J535D165/datahugger/raw/main/docs/images/datahugger_repo.png)](github.com/j535d165/datahugger)
+<p align="center">
+  <img alt="Datahugger - Where DOI hugs Data" src="https://github.com/J535D165/datahugger/raw/main/datahugger_repocard_tagline.svg">
+</p>
 
 # Datahugger - Where DOI :open_hands: Data
 
