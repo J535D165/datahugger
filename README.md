@@ -69,33 +69,10 @@ Repository content succesfully downloaded.
 
 **Tip:** On some systems, you have to quote the DOI or URL. For example: `datahugger "10.5061/dryad.31zcrjdm5" data`. 
 
-## Options
-
-### Skip large files
-
-For most repositories, it is possible to skip files that exceed a certain
-number of bytes. For `load_repositories` use the argument `max_file_size`
-(in bytes). For example, you want to skip files larger than 50Mb, use
-`max_file_size=50000000`. For the command line interface, use
-`--max_file_size`.
-
-### Extract single zip
-
-Some services like [Zenodo](zenodo.org) don't offer an option to preserve
-folder structures. Therefore, the content is often zipped before being
-uploaded to the service. In this case, Datahugger will unzip the file to the
-output folder by default. Set this option to False to disable(`unzip`).
-
-### Download mode
-
-By default, Datahugger skips the download of files and datasets that are already 
-available on the local system. To change this behavior, use the argument 
-`download_mode`. The options are: "skip_if_exists", "force_redownload".
-
 ## Tips and tricks
 
 - No need to struggle with DOIs versus DOI URLs. They both work (and more). Example: The values `10.5061/dryad.x3ffbg7m8`, `doi:10.5061/dryad.x3ffbg7m8`, [`https://doi.org/10.5061/dryad.x3ffbg7m8`](https://doi.org/10.5061/dryad.x3ffbg7m8), and [`https://datadryad.org/stash/dataset/doi:10.5061/dryad.x3ffbg7m8`](https://datadryad.org/stash/dataset/doi:10.5061/dryad.x3ffbg7m8) all point to the same dataset.
-- Do not repuplish the dataset when you are uploading your data to an scientific data repository. These storages resources can be used better :)
+- Do not republish the dataset when you are uploading your data to an scientific data repository. These storages resources can be used better :)
 - Are you using git? Add the folder to the `.gitignore` file. This prevents committing all results to the repo.
 
 ## Interesting reads
@@ -111,6 +88,6 @@ available on the local system. To change this behavior, use the argument
 
 ## Contact
 
-Datahugger is developed and maintained by Jonathan de Bruin ([jonathandebruinos@gmail.com](email:jonathandebruinos@gmail.com)).
-This project received support from the Utrecht University Open Science Programme and the Utrecht University
-Research IT Programme.  
+Feel free to reach out with questions, remarks, and suggestions. The
+[issue tracker](/issues) is a good starting point. You can also email me at
+[jonathandebruinos@gmail.com](mailto:jonathandebruinos@gmail.com).

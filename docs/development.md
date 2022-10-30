@@ -1,16 +1,12 @@
 # Development
 
-Welcome at the development page of Datahugger. This page provides information
-on various aspects of datahugger, including the development and maintanance
-of repository APIs.
-
-## Repositories
+## Add new service
 
 Support for repositories can be achieved by implementing a "service". The
 file [datahugger/services.py](datahugger/services.py) list various services.
-For the new service, one needs to develop a new class, inherited from the
-BaseService class. The class of OSF is a good example of a simple
-implementation.
+For the new service, one needs to develop a new class, ideally inherited from
+the `BaseRepoDownloader` class. The class of Open Science Framework
+(`OSFDownload`) is a good example of a simple implementation.
 
 ```python
 class OSFDownload(BaseRepoDownloader):

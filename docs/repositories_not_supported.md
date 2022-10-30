@@ -6,9 +6,10 @@
 There are several reasons why Datahugger can't download the contents of a DOI.
 Besides internet and network errors, reasons for failure include (but not limited to):
 
-- DOI is a journal publication (not supported)
-- DOI refers to a data repository not in the list of [supported repositories](repositories.md).
-- DOI is no longer available on the repository.
+- Not a valid DOI or URL
+- DOI doesn't point to a data repository
+- Data repository isn't in the list of [supported repositories](repositories.md).
+- DOI is no longer available in the repository.
 
 ## Not supported error message
 
@@ -66,5 +67,5 @@ When a repository is not supported, an error is returned (exit 1).
 
 ## Request support
 
-If a repository is not supported by datahugger, you can open an issue in the
+If a repository is not supported by Datahugger, you can open an issue in the
 GitHub issue tracker.

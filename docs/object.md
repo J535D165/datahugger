@@ -13,6 +13,8 @@ result of the download. Assign the returned object to a variable.
 The Datahugger result object has a method tree to print the tree. The tree
 is optimized for scientific use (see [scitree](https://github.com/J535D165/scitree) and [scisort](https://github.com/J535D165/scisort)).
 
+=== "Python"
+
 ```python
 import datahugger
 

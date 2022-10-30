@@ -7,4 +7,4 @@ reproducibility of your research. Datahugger provides a straightforward
 [Python interface](#download-with-python) as well as an intuitive
 [Command Line Interface](#download-with-command-line) (CLI).
 
-[![datahugger_repo.png](../images/datahugger_repo.png)](github.com/j535d165/datahugger)
+[![Datahugger - Where DOI hugs data](../images/datahugger_repo.svg)](github.com/j535d165/datahugger)
