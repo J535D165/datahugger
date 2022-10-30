@@ -6,7 +6,7 @@ from typing import Union
 
 import natsort as ns
 import requests
-import seedir as sd
+from scitree import scitree
 from tqdm import tqdm
 
 from datahugger.utils import _format_filename
@@ -50,18 +50,13 @@ class DatasetResult(object):
 
         return count
 
-    def tree(
-        self, sort=True, first="files", sort_key=_scientific_sort, *args, **kwargs
-    ):
+    def tree(self, **kwargs):
+        """Return the folder tree.
 
-        return sd.seedir(
-            str(self.output_folder),
-            sort=sort,
-            first=first,
-            sort_key=sort_key,
-            *args,
-            **kwargs,
-        )
+        Tree based on scientific sort.
+        """
+
+        return scitree(self.output_folder, **kwargs)
 
 
 class DatasetDownloader(object):
