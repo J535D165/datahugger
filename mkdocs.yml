@@ -4,7 +4,11 @@ repo_name: J535D165/datahugger
 
 nav:
     - Home: index.md
-    - Getting started: options.md
+    - Getting started:
+      - installation.md
+      - download.md
+      - object.md
+      - options.md
     - Repositories:
       - repositories.md
       - repositories_not_supported.md
@@ -20,9 +24,14 @@ theme:
     - navigation.tabs
   icon:
     repo: fontawesome/brands/github
+    logo: fontawesome/solid/hand-spock
 
 
 markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
