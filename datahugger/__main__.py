@@ -87,7 +87,7 @@ def main():
             print(f"\u001b[31mFailed to download: {err}\u001b[0m")
             exit(1)
 
-    print("\u001b[32mDataset succesfully downloaded.\u001b[0m")
+    print("\u001b[32mDataset successfully downloaded.\u001b[0m")
 
 
 if __name__ == "__main__":
