@@ -66,19 +66,16 @@ class DatasetDownloader(object):
         self,
         base_url=None,
         max_file_size=None,
-        download_mode="skip_if_exists",
+        force_download=False,
         progress=True,
         unzip=True,
     ):
         super(DatasetDownloader, self).__init__()
         self.base_url = base_url
         self.max_file_size = max_file_size
-        self.download_mode = download_mode
+        self.force_download = force_download
         self.progress = progress
         self.unzip = unzip
-
-        if download_mode not in ["skip_if_exists", "force_redownload"]:
-            raise ValueError(f"Download mode {download_mode} not recognised")
 
     def download(
         self,
@@ -118,7 +115,7 @@ class DatasetDownloader(object):
 
         output_fp = Path(base_output_folder, output_fn)
 
-        if self.download_mode == "skip_if_exists" and output_fp.exists():
+        if not self.force_download and output_fp.exists():
             print("File already exists:", output_fn)
             return
 
