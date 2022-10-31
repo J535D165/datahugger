@@ -40,3 +40,12 @@ class OSFDownload(BaseRepoDownloader):
 - The `REGEXP_ID` is used to parse the URL and extract the ID. This ID is passed to the function `_get` with name `record_id`.
 - Next, the metadata should be retrieved.
 - For every file, download should be called.
+
+## Datahugger for research software
+
+Scientific software rarely offers the options to import datasets from a DOI.
+Imagine what it would look like if you could. You can open a statistical
+software and you can start working on any published dataset. This is why we
+need persistent identifiers.
+
+

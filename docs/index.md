@@ -7,4 +7,16 @@ reproducibility of your research. Datahugger provides a straightforward
 [Python interface](#download-with-python) as well as an intuitive
 [Command Line Interface](#download-with-command-line) (CLI).
 
-[![Datahugger - Where DOI hugs data](../images/datahugger_repo.svg)](github.com/j535d165/datahugger)
+![Datahugger - Where DOI hugs data](../images/datahugger_repo.svg)
+
+## Alternatives
+
+Datahugger's main focus is on downloading datasets from arbitrary DOI's. As
+far as I know, there are alternatives for downloading datasets from arbitrary
+DOI's. However, there are many libraries for downloading datasets from a
+repository right away. Usually they can also be used for uploading data to
+the respotory. Nice examples are:
+
+- [https://guides.dataverse.org/en/latest/api/client-libraries.html](https://guides.dataverse.org/en/latest/api/client-libraries.html)
+- [https://pypi.org/project/pyzenodo3/](https://pypi.org/project/pyzenodo3/)
+- [https://osfclient.readthedocs.io/en/latest/](https://osfclient.readthedocs.io/en/latest/)
