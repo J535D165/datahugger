@@ -32,11 +32,8 @@ def main():
         help="Skip files larger than this size. Might not work for all services.",
     )
 
-    parser.add_argument(
-        "--download_mode",
-        default="skip_if_exists",
-        help="Skip files if they already exist.",
-    )
+    parser.add_argument("-f", "--force-download", dest="force_download", action="store_true")
+    parser.set_defaults(force_download=False)
 
     parser.add_argument("--unzip", action="store_true")
     parser.add_argument("--no-unzip", dest="unzip", action="store_false")
@@ -69,7 +66,7 @@ def main():
             args.url_or_doi,
             args.output_dir,
             max_file_size=args.max_file_size,
-            download_mode=args.download_mode,
+            force_download=args.force_download,
             unzip=args.unzip,
             progress=args.progress,
         )
@@ -90,7 +87,7 @@ def main():
             print(f"\u001b[31mFailed to download: {err}\u001b[0m")
             exit(1)
 
-    print("\u001b[32mDataset succesfully downloaded.\u001b[0m")
+    print("\u001b[32mDataset successfully downloaded.\u001b[0m")
 
 
 if __name__ == "__main__":

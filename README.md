@@ -64,7 +64,7 @@ datahugger 10.5061/dryad.31zcrjdm5 data
 % datahugger 10.5061/dryad.x3ffbg7m8 data
 README_Pfaller_Robinson_20[...].txt: 100%|█████████████████████████████████████| 17.1k/17.1k [00:00<00:00, 2.62MB/s]
 Pfaller_Robinson_2022_Glob[...].csv: 100%|████████████████████████████████████████| 709k/709k [00:00<00:00, 904kB/s]
-Repository content succesfully downloaded.
+Repository content successfully downloaded.
 ```
 
 **Tip:** On some systems, you have to quote the DOI or URL. For example: `datahugger "10.5061/dryad.31zcrjdm5" data`. 
