@@ -8,13 +8,14 @@ Datahugger is a tool to download scientific datasets, software, and code from a 
 
 ## Supported repositories
 
-Datahugger offers support for more than [150 generic and specific (scientific) repositories](https://github.com/J535D165/datahugger/blob/main/docs/repositories.md) (and more to come!).
+Datahugger offers support for more than [150 generic and specific (scientific) repositories](https://j535d165.github.io/datahugger/repositories) (and more to come!).
 
-[![Datahugger support Zenodo, Dataverse, DataOne, GitHub, FigShare, HuggingFace, Mendeley Data, Dryad, OSF, and many more](https://github.com/J535D165/datahugger/raw/main/docs/images/logos.png)](https://github.com/J535D165/datahugger/blob/main/docs/repositories.md)
+[![Datahugger support Zenodo, Dataverse, DataOne, GitHub, FigShare, HuggingFace, Mendeley Data, Dryad, OSF, and many more](https://github.com/J535D165/datahugger/raw/main/docs/images/logos.png)](https://j535d165.github.io/datahugger/repositories)
 
 We are still expanding Datahugger with support for more repositories. You can
-help by [requesting support for a repository](https://github.com/J535D165/datahugger/issues/new/choose) in the issue tracker. Pull Requests are very
-welcome as well.
+help by [requesting support for a repository]
+(https://github.com/J535D165/datahugger/issues/new/choose) in the issue
+tracker. Pull Requests are very welcome as well.
 
 ## Installation
 
@@ -28,8 +29,9 @@ pip install datahugger
 
 ### Download with Python
 
-Load a dataset (or any digital asset) from a repository with the `datahugger.load_repository` function. The first
-argument is the DOI or URL and the second argument the name of the folder to store the dataset (will be
+Load a dataset (or any digital asset) from a repository with the
+`datahugger.load_repository` function. The first argument is the DOI or URL
+and the second argument the name of the folder to store the dataset (will be
 created if it does not exist).
 
 ```python
