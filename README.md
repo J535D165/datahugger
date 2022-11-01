@@ -73,14 +73,6 @@ Repository content successfully downloaded.
 
 - No need to struggle with DOIs versus DOI URLs. They both work (and more). Example: The values `10.5061/dryad.x3ffbg7m8`, `doi:10.5061/dryad.x3ffbg7m8`, [`https://doi.org/10.5061/dryad.x3ffbg7m8`](https://doi.org/10.5061/dryad.x3ffbg7m8), and [`https://datadryad.org/stash/dataset/doi:10.5061/dryad.x3ffbg7m8`](https://datadryad.org/stash/dataset/doi:10.5061/dryad.x3ffbg7m8) all point to the same dataset.
 - Do not republish the dataset when you are uploading your data to an scientific data repository. These storages resources can be used better :)
-- Are you using git? Add the folder to the `.gitignore` file. This prevents committing all results to the repo.
-
-## Interesting reads
-
-- https://www.crossref.org/blog/urls-and-dois-a-complicated-relationship/
-- *Harvey MJ, Mason NJ, McLean A, Rzepa HS. Standards-based metadata procedures for retrieving data for display or mining utilizing persistent (data-DOI) identifiers. J Cheminform. 2015 Aug 8;7:37. doi: [10.1186/s13321-015-0081-7](https://doi.org/10.1186%2Fs13321-015-0081-7). PMID: 26257829; PMCID: PMC4528360.*
-- *Sara Lafia & Werner Kuhn (2018) Spatial Discovery of Linked Research Datasets and Documents at a Spatially Enabled Research Library, Journal of Map & Geography Libraries, 14:1, 21-39, DOI: 10.1080/15420353.2018.1478923*
-- [DOI Content Negotiation (Crosscite.org](https://citation.crosscite.org/docs.html) 
 
 ## License
 
