@@ -1,17 +1,42 @@
 site_name: Datahugger Documentation
+repo_url: https://github.com/J535D165/datahugger
+repo_name: J535D165/datahugger
 
 nav:
-    - Home: index.md
-    - Options: options.md
-    - Supported repositories: repositories.md
-    - Development: development.md
+    - Home:
+      - index.md
+      - working.md
+      - reproducible.md
+    - Getting started:
+      - installation.md
+      - download.md
+      - object.md
+      - options.md
+    - Repositories:
+      - repositories.md
+      - repositories_not_supported.md
+    - Development:
+      - development.md
+    - FAQ:
+      - faq.md
 
 theme:
   name: material
   features:
     - content.tabs.link
+    - navigation.tabs
+  icon:
+    repo: fontawesome/brands/github
+    logo: fontawesome/solid/hand-spock
+
+extra_css:
+  - stylesheets/extra.css
 
 markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg

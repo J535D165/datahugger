@@ -1,16 +1,12 @@
 # Development
 
-Welcome at the development page of Datahugger. This page provides information
-on various aspects of datahugger, including the development and maintanance
-of repository APIs.
-
-## Repositories
+## Add new service
 
 Support for repositories can be achieved by implementing a "service". The
 file [datahugger/services.py](datahugger/services.py) list various services.
-For the new service, one needs to develop a new class, inherited from the
-BaseService class. The class of OSF is a good example of a simple
-implementation.
+For the new service, one needs to develop a new class, ideally inherited from
+the `BaseRepoDownloader` class. The class of Open Science Framework
+(`OSFDownload`) is a good example of a simple implementation.
 
 ```python
 class OSFDownload(BaseRepoDownloader):
@@ -44,3 +40,12 @@ class OSFDownload(BaseRepoDownloader):
 - The `REGEXP_ID` is used to parse the URL and extract the ID. This ID is passed to the function `_get` with name `record_id`.
 - Next, the metadata should be retrieved.
 - For every file, download should be called.
+
+## Datahugger for research software
+
+Scientific software rarely offers the options to import datasets from a DOI.
+Imagine what it would look like if you could. You can open a statistical
+software and you can start working on any published dataset. This is why we
+need persistent identifiers.
+
+
