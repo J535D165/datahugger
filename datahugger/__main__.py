@@ -26,7 +26,7 @@ def main():
     )
 
     parser.add_argument(
-        "--max_file_size",
+        "--max-file-size",
         default=None,
         type=int,
         help="Skip files larger than this size. Might not work for all services.",
