@@ -18,6 +18,8 @@ tracker. Pull Requests are very welcome as well.
 
 ## Installation
 
+![PyPI](https://img.shields.io/pypi/v/datahugger)
+
 Datahugger requires Python 3.6 or later.
 
 ```
