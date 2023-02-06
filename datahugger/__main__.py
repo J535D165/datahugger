@@ -32,7 +32,9 @@ def main():
         help="Skip files larger than this size. Might not work for all services.",
     )
 
-    parser.add_argument("-f", "--force-download", dest="force_download", action="store_true")
+    parser.add_argument(
+        "-f", "--force-download", dest="force_download", action="store_true"
+    )
     parser.set_defaults(force_download=False)
 
     parser.add_argument("--unzip", action="store_true")
@@ -44,7 +46,9 @@ def main():
     parser.set_defaults(progress=True)
 
     parser.add_argument(
-        "--log-level", default="WARNING", help="Python based log levels. Default: WARNING."
+        "--log-level",
+        default="WARNING",
+        help="Python based log levels. Default: WARNING.",
     )
 
     # version

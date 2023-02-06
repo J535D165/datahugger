@@ -22,6 +22,7 @@ from datahugger.utils import get_re3data_repository
 
 URL_RESOLVE = ["doi.org"]
 
+# fast lookup
 SERVICES_NETLOC = {
     "zenodo.org": ZenodoDownload,
     "figshare.com": FigShareDownload,
@@ -123,6 +124,9 @@ SERVICES_NETLOC = {
     "www.uni-hildesheim.de": DataverseDownload,
 }
 
+# regexp lookup
+SERVICES_NETLOC_REGEXP = {"*.figshare.com": FigShareDownload}
+
 RE3DATA_SOFTWARE = {
     "DataVerse": DataverseDownload,  # Hits on re3data 2022-09-02: (145)
     # "DSpace": DSpaceDownload,  # Hits on re3data 2022-09-02: (115)
@@ -181,6 +185,7 @@ def load_repository(
 
     # if netloc is doi.org, follow the redirect
     if uri.netloc in URL_RESOLVE:
+
         r = requests.head(url, allow_redirects=True)
         if r.status_code == 404:
             raise DOIError(
@@ -242,6 +247,7 @@ def _resolve_service_from_netloc(url):
 
     uri = urlparse(url)
 
+    logging.debug(f"Resolve service: search netloc '{uri.netloc}'")
     if uri.netloc in SERVICES_NETLOC.keys():
         logging.debug("Service found: " + uri.netloc)
 
