@@ -44,7 +44,7 @@ def main():
     parser.set_defaults(progress=True)
 
     parser.add_argument(
-        "--log", default="WARNING", help="Python based log levels. Default: WARNING."
+        "--log-level", default="WARNING", help="Python based log levels. Default: WARNING."
     )
 
     # version
@@ -57,7 +57,7 @@ def main():
 
     args, _ = parser.parse_known_args()
 
-    logging.basicConfig(level=args.log)
+    logging.basicConfig(level=args.log_level)
 
     try:
 
