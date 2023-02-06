@@ -109,8 +109,8 @@ class FigShareDownload(DatasetDownloader):
     """Downloader for FigShare repository."""
 
     API_URL = "https://api.figshare.com/v2"
-    REGEXP_ID_AND_VERSION = r"figshare\.com\/articles\/dataset\/.*\/(\d+)\/(\d+)"
-    REGEXP_ID = r"figshare\.com\/articles\/dataset\/.*\/(\d+)"
+    REGEXP_ID_AND_VERSION = r"articles\/dataset\/.*\/(\d+)\/(\d+)"
+    REGEXP_ID = r"articles\/dataset\/.*\/(\d+)"
 
     def _get(
         self,

@@ -25,13 +25,15 @@ URL_RESOLVE = ["doi.org"]
 # fast lookup
 SERVICES_NETLOC = {
     "zenodo.org": ZenodoDownload,
-    "figshare.com": FigShareDownload,
     "github.com": GitHubDownload,
     "datadryad.org": DataDryadDownload,
     "datadryad.org:443": DataDryadDownload,
     "huggingface.co": HuggingFaceDownload,
     "osf.io": OSFDownload,
     "data.mendeley.com": MendeleyDownload,
+    # Figshare download
+    "figshare.com": FigShareDownload,
+    "data.4tu.nl": FigShareDownload,
     # DataOne repositories
     "arcticdata.io": DataOneDownload,
     "knb.ecoinformatics.org": DataOneDownload,

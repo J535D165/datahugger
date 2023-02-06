@@ -66,11 +66,24 @@ def test_load_github_cbsodata(tmpdir):
         ("https://doi.org/10.6084/m9.figshare.8851784.v1"),
     ],
 )
-def test_load_figshare_8851784(url_or_id, tmpdir):
+def test_load_figshare(url_or_id, tmpdir):
     """Load repository with the generic loader."""
     load_repository(url_or_id, tmpdir)
 
     assert Path(tmpdir, "cross_year_data2.csv").exists()
+
+
+@pytest.mark.parametrize(
+    "url_or_id",
+    [
+        ("https://doi.org/10.4121/21989216.v1"),
+    ],
+)
+def test_load_figshare_4tu(url_or_id, tmpdir):
+    """Load repository with the generic loader."""
+    load_repository(url_or_id, tmpdir)
+
+    assert Path(tmpdir, "README.txt").exists()
 
 
 @pytest.mark.parametrize(
