@@ -13,8 +13,7 @@ Datahugger offers support for more than [150 generic and specific (scientific) r
 [![Datahugger support Zenodo, Dataverse, DataOne, GitHub, FigShare, HuggingFace, Mendeley Data, Dryad, OSF, and many more](https://github.com/J535D165/datahugger/raw/main/docs/images/logos.png)](https://j535d165.github.io/datahugger/repositories)
 
 We are still expanding Datahugger with support for more repositories. You can
-help by [requesting support for a repository]
-(https://github.com/J535D165/datahugger/issues/new/choose) in the issue
+help by [requesting support for a repository](https://github.com/J535D165/datahugger/issues/new/choose) in the issue
 tracker. Pull Requests are very welcome as well.
 
 ## Installation
