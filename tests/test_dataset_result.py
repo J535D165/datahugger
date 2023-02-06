@@ -2,6 +2,7 @@ import pytest
 
 from datahugger import load_repository
 
+
 @pytest.mark.parametrize(
     "url_or_id",
     [
