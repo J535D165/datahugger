@@ -2,7 +2,6 @@ import pytest
 
 from datahugger import load_repository
 
-
 @pytest.mark.parametrize(
     "url_or_id",
     [
@@ -11,25 +10,23 @@ from datahugger import load_repository
         ("https://doi.org/10.5281/zenodo.6614829"),
     ],
 )
-def test_load_zenodo_6614829(url_or_id, tmpdir):
+def test_load_zenodo_6614829(url_or_id, tmpdir, capsys):
     dataset = load_repository(url_or_id, tmpdir, max_file_size=1e6)
 
     dataset.tree()
 
-    s_tree = dataset.tree(printout=False)
-
-    assert "quasiperiod.m" in s_tree
+    captured = capsys.readouterr()
+    assert "quasiperiod.m" in captured.out
 
     # test count
-    assert "n_files=12" in str(dataset)
+    assert "12 file" in captured.out
     assert 12 == len(dataset)
 
 
-def test_load_github_cbsodata(tmpdir):
+def test_load_github_cbsodata(tmpdir, capsys):
     dataset = load_repository("https://github.com/j535d165/cbsodata", tmpdir)
 
     dataset.tree()
 
-    s_tree = dataset.tree(printout=False)
-
-    assert ".gitignore" in s_tree
+    captured = capsys.readouterr()
+    assert ".gitignore" in captured.out
