@@ -14,9 +14,29 @@ search engines like [Google Dataset Search](https://datasetsearch.research.googl
 scientific publications. Once you found the dataset, copy the DOI. If there
 is no DOI available, use the URL to the dataset.
 
-### Option 1: Create project
+### Instruct user to install datahugger
 
-### Option 2: Embed in project
+If the user doesn't have datahugger installed on their device, it is required
+to install datahugger. Datahugger can be added to an existing Python
+installation file like `requirements.txt` of via documentation `pip install
+datahugger`.
+
+### Scenario 1: Standalone project setup
+
+In this scenario, you create a script or piece of documentation to setup the prerequirements for your project. This likely contains the installation dependencies and the download of the data with Datahugger. The following example shows an example for a Python project.
+
+```bash
+pip install -r requirements.txt
+datahugger 10.xxx/yyy data
+```
+
+This script sets up the required Python dependencies and downloads the dataset.
+
+### Scenario 2: Single workflow
+
+In this scenario, the data download is part of the same script or workflow as
+the analysis. This is common for interactive environments like Jupyter
+Notebooks.
 
 ### Tips for git users
 
