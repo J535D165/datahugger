@@ -8,7 +8,7 @@ reproducibility of your research. Datahugger provides a straightforward
 [Command Line Interface](#download-with-command-line) (CLI).
 
 <p align="center">
-  <img alt="Datahugger - Where DOI hugs data" src="../images/datahugger_repo.svg">
+  <img alt="Datahugger - Where DOI hugs data" src="images/datahugger_repo.svg">
 </p>
 
 ## Alternatives
