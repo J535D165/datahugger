@@ -21,7 +21,7 @@ number of bytes. For example, you want to skip files larger than 50Mb.
 
 ## Extract single zip
 
-Some services like [Zenodo](zenodo.org) don't offer an option to preserve
+Some services like [Zenodo](https://zenodo.org) don't offer an option to preserve
 folder structures. Therefore, the content is often zipped before being
 uploaded to the service. In this case, Datahugger will unzip the file to the
 output folder by default.

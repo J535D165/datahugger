@@ -3,7 +3,7 @@
 ## Add new service
 
 Support for repositories can be achieved by implementing a "service". The
-file [datahugger/services.py](datahugger/services.py) list various services.
+file [datahugger/services.py](https://github.com/J535D165/datahugger/blob/main/datahugger/services.py) list various services.
 For the new service, one needs to develop a new class, ideally inherited from
 the `BaseRepoDownloader` class. The class of Open Science Framework
 (`OSFDownload`) is a good example of a simple implementation.
