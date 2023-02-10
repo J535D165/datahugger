@@ -6,8 +6,6 @@
 
 Datahugger is a tool to download scientific datasets, software, and code from a large number of repositories based on their DOI [(wiki)](https://en.wikipedia.org/wiki/Digital_object_identifier) or URL. With Datahugger, you can automate the downloading of data and improve the reproducibility of your research. Datahugger provides a straightforward [Python interface](#download-with-python) as well as an intuitive [Command Line Interface](#download-with-command-line) (CLI).
 
-[Full documentation](https://j535d165.github.io/datahugger/)
-
 ## Supported repositories
 
 Datahugger offers support for more than [150 generic and specific (scientific) repositories](https://j535d165.github.io/datahugger/repositories) (and more to come!).
