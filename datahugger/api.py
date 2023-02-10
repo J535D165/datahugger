@@ -1,4 +1,5 @@
 import logging
+import re
 from urllib.parse import urlparse
 
 import requests
@@ -127,7 +128,7 @@ SERVICES_NETLOC = {
 }
 
 # regexp lookup
-SERVICES_NETLOC_REGEXP = {"*.figshare.com": FigShareDownload}
+SERVICES_NETLOC_REGEXP = {r".*\.figshare\.com": FigShareDownload}
 
 RE3DATA_SOFTWARE = {
     "DataVerse": DataverseDownload,  # Hits on re3data 2022-09-02: (145)
@@ -254,6 +255,10 @@ def _resolve_service_from_netloc(url):
         logging.debug("Service found: " + uri.netloc)
 
         return SERVICES_NETLOC[uri.netloc]
+
+    for netloc_re, service in SERVICES_NETLOC_REGEXP.items():
+        if re.match(netloc_re, uri.hostname):
+            return service
 
 
 def _resolve_service_with_re3data(doi):
