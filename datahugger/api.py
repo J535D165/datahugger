@@ -28,7 +28,6 @@ SERVICES_NETLOC = {
     "zenodo.org": ZenodoDownload,
     "github.com": GitHubDownload,
     "datadryad.org": DataDryadDownload,
-    "datadryad.org:443": DataDryadDownload,
     "huggingface.co": HuggingFaceDownload,
     "osf.io": OSFDownload,
     "data.mendeley.com": MendeleyDownload,
@@ -187,7 +186,7 @@ def load_repository(
     uri = urlparse(url)
 
     # if netloc is doi.org, follow the redirect
-    if uri.netloc in URL_RESOLVE:
+    if uri.hostname in URL_RESOLVE:
 
         r = requests.head(url, allow_redirects=True)
         if r.status_code == 404:
@@ -250,11 +249,11 @@ def _resolve_service_from_netloc(url):
 
     uri = urlparse(url)
 
-    logging.debug(f"Resolve service: search netloc '{uri.netloc}'")
-    if uri.netloc in SERVICES_NETLOC.keys():
-        logging.debug("Service found: " + uri.netloc)
+    logging.debug(f"Resolve service: search netloc '{uri.hostname}'")
+    if uri.hostname in SERVICES_NETLOC.keys():
+        logging.debug("Service found: " + uri.hostname)
 
-        return SERVICES_NETLOC[uri.netloc]
+        return SERVICES_NETLOC[uri.hostname]
 
     for netloc_re, service in SERVICES_NETLOC_REGEXP.items():
         if re.match(netloc_re, uri.hostname):
