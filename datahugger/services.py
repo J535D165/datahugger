@@ -71,7 +71,7 @@ class DataverseDataset(DatasetDownloader, DatasetResult):
         )
 
 
-class FigShareDataset(DatasetDownloader):
+class FigShareDataset(DatasetDownloader, DatasetResult):
     """Downloader for FigShare repository."""
 
     REGEXP_ID_AND_VERSION = r"articles\/dataset\/.*\/(\d+)\/(\d+)"
@@ -91,7 +91,7 @@ class FigShareDataset(DatasetDownloader):
     META_FILE_HASH_TYPE_VALUE = "md5"
 
 
-class OSFDataset(DatasetDownloader):
+class OSFDataset(DatasetDownloader, DatasetResult):
     """Downloader for OSF repository."""
 
     REGEXP_ID = r"osf\.io\/(.*)/"
@@ -111,7 +111,7 @@ class OSFDataset(DatasetDownloader):
     META_FILE_HASH_TYPE_VALUE = "sha256"
 
 
-class DataDryadDataset(DatasetDownloader):
+class DataDryadDataset(DatasetDownloader, DatasetResult):
     """Downloader for DataDryad repository."""
 
     REGEXP_ID = r"datadryad\.org[\:]*[43]{0,3}\/stash\/dataset\/doi:(.*)"
@@ -168,7 +168,7 @@ class DataDryadDataset(DatasetDownloader):
         return "https://datadryad.org" + record["_links"]["stash:file-download"]["href"]
 
 
-class DataOneDataset(DatasetDownloader):
+class DataOneDataset(DatasetDownloader, DatasetResult):
     """Downloader for DataOne repositories."""
 
     REGEXP_ID = r"view/doi:(.*)"
@@ -210,7 +210,7 @@ class DataOneDataset(DatasetDownloader):
         return self._files
 
 
-class MendeleyDataset(DatasetDownloader):
+class MendeleyDataset(DatasetDownloader, DatasetResult):
     """Downloader for Mendeley repository."""
 
     REGEXP_ID_WITH_VERSION = r"data\.mendeley\.com\/datasets\/([0-9a-z]+)\/(\d+)"
@@ -243,7 +243,7 @@ class MendeleyDataset(DatasetDownloader):
             self.version = r_version.json()[-1]["version"]
 
 
-class GitHubDataset(DatasetDownloader):
+class GitHubDataset(DatasetDownloader, DatasetResult):
     """Downloader for GitHub repository."""
 
     API_URL = "https://github.com/"
@@ -258,7 +258,7 @@ class GitHubDataset(DatasetDownloader):
         z.extractall(output_folder)
 
 
-class HuggingFaceDataset(DatasetDownloader):
+class HuggingFaceDataset(DatasetDownloader, DatasetResult):
     """Downloader for Huggingface repository."""
 
     REGEXP_ID = r"huggingface.co/datasets/(.*)"
