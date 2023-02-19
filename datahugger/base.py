@@ -8,6 +8,7 @@ import natsort as ns
 import requests
 from scitree import scitree
 from tqdm import tqdm
+from jsonpath_ng import jsonpath, parse
 
 from datahugger.utils import _format_filename
 from datahugger.utils import _is_url
@@ -36,19 +37,13 @@ def _scientific_sort(f, alg=ns.PATH):
 class DatasetResult(object):
     """Result class after downloading the dataset."""
 
-    def __init__(self, output_folder):
-        self.output_folder = output_folder
-
     def __str__(self):
 
         return f"<{self.__class__.__name__} n_files={len(self)} >"
 
     def __len__(self):
-        count = 0
-        for root_dir, cur_dir, files in os.walk(self.output_folder):
-            count += len(files)
 
-        return count
+        return len(self.files)
 
     def tree(self, **kwargs):
         """Return the folder tree.
@@ -64,6 +59,8 @@ class DatasetDownloader(object):
 
     def __init__(
         self,
+        url: Union[str, int],
+        version=None,
         base_url=None,
         max_file_size=None,
         force_download=False,
@@ -71,17 +68,62 @@ class DatasetDownloader(object):
         unzip=True,
     ):
         super(DatasetDownloader, self).__init__()
+        self.url = url
+        self._version = version
         self.base_url = base_url
         self.max_file_size = max_file_size
         self.force_download = force_download
         self.progress = progress
         self.unzip = unzip
 
-    def download(
+    def _get_file_meta_attr(self, record, jsonp):
+
+        try:
+            jsonpath_expression = parse(jsonp)
+            return jsonpath_expression.find(record)[0].value
+        except Exception as err:
+            return None
+
+    def _get_file_meta_link(self, record):
+
+        if not hasattr(self, "META_FILE_LINK_JSONPATH"):
+            return None
+
+        return self._get_file_meta_attr(record, self.META_FILE_LINK_JSONPATH)
+
+    def _get_file_meta_name(self, record):
+
+        if not hasattr(self, "META_FILE_NAME_JSONPATH"):
+            return None
+
+        return self._get_file_meta_attr(record, self.META_FILE_NAME_JSONPATH)
+
+    def _get_file_meta_size(self, record):
+
+        if not hasattr(self, "META_FILE_SIZE_JSONPATH"):
+            return None
+
+        return self._get_file_meta_attr(record, self.META_FILE_SIZE_JSONPATH)
+
+    def _get_file_meta_hash(self, record):
+
+        if not hasattr(self, "META_FILE_HASH_JSONPATH"):
+            return None
+
+        return self._get_file_meta_attr(record, self.META_FILE_HASH_JSONPATH)
+
+    def _get_file_meta_hash_type(self, record):
+
+        if not hasattr(self, "META_FILE_HASH_TYPE_JSONPATH"):
+            return None
+
+        return self._get_file_meta_attr(record, self.META_FILE_HASH_TYPE_JSONPATH)
+
+    def download_file(
         self,
-        url,
-        base_output_folder,
-        output_fn,
+        file_link,
+        output_folder,
+        file_name,
         file_size=None,
         file_hash=None,
         file_hash_type=None,
@@ -90,11 +132,11 @@ class DatasetDownloader(object):
 
         Arguments
         ---------
-        url: str
+        file_link: str
             Path to the file to download.
-        base_output_folder: str
+        output_folder: str
             The folder to store the downloaded file.
-        output_fn: str
+        file_name: str
             The filename of the downloaded file.
         file_size: int
             The size of the file in bytes.
@@ -107,16 +149,16 @@ class DatasetDownloader(object):
             and self.max_file_size is not None
             and file_size >= self.max_file_size
         ):
-            logging.info("Skipping large file {}".format(url))
+            logging.info("Skipping large file {}".format(file_link))
             return
 
-        logging.info("Downloading file {}".format(url))
-        res = requests.get(url, stream=True)
+        logging.info("Downloading file {}".format(file_link))
+        res = requests.get(file_link, stream=True)
 
-        output_fp = Path(base_output_folder, output_fn)
+        output_fp = Path(output_folder, file_name)
 
         if not self.force_download and output_fp.exists():
-            print("File already exists:", output_fn)
+            print("File already exists:", file_name)
             return
 
         if self.progress:
@@ -124,7 +166,7 @@ class DatasetDownloader(object):
                 open(output_fp, "wb"),
                 "write",
                 miniters=1,
-                desc=_format_filename(output_fn),
+                desc=_format_filename(file_name),
                 total=int(res.headers.get("content-length", 0)),
             ) as fout:
                 for chunk in res.iter_content(chunk_size=4096):
@@ -155,11 +197,81 @@ class DatasetDownloader(object):
 
         return None, None
 
-    def get(
+    def _unpack_single_folder(self, zip_url, output_folder):
+
+        r = requests.get(zip_url)
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+
+        for zip_info in z.infolist():
+            if zip_info.filename[-1] == "/":
+                continue
+            zip_info.filename = os.path.basename(zip_info.filename)
+            z.extract(zip_info, output_folder)
+
+    @property
+    def api_record_id(self):
+
+        if hasattr(self, "_api_record_id"):
+            return self._api_record_id
+
+        if isinstance(self.url, str) and _is_url(self.url):
+            self._api_record_id, self._version = self._parse_url(self.url)
+        else:
+            self._api_record_id, self._version = self.url, self._version
+
+        return self._api_record_id
+
+    @property
+    def files(self):
+
+        if hasattr(self, "_files"):
+            return self._files
+
+        res = requests.get(
+            self.API_URL_META.format(
+                api_record_id=self.api_record_id,
+                version=self._version,
+                base_url=self.base_url,
+            )
+        )
+
+        if hasattr(self, "META_FILES_JSONPATH"):
+            jsonpath_expression = parse(self.META_FILES_JSONPATH)
+            files_raw = jsonpath_expression.find(res.json())[0].value
+        else:
+            files_raw = res.json()
+
+        x = []
+        for f in files_raw:
+            x.append(
+                {
+                    "file_link": self._get_file_meta_link(f),
+                    "file_name": self._get_file_meta_name(f),
+                    "file_size": self._get_file_meta_size(f),
+                    "file_hash": self._get_file_meta_hash(f),
+                    "file_hash_type": self._get_file_meta_hash_type(f),
+                }
+            )
+
+        self._files = x
+        return self._files
+
+    def _get(
         self,
-        record_id_or_url: Union[str, int],
         output_folder: Union[Path, str],
-        version: int = None,
+        **kwargs,
+    ):
+
+        if len(self.files) == 1 and self.files[0]["file_link"].endswith(".zip"):
+            self._unpack_single_folder(self.files[0]["file_link"], output_folder)
+            return
+
+        for f in self.files:
+            self.download_file(output_folder=output_folder, **f)
+
+    def download(
+        self,
+        output_folder: Union[Path, str],
         **kwargs,
     ):
         """Download files for the given URL or record id.
@@ -177,11 +289,11 @@ class DatasetDownloader(object):
         """
         Path(output_folder).mkdir(parents=True, exist_ok=True)
 
-        if isinstance(record_id_or_url, str) and _is_url(record_id_or_url):
-            record_id, version = self._parse_url(record_id_or_url)
-        else:
-            record_id, version = record_id_or_url, version
+        # # if isinstance(record_id_or_url, str) and _is_url(record_id_or_url):
+        # record_id, version = self._parse_url(self.record_id)
+        # else:
+        #     record_id, version = record_id_or_url, version
 
-        self._get(record_id, output_folder, version=version, **kwargs)
+        self._get(output_folder, **kwargs)
 
-        return DatasetResult(output_folder)
+        return self

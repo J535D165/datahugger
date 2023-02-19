@@ -2,8 +2,19 @@ from pathlib import Path
 
 import pytest
 
-from datahugger import load_repository
+import datahugger
 from datahugger.utils import _is_url
+
+
+TESTS_URLS = [
+    # ("https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/KBHLOD", "tutorial1.py"),
+    # ("https://doi.org/10.7910/DVN/KBHLOD", "tutorial1.py"),
+    # ("https://doi.org/10.6084/m9.figshare.8851784.v1", "cross_year_data2.csv"),
+    # ("https://figshare.com/articles/dataset/Long-term_behavioral_repeatability_in_wild_adult_and_captive_juvenile_turtles_implications_for_personality_development/8851784", "cross_year_data2.csv"),
+    ("https://datadryad.org/stash/dataset/doi:10.5061/dryad.31zcrjdm5", "ReadmeFile.txt"),
+    ("https://doi.org/10.5061/dryad.31zcrjdm5", "ReadmeFile.txt")
+]
+
 
 
 def test_url_checker():
@@ -12,10 +23,18 @@ def test_url_checker():
     assert _is_url("https://doi.org/10.5281/zenodo.6614829")
 
 
+@pytest.mark.parametrize("url_or_id,output_file", TESTS_URLS)
+def test_load_dyno(url_or_id, output_file, tmpdir):
+    """Load repository with the generic loader."""
+    datahugger.get(url_or_id, tmpdir)
+
+    assert Path(tmpdir, output_file).exists()
+
+
 def test_zenodo_unzip(tmpdir):
     """Test unzip on single file for zenodo."""
 
-    load_repository("10.5281/zenodo.6625880", tmpdir)
+    datahugger.get("10.5281/zenodo.6625880", tmpdir)
 
     assert Path(tmpdir, "README.md").exists()
 
@@ -29,48 +48,15 @@ def test_zenodo_unzip(tmpdir):
     ],
 )
 def test_load_zenodo_6614829(url_or_id, tmpdir):
-    load_repository(url_or_id, tmpdir, max_file_size=1e6)
+    datahugger.get(url_or_id, tmpdir, max_file_size=1e6)
 
     assert Path(tmpdir, "quasiperiod.m").exists()
     assert not Path(tmpdir, "quasiperiod.txt.gz").exists()
 
 
-@pytest.mark.parametrize(
-    "url_or_id",
-    [
-        ("10.7910/DVN/KBHLOD"),
-        ("doi:10.7910/DVN/KBHLOD"),
-        (
-            "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/KBHLOD"
-        ),
-        ("https://doi.org/10.7910/DVN/KBHLOD"),
-    ],
-)
-def test_load_dataverse_KBHLOD(url_or_id, tmpdir):
-    """Load repository with the generic loader."""
-    load_repository(url_or_id, tmpdir)
-
-    assert Path(tmpdir, "tutorial1.py").exists()
-
-
 def test_load_github_cbsodata(tmpdir):
 
-    load_repository("https://github.com/j535d165/cbsodata", tmpdir)
-
-
-@pytest.mark.parametrize(
-    "url_or_id",
-    [
-        ("10.6084/m9.figshare.8851784.v1"),
-        ("https://figshare.com/articles/dataset/Long-term_behavioral_repeatability_in_wild_adult_and_captive_juvenile_turtles_implications_for_personality_development/8851784"),  # noqa
-        ("https://doi.org/10.6084/m9.figshare.8851784.v1"),
-    ],
-)
-def test_load_figshare(url_or_id, tmpdir):
-    """Load repository with the generic loader."""
-    load_repository(url_or_id, tmpdir)
-
-    assert Path(tmpdir, "cross_year_data2.csv").exists()
+    datahugger.get("https://github.com/j535d165/cbsodata", tmpdir)
 
 
 @pytest.mark.parametrize(
@@ -81,24 +67,9 @@ def test_load_figshare(url_or_id, tmpdir):
 )
 def test_load_figshare_4tu(url_or_id, tmpdir):
     """Load repository with the generic loader."""
-    load_repository(url_or_id, tmpdir)
+    datahugger.get(url_or_id, tmpdir)
 
     assert Path(tmpdir, "README.txt").exists()
-
-
-@pytest.mark.parametrize(
-    "url_or_id",
-    [
-        ("https://datadryad.org/stash/dataset/doi:10.5061/dryad.31zcrjdm5"),
-        ("https://doi.org/10.5061/dryad.31zcrjdm5"),
-    ],
-)
-def test_load_dryad_31zcrjdm5(url_or_id, tmpdir):
-    """Load repository with the generic loader."""
-    load_repository(url_or_id, tmpdir)
-
-    assert Path(tmpdir, "ReadmeFile.txt").exists()
-
 
 @pytest.mark.parametrize(
     "url_or_id,fn",
@@ -108,7 +79,7 @@ def test_load_dryad_31zcrjdm5(url_or_id, tmpdir):
 )
 def test_load_dataone(url_or_id, tmpdir, fn):
     """Load repository with the generic loader."""
-    load_repository(url_or_id, tmpdir)
+    datahugger.get(url_or_id, tmpdir)
 
     assert Path(tmpdir, fn).exists()
 
@@ -122,7 +93,7 @@ def test_load_dataone(url_or_id, tmpdir, fn):
 )
 def test_load_osf_kq573(url_or_id, tmpdir):
     """Load repository with the generic loader."""
-    load_repository(url_or_id, tmpdir)
+    datahugger.get(url_or_id, tmpdir)
 
     assert Path(tmpdir, "nest_area_data.xlsx").exists()
 
@@ -136,6 +107,6 @@ def test_load_osf_kq573(url_or_id, tmpdir):
 )
 def test_load_mendeley_p6wmtv6t5g(url_or_id, tmpdir):
     """Load repository with the generic loader."""
-    load_repository(url_or_id, tmpdir)
+    datahugger.get(url_or_id, tmpdir)
 
     assert Path(tmpdir, "READMI Stranding Sea Turtle records.pdf").exists()

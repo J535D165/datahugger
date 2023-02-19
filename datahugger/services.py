@@ -8,157 +8,137 @@ from typing import Union
 from urllib.parse import quote
 
 import requests
+from jsonpath_ng import jsonpath, parse
 
-from datahugger.base import DatasetDownloader
+from datahugger.base import DatasetDownloader, DatasetResult
+from datahugger.utils import _is_url
 
 
-class ZenodoDownload(DatasetDownloader):
+class ZenodoDataset(DatasetDownloader, DatasetResult):
     """Downloader for Zenodo repository.
 
-    Parameters
-    ----------
-    unzip: True
-        Unzip the repository if it is a single zipped file.
-        This is often the case for repos published via the
-        GitHub-Zenodo integration.
-
+    For Zenodo records, new versions have new identifiers.
     """
 
-    API_URL = "https://zenodo.org/api/"
     REGEXP_ID = r"zenodo\.org\/record\/(\d+).*"
 
-    def _is_single_file(self, zip_url, output_folder):
+    # the base entry point of the REST API
+    API_URL = "https://zenodo.org/api/"
 
-        r = requests.get(zip_url)
-        z = zipfile.ZipFile(io.BytesIO(r.content))
+    # the files and metadata about the dataset
+    API_URL_META = API_URL + "records/{api_record_id}"
+    META_FILES_JSONPATH = "files"
 
-        for zip_info in z.infolist():
-            if zip_info.filename[-1] == "/":
-                continue
-            zip_info.filename = os.path.basename(zip_info.filename)
-            z.extract(zip_info, output_folder)
+    # jsonpaths to file attributes
+    META_FILE_NAME_JSONPATH = "key"
+    META_FILE_LINK_JSONPATH = "links.self"
+    META_FILE_SIZE_JSONPATH = "size"
+    META_FILE_HASH_JSONPATH = "checksum"
 
-    def _get(
-        self,
-        record_id: Union[str, int],
-        output_folder: Union[Path, str],
-        **kwargs,
-    ):
-        res = requests.get(self.API_URL + "records/" + str(record_id))
-        files = res.json()["files"]
+    def _get_file_meta_hash(self, record):
 
-        if len(files) == 1 and files[0]["links"]["self"].endswith(".zip"):
-            self._is_single_file(files[0]["links"]["self"], output_folder)
-            return
+        return self._get_file_meta_attr(record, self.META_FILE_HASH_JSONPATH).split(
+            ":"
+        )[1]
 
-        for f in files:
-            logging.debug(f)
-            self.download(
-                f["links"]["self"],
-                output_folder,
-                f["key"],
-                file_size=f["size"],
-                file_hash=f["checksum"].split(":")[1],
-                file_hash_type=f["checksum"].split(":")[0],
-            )
+    def _get_file_meta_hash_type(self, record):
+
+        return self._get_file_meta_attr(record, self.META_FILE_HASH_JSONPATH).split(
+            ":"
+        )[0]
 
 
-class DataverseDownload(DatasetDownloader):
-    """Downloader for Dataverse repositories."""
+class DataverseDataset(DatasetDownloader, DatasetResult):
+    """Downloader for Dataverse repository."""
 
     REGEXP_ID = r"dataset\.xhtml\?persistentId=(.*)"
 
-    def _get(
-        self,
-        record_id: Union[str, int],
-        output_folder: Union[Path, str],
-        **kwargs,
-    ):
+    # the base entry point of the REST API
+    # API_URL = "https://zenodo.org/api/"
 
-        dataset_metadata_url = f"{self.base_url}/api/datasets/:persistentId/?persistentId={record_id}"  # noqa
+    # the files and metadata about the dataset
+    API_URL_META = "{base_url}/api/datasets/:persistentId/?persistentId={api_record_id}"
+    META_FILES_JSONPATH = "data.latestVersion.files"
 
-        res = requests.get(dataset_metadata_url)
-        files = res.json()["data"]["latestVersion"]["files"]
+    # jsonpaths to file attributes
+    META_FILE_NAME_JSONPATH = "dataFile.filename"
+    META_FILE_SIZE_JSONPATH = "dataFile.filesize"
+    META_FILE_HASH_JSONPATH = "dataFile.md5"
 
-        for f in files:
-            logging.debug(f)
-            self.download(
-                self.base_url + "/api/access/datafile/{}".format(f["dataFile"]["id"]),
-                output_folder,
-                f["dataFile"]["filename"],
-                file_size=f["dataFile"]["filesize"],
-                file_hash=f["dataFile"]["md5"],
-                file_hash_type="md5",
-            )
+    def _get_file_meta_link(self, record):
 
+        return "{}/api/access/datafile/{}".format(
+            self.base_url, record["dataFile"]["id"]
+        )
 
-class GitHubDownload(DatasetDownloader):
-    """Downloader for GitHub repository."""
+    def _get_file_meta_hash_type(self, record):
 
-    API_URL = "https://github.com/"
-    REGEXP_ID = r"github\.com\/([a-zA-Z0-9]+\/[a-zA-Z0-9]+)[\/]*.*"
-
-    def _get(self, record_id: str, output_folder: Union[Path, str], *args, **kwargs):
-
-        res = requests.get(f"{self.API_URL}{record_id}/archive/refs/heads/master.zip")
-        z = zipfile.ZipFile(io.BytesIO(res.content))
-        z.extractall(output_folder)
+        return "md5"
 
 
-class FigShareDownload(DatasetDownloader):
+class FigShareDataset(DatasetDownloader):
     """Downloader for FigShare repository."""
 
-    API_URL = "https://api.figshare.com/v2"
     REGEXP_ID_AND_VERSION = r"articles\/dataset\/.*\/(\d+)\/(\d+)"
     REGEXP_ID = r"articles\/dataset\/.*\/(\d+)"
 
-    def _get(
-        self,
-        record_id: Union[str, int],
-        output_folder: Union[Path, str],
-        **kwargs,
-    ):
+    # the base entry point of the REST API
+    API_URL = "https://api.figshare.com/v2"
 
-        res = requests.get(self.API_URL + "/articles/{}/files".format(record_id))
-        files = res.json()
+    # the files and metadata about the dataset
+    API_URL_META = API_URL + "/articles/{api_record_id}/files"
 
-        # TODO skip is_link_only
+    # jsonpaths to file attributes
+    META_FILE_LINK_JSONPATH = "download_url"
+    META_FILE_NAME_JSONPATH = "name"
+    META_FILE_SIZE_JSONPATH = "size"
+    META_FILE_HASH_JSONPATH = "computed_md5"
 
-        for f in files:
-            logging.debug(f)
-            self.download(
-                f["download_url"],
-                output_folder,
-                f["name"],
-                file_size=f["size"],
-                file_hash=f["computed_md5"],
-                file_hash_type="md5",
-            )
+    def _get_file_meta_hash_type(self, record):
+
+        return "md5"
 
 
-class DataDryadDownload(DatasetDownloader):
-    """Downloader for DataDryad repository.
+class OSFDownload(DatasetDownloader):
+    """Downloader for OSF repository."""
 
-    Note
-    ----
+    REGEXP_ID = r"osf\.io\/(.*)/"
 
-    The zip file not immediately available "The version
-    of the dataset is being assembled. Check back in around
-    1 minute and it should be ready to download.".
+    # the base entry point of the REST API
+    API_URL = "https://api.osf.io/v2/registrations/"
 
-    """
+    # the files and metadata about the dataset
+    API_URL_META = API_URL + "{api_record_id}/files/osfstorage/?format=jsonapi"
+    META_FILES_JSONPATH = "data"
+
+    # jsonpaths to file attributes
+    META_FILE_LINK_JSONPATH = "links.download"
+    META_FILE_NAME_JSONPATH = "attributes.name"
+    META_FILE_SIZE_JSONPATH = "attributes.size"
+    META_FILE_HASH_JSONPATH = "attributes.extra.hashes.sha256"
+
+    def _get_file_meta_hash_type(self, record):
+
+        return "sha256"
+
+
+class DataDryadDataset(DatasetDownloader):
+    """Downloader for DataDryad repository."""
 
     API_URL = "https://datadryad.org/api/v2"
     REGEXP_ID = r"datadryad\.org[\:]*[43]{0,3}\/stash\/dataset\/doi:(.*)"
 
-    def _get(
-        self,
-        record_id: Union[str, int],
-        output_folder: Union[Path, str],
-        **kwargs,
-    ):
+    # jsonpaths to file attributes
+    META_FILE_NAME_JSONPATH = "path"
+    META_FILE_SIZE_JSONPATH = "size"
 
-        datadryad_doi_safe = quote(f"doi:{record_id}", safe="")
+    @property
+    def files(self):
+
+        if hasattr(self, "_files"):
+            return self._files
+
+        datadryad_doi_safe = quote(f"doi:{self.api_record_id}", safe="")
         dataset_metadata_url = self.API_URL + "/datasets/" + datadryad_doi_safe
 
         res = requests.get(dataset_metadata_url)
@@ -168,42 +148,33 @@ class DataDryadDownload(DatasetDownloader):
         latest_version = dataset_metadata["_links"]["stash:version"]["href"]
         url_latest_version = "https://datadryad.org" + latest_version + "/files"
 
-        res_files = requests.get(url_latest_version)
-        files_metadata = res_files.json()
+        res = requests.get(url_latest_version)
+        res.json()["_embedded"]["stash:files"]
 
-        for f in files_metadata["_embedded"]["stash:files"]:
-            logging.debug(f)
-            self.download(
-                "https://datadryad.org" + f["_links"]["stash:file-download"]["href"],
-                output_folder,
-                f["path"],
-                file_size=f["size"],
-                file_hash=None,
-                file_hash_type=None,
+        if hasattr(self, "META_FILES_JSONPATH"):
+            jsonpath_expression = parse(self.META_FILES_JSONPATH)
+            files_raw = jsonpath_expression.find(res.json())[0].value
+        else:
+            files_raw = res.json()
+
+        x = []
+        for f in files_raw["_embedded"]["stash:files"]:
+            x.append(
+                {
+                    "file_link": self._get_file_meta_link(f),
+                    "file_name": self._get_file_meta_name(f),
+                    "file_size": self._get_file_meta_size(f),
+                    "file_hash": self._get_file_meta_hash(f),
+                    "file_hash_type": self._get_file_meta_hash_type(f),
+                }
             )
 
+        self._files = x
+        return self._files
 
-class HuggingFaceDownload(DatasetDownloader):
-    """Downloader for Huggingface repository."""
+    def _get_file_meta_link(self, record):
 
-    REGEXP_ID = r"huggingface.co/datasets/(.*)"
-
-    def _get(
-        self,
-        record_id: Union[str, int],
-        output_folder: Union[Path, str],
-        **kwargs,
-    ):
-
-        try:
-            from datasets import load_dataset
-        except ImportError:
-            raise ImportError(
-                "Install 'datasets' to use HuggingFace Datasets"
-                " or use 'pip install datahugger[all]'"
-            )
-
-        load_dataset(record_id, cache_dir=output_folder, **kwargs)
+        return "https://datadryad.org" + record["_links"]["stash:file-download"]["href"]
 
 
 class DataOneDownload(DatasetDownloader):
@@ -226,7 +197,7 @@ class DataOneDownload(DatasetDownloader):
         for data_elem in meta_tree.find("dataset"):
             if data_elem.tag in ["otherEntity", "dataTable"]:
                 logging.debug(data_elem)
-                self.download(
+                self.download_file(
                     data_elem.find(
                         "./physical/distribution/online/url[@function='download']"
                     ).text,  # noqa
@@ -234,36 +205,6 @@ class DataOneDownload(DatasetDownloader):
                     data_elem.find("entityName").text,
                     file_size=data_elem.find("./physical/size").text,
                 )
-
-
-class OSFDownload(DatasetDownloader):
-    """Downloader for OSF repository."""
-
-    API_URL = "https://api.osf.io/v2/registrations/"
-    REGEXP_ID = r"osf\.io\/(.*)/"
-
-    def _get(
-        self,
-        record_id: Union[str, int],
-        output_folder: Union[Path, str],
-        **kwargs,
-    ):
-
-        r_meta = requests.get(
-            self.API_URL + record_id + "/files/osfstorage/?format=jsonapi"
-        )
-        dataset_metadata = r_meta.json()
-
-        for f in dataset_metadata["data"]:
-            logging.debug(f)
-            self.download(
-                f["links"]["download"],
-                output_folder,
-                f["attributes"]["name"],
-                file_size=f["attributes"]["size"],
-                file_hash=f["attributes"]["extra"]["hashes"]["sha256"],
-                file_hash_type="sha256",
-            )
 
 
 class MendeleyDownload(DatasetDownloader):
@@ -292,7 +233,7 @@ class MendeleyDownload(DatasetDownloader):
 
         for f in dataset_metadata:
             logging.debug(f)
-            self.download(
+            self.download_file(
                 f["content_details"]["download_url"],
                 output_folder,
                 f["filename"],
@@ -300,3 +241,39 @@ class MendeleyDownload(DatasetDownloader):
                 file_hash=f["content_details"]["sha256_hash"],
                 file_hash_type="sha256",
             )
+
+
+class GitHubDownload(DatasetDownloader):
+    """Downloader for GitHub repository."""
+
+    API_URL = "https://github.com/"
+    REGEXP_ID = r"github\.com\/([a-zA-Z0-9]+\/[a-zA-Z0-9]+)[\/]*.*"
+
+    def _get(self, record_id: str, output_folder: Union[Path, str], *args, **kwargs):
+
+        res = requests.get(f"{self.API_URL}{record_id}/archive/refs/heads/master.zip")
+        z = zipfile.ZipFile(io.BytesIO(res.content))
+        z.extractall(output_folder)
+
+
+class HuggingFaceDownload(DatasetDownloader):
+    """Downloader for Huggingface repository."""
+
+    REGEXP_ID = r"huggingface.co/datasets/(.*)"
+
+    def _get(
+        self,
+        record_id: Union[str, int],
+        output_folder: Union[Path, str],
+        **kwargs,
+    ):
+
+        try:
+            from datasets import load_dataset
+        except ImportError:
+            raise ImportError(
+                "Install 'datasets' to use HuggingFace Datasets"
+                " or use 'pip install datahugger[all]'"
+            )
+
+        load_dataset(record_id, cache_dir=output_folder, **kwargs)

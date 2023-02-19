@@ -18,7 +18,7 @@ is optimized for scientific use (see [scitree](https://github.com/J535D165/scitr
 ```python
 import datahugger
 
-dh_data = datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data")
+dh_data = datahugger.get("10.5061/dryad.x3ffbg7m8", "data")
 
 dh_data.tree()
 ```

@@ -18,4 +18,4 @@ def test_doi_not_found(tmpdir):
 
     doi = "10.1038/s42256-020-00287"
 
-    load_repository(doi, tmpdir)
+    get(doi, tmpdir)
