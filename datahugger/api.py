@@ -222,7 +222,7 @@ def get(
 
         logging.info(f"Redirect from {url} to {r.url}")
 
-        return load_repository(
+        return get(
             r.url,
             output_folder,
             max_file_size=max_file_size,
