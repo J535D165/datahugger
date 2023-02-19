@@ -1,17 +1,15 @@
 import io
-import logging
-import os
 import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 from typing import Union
 from urllib.parse import quote
 
-import requests
 from jsonpath_ng import parse
+import requests
 
-from datahugger.base import DatasetDownloader, DatasetResult
-from datahugger.utils import _is_url
+from datahugger.base import DatasetDownloader
+from datahugger.base import DatasetResult
 
 
 class ZenodoDataset(DatasetDownloader, DatasetResult):

@@ -1,14 +1,16 @@
+import io
 import logging
 import os
 import re
+import zipfile
 from pathlib import Path
 from typing import Union
 
+from jsonpath_ng import parse
 import natsort as ns
 import requests
 from scitree import scitree
 from tqdm import tqdm
-from jsonpath_ng import jsonpath, parse
 
 from datahugger.utils import _format_filename
 from datahugger.utils import _is_url
@@ -81,7 +83,7 @@ class DatasetDownloader(object):
         try:
             jsonpath_expression = parse(jsonp)
             return jsonpath_expression.find(record)[0].value
-        except Exception as err:
+        except Exception:
             return None
 
     def _get_file_meta_link(self, record):

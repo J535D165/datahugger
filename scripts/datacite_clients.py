@@ -1,5 +1,5 @@
-import requests
 import pandas as pd
+import requests
 
 url_datacite_clients = (
     "https://api.datacite.org/clients?page%5Bnumber%5D=1&page%5Bsize%5D=1000"
