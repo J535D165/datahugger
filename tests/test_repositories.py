@@ -17,7 +17,7 @@ TESTS_URLS = [
     # Figshare
     ("https://doi.org/10.6084/m9.figshare.8851784.v1", "cross_year_data2.csv"),
     ("https://figshare.com/articles/dataset/Long-term_behavioral_repeatability_in_wild_adult_and_captive_juvenile_turtles_implications_for_personality_development/8851784", "cross_year_data2.csv"),
-    ("https://doi.org/10.4121/21989216.v1", "README.txt")
+    ("https://doi.org/10.4121/21989216.v1", "README.txt"),
 
     # Dryad
     ("https://datadryad.org/stash/dataset/doi:10.5061/dryad.31zcrjdm5", "ReadmeFile.txt"),
