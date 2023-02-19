@@ -1,6 +1,6 @@
 import pytest
 
-from datahugger import load_repository
+import datahugger
 
 
 @pytest.mark.parametrize(
@@ -12,7 +12,7 @@ from datahugger import load_repository
     ],
 )
 def test_load_zenodo_6614829(url_or_id, tmpdir, capsys):
-    dataset = get(url_or_id, tmpdir, max_file_size=1e6)
+    dataset = datahugger.get(url_or_id, tmpdir, max_file_size=1e6)
 
     dataset.tree()
 
@@ -25,7 +25,7 @@ def test_load_zenodo_6614829(url_or_id, tmpdir, capsys):
 
 
 def test_load_github_cbsodata(tmpdir, capsys):
-    dataset = get("https://github.com/j535d165/cbsodata", tmpdir)
+    dataset = datahugger.get("https://github.com/j535d165/cbsodata", tmpdir)
 
     dataset.tree()
 

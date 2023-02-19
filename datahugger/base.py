@@ -69,7 +69,7 @@ class DatasetDownloader(object):
     ):
         super(DatasetDownloader, self).__init__()
         self.url = url
-        self._version = version
+        self.version = version
         self.base_url = base_url
         self.max_file_size = max_file_size
         self.force_download = force_download
@@ -113,6 +113,9 @@ class DatasetDownloader(object):
         return self._get_file_meta_attr(record, self.META_FILE_HASH_JSONPATH)
 
     def _get_file_meta_hash_type(self, record):
+
+        if hasattr(self, "META_FILE_HASH_TYPE_VALUE"):
+            return self.META_FILE_HASH_TYPE_VALUE
 
         if not hasattr(self, "META_FILE_HASH_TYPE_JSONPATH"):
             return None
@@ -215,11 +218,14 @@ class DatasetDownloader(object):
             return self._api_record_id
 
         if isinstance(self.url, str) and _is_url(self.url):
-            self._api_record_id, self._version = self._parse_url(self.url)
+            self._api_record_id, self.version = self._parse_url(self.url)
         else:
-            self._api_record_id, self._version = self.url, self._version
+            self._api_record_id, self.version = self.url, self.version
 
         return self._api_record_id
+
+    def _pre_files(self):
+        pass
 
     @property
     def files(self):
@@ -227,10 +233,12 @@ class DatasetDownloader(object):
         if hasattr(self, "_files"):
             return self._files
 
+        self._pre_files()
+
         res = requests.get(
             self.API_URL_META.format(
                 api_record_id=self.api_record_id,
-                version=self._version,
+                version=self.version,
                 base_url=self.base_url,
             )
         )
@@ -288,11 +296,6 @@ class DatasetDownloader(object):
 
         """
         Path(output_folder).mkdir(parents=True, exist_ok=True)
-
-        # # if isinstance(record_id_or_url, str) and _is_url(record_id_or_url):
-        # record_id, version = self._parse_url(self.record_id)
-        # else:
-        #     record_id, version = record_id_or_url, version
 
         self._get(output_folder, **kwargs)
 

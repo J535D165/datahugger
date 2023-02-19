@@ -6,13 +6,13 @@ import requests
 
 from datahugger.exceptions import DOIError
 from datahugger.services import DataDryadDataset
-from datahugger.services import DataOneDownload
+from datahugger.services import DataOneDataset
 from datahugger.services import DataverseDataset
 from datahugger.services import FigShareDataset
-from datahugger.services import GitHubDownload
-from datahugger.services import HuggingFaceDownload
-from datahugger.services import MendeleyDownload
-from datahugger.services import OSFDownload
+from datahugger.services import GitHubDataset
+from datahugger.services import HuggingFaceDataset
+from datahugger.services import MendeleyDataset
+from datahugger.services import OSFDataset
 from datahugger.services import ZenodoDataset
 from datahugger.utils import _is_doi
 from datahugger.utils import _is_url
@@ -26,33 +26,33 @@ URL_RESOLVE = ["doi.org"]
 # fast lookup
 SERVICES_NETLOC = {
     "zenodo.org": ZenodoDataset,
-    "github.com": GitHubDownload,
+    "github.com": GitHubDataset,
     "datadryad.org": DataDryadDataset,
-    "huggingface.co": HuggingFaceDownload,
-    "osf.io": OSFDownload,
-    "data.mendeley.com": MendeleyDownload,
+    "huggingface.co": HuggingFaceDataset,
+    "osf.io": OSFDataset,
+    "data.mendeley.com": MendeleyDataset,
     # Figshare download
     "figshare.com": FigShareDataset,
     "data.4tu.nl": FigShareDataset,
     # DataOne repositories
-    "arcticdata.io": DataOneDownload,
-    "knb.ecoinformatics.org": DataOneDownload,
-    "data.pndb.fr": DataOneDownload,
-    "opc.dataone.org": DataOneDownload,
-    "portal.edirepository.org": DataOneDownload,
-    "goa.nceas.ucsb.edu": DataOneDownload,
-    "data.piscoweb.org": DataOneDownload,
-    "adc.arm.gov": DataOneDownload,
-    "scidb.cn": DataOneDownload,
-    "data.ess-dive.lbl.gov": DataOneDownload,
-    "hydroshare.org": DataOneDownload,
-    "ecl.earthchem.org": DataOneDownload,
-    "get.iedadata.org": DataOneDownload,
-    "usap-dc.org": DataOneDownload,
-    "iys.hakai.org": DataOneDownload,
-    "doi.pangaea.de": DataOneDownload,
-    "rvdata.us": DataOneDownload,
-    "sead-published.ncsa.illinois.edu": DataOneDownload,
+    "arcticdata.io": DataOneDataset,
+    "knb.ecoinformatics.org": DataOneDataset,
+    "data.pndb.fr": DataOneDataset,
+    "opc.dataone.org": DataOneDataset,
+    "portal.edirepository.org": DataOneDataset,
+    "goa.nceas.ucsb.edu": DataOneDataset,
+    "data.piscoweb.org": DataOneDataset,
+    "adc.arm.gov": DataOneDataset,
+    "scidb.cn": DataOneDataset,
+    "data.ess-dive.lbl.gov": DataOneDataset,
+    "hydroshare.org": DataOneDataset,
+    "ecl.earthchem.org": DataOneDataset,
+    "get.iedadata.org": DataOneDataset,
+    "usap-dc.org": DataOneDataset,
+    "iys.hakai.org": DataOneDataset,
+    "doi.pangaea.de": DataOneDataset,
+    "rvdata.us": DataOneDataset,
+    "sead-published.ncsa.illinois.edu": DataOneDataset,
     # DataVerse repositories (extracted from re3data)
     "dataverse.acg.maine.edu": DataverseDataset,
     "dataverse.icrisat.org": DataverseDataset,
@@ -131,16 +131,16 @@ SERVICES_NETLOC_REGEXP = {r".*\.figshare\.com": FigShareDataset}
 
 RE3DATA_SOFTWARE = {
     "DataVerse": DataverseDataset,  # Hits on re3data 2022-09-02: (145)
-    # "DSpace": DSpaceDownload,  # Hits on re3data 2022-09-02: (115)
-    # "CKAN": CKANDownload,  # Hits on re3data 2022-09-02: (89)
-    # "MySQL": MySQLDownload,  # Hits on re3data 2022-09-02: (86)
-    # "Fedora": FedoraDownload,  # Hits on re3data 2022-09-02: (43)
-    # "EPrints": EPrintsDownload,  # Hits on re3data 2022-09-02: (34)
-    # "Nesstar": NesstarDownload,  # Hits on re3data 2022-09-02: (19)
-    # "DigitalCommons": DigitalCommonsDownload,  # Hits on re3data 2022-09-02: (4)
-    # "eSciDoc": eSciDocDownload,  # Hits on re3data 2022-09-02: (3)
-    # "Opus": OpusDownload,  # Hits on re3data 2022-09-02: (2)
-    # "dLibra": dLibraDownload,  # Hits on re3data 2022-09-02: (2)
+    # "DSpace": DSpaceDataset,  # Hits on re3data 2022-09-02: (115)
+    # "CKAN": CKANDataset,  # Hits on re3data 2022-09-02: (89)
+    # "MySQL": MySQLDataset,  # Hits on re3data 2022-09-02: (86)
+    # "Fedora": FedoraDataset,  # Hits on re3data 2022-09-02: (43)
+    # "EPrints": EPrintsDataset,  # Hits on re3data 2022-09-02: (34)
+    # "Nesstar": NesstarDataset,  # Hits on re3data 2022-09-02: (19)
+    # "DigitalCommons": DigitalCommonsDataset,  # Hits on re3data 2022-09-02: (4)
+    # "eSciDoc": eSciDocDataset,  # Hits on re3data 2022-09-02: (3)
+    # "Opus": OpusDataset,  # Hits on re3data 2022-09-02: (2)
+    # "dLibra": dLibraDataset,  # Hits on re3data 2022-09-02: (2)
 }
 
 
