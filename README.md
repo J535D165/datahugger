@@ -39,7 +39,7 @@ created if it does not exist).
 import datahugger
 
 # download the data to your device
-datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data")
+datahugger.get("10.5061/dryad.x3ffbg7m8", "data")
 ```
 
 The data from DOI [10.5061/dryad.x3ffbg7m8](https://doi.org/10.5061/dryad.x3ffbg7m8) is now stored in the folder `data`. The data can now be accessed and analyzed. For example:

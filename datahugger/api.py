@@ -5,15 +5,15 @@ from urllib.parse import urlparse
 import requests
 
 from datahugger.exceptions import DOIError
-from datahugger.services import DataDryadDownload
-from datahugger.services import DataOneDownload
-from datahugger.services import DataverseDownload
-from datahugger.services import FigShareDownload
-from datahugger.services import GitHubDownload
-from datahugger.services import HuggingFaceDownload
-from datahugger.services import MendeleyDownload
-from datahugger.services import OSFDownload
-from datahugger.services import ZenodoDownload
+from datahugger.services import DataDryadDataset
+from datahugger.services import DataOneDataset
+from datahugger.services import DataverseDataset
+from datahugger.services import FigShareDataset
+from datahugger.services import GitHubDataset
+from datahugger.services import HuggingFaceDataset
+from datahugger.services import MendeleyDataset
+from datahugger.services import OSFDataset
+from datahugger.services import ZenodoDataset
 from datahugger.utils import _is_doi
 from datahugger.utils import _is_url
 from datahugger.utils import get_base_url
@@ -25,126 +25,150 @@ URL_RESOLVE = ["doi.org"]
 
 # fast lookup
 SERVICES_NETLOC = {
-    "zenodo.org": ZenodoDownload,
-    "github.com": GitHubDownload,
-    "datadryad.org": DataDryadDownload,
-    "huggingface.co": HuggingFaceDownload,
-    "osf.io": OSFDownload,
-    "data.mendeley.com": MendeleyDownload,
+    "zenodo.org": ZenodoDataset,
+    "github.com": GitHubDataset,
+    "datadryad.org": DataDryadDataset,
+    "huggingface.co": HuggingFaceDataset,
+    "osf.io": OSFDataset,
+    "data.mendeley.com": MendeleyDataset,
     # Figshare download
-    "figshare.com": FigShareDownload,
-    "data.4tu.nl": FigShareDownload,
+    "figshare.com": FigShareDataset,
+    "data.4tu.nl": FigShareDataset,
     # DataOne repositories
-    "arcticdata.io": DataOneDownload,
-    "knb.ecoinformatics.org": DataOneDownload,
-    "data.pndb.fr": DataOneDownload,
-    "opc.dataone.org": DataOneDownload,
-    "portal.edirepository.org": DataOneDownload,
-    "goa.nceas.ucsb.edu": DataOneDownload,
-    "data.piscoweb.org": DataOneDownload,
-    "adc.arm.gov": DataOneDownload,
-    "scidb.cn": DataOneDownload,
-    "data.ess-dive.lbl.gov": DataOneDownload,
-    "hydroshare.org": DataOneDownload,
-    "ecl.earthchem.org": DataOneDownload,
-    "get.iedadata.org": DataOneDownload,
-    "usap-dc.org": DataOneDownload,
-    "iys.hakai.org": DataOneDownload,
-    "doi.pangaea.de": DataOneDownload,
-    "rvdata.us": DataOneDownload,
-    "sead-published.ncsa.illinois.edu": DataOneDownload,
+    "arcticdata.io": DataOneDataset,
+    "knb.ecoinformatics.org": DataOneDataset,
+    "data.pndb.fr": DataOneDataset,
+    "opc.dataone.org": DataOneDataset,
+    "portal.edirepository.org": DataOneDataset,
+    "goa.nceas.ucsb.edu": DataOneDataset,
+    "data.piscoweb.org": DataOneDataset,
+    "adc.arm.gov": DataOneDataset,
+    "scidb.cn": DataOneDataset,
+    "data.ess-dive.lbl.gov": DataOneDataset,
+    "hydroshare.org": DataOneDataset,
+    "ecl.earthchem.org": DataOneDataset,
+    "get.iedadata.org": DataOneDataset,
+    "usap-dc.org": DataOneDataset,
+    "iys.hakai.org": DataOneDataset,
+    "doi.pangaea.de": DataOneDataset,
+    "rvdata.us": DataOneDataset,
+    "sead-published.ncsa.illinois.edu": DataOneDataset,
     # DataVerse repositories (extracted from re3data)
-    "dataverse.acg.maine.edu": DataverseDownload,
-    "dataverse.icrisat.org": DataverseDownload,
-    "datos.pucp.edu.pe": DataverseDownload,
-    "datos.uchile.cl": DataverseDownload,
-    "opendata.pku.edu.cn": DataverseDownload,
-    "www.march.es": DataverseDownload,
-    "www.murray.harvard.edu": DataverseDownload,
-    "abacus.library.ubc.ca": DataverseDownload,
-    "ada.edu.au": DataverseDownload,
-    "adattar.unideb.hu": DataverseDownload,
-    "archive.data.jhu.edu": DataverseDownload,
-    "borealisdata.ca": DataverseDownload,
-    "dados.ipb.pt": DataverseDownload,
-    "dadosdepesquisa.fiocruz.br": DataverseDownload,
-    "darus.uni-stuttgart.de": DataverseDownload,
-    "data.aussda.at": DataverseDownload,
-    "data.cimmyt.org": DataverseDownload,
-    "data.fz-juelich.de": DataverseDownload,
-    "data.goettingen-research-online.de": DataverseDownload,
-    "data.inrae.fr": DataverseDownload,
-    "data.scielo.org": DataverseDownload,
-    "data.sciencespo.fr": DataverseDownload,
-    "data.tdl.org": DataverseDownload,
-    "data.univ-gustave-eiffel.fr": DataverseDownload,
-    "datarepositorium.uminho.pt": DataverseDownload,
-    "datasets.iisg.amsterdam": DataverseDownload,
-    "dataspace.ust.hk": DataverseDownload,
-    "dataverse.asu.edu": DataverseDownload,
-    "dataverse.cirad.fr": DataverseDownload,
-    "dataverse.csuc.cat": DataverseDownload,
-    "dataverse.harvard.edu": DataverseDownload,
-    "dataverse.iit.it": DataverseDownload,
-    "dataverse.ird.fr": DataverseDownload,
-    "dataverse.lib.umanitoba.ca": DataverseDownload,
-    "dataverse.lib.unb.ca": DataverseDownload,
-    "dataverse.lib.virginia.edu": DataverseDownload,
-    "dataverse.nl": DataverseDownload,
-    "dataverse.no": DataverseDownload,
-    "dataverse.openforestdata.pl": DataverseDownload,
-    "dataverse.scholarsportal.info": DataverseDownload,
-    "dataverse.theacss.org": DataverseDownload,
-    "dataverse.ucla.edu": DataverseDownload,
-    "dataverse.unc.edu": DataverseDownload,
-    "dataverse.unimi.it": DataverseDownload,
-    "dataverse.yale-nus.edu.sg": DataverseDownload,
-    "dorel.univ-lorraine.fr": DataverseDownload,
-    "dvn.fudan.edu.cn": DataverseDownload,
-    "edatos.consorciomadrono.es": DataverseDownload,
-    "edmond.mpdl.mpg.de": DataverseDownload,
-    "heidata.uni-heidelberg.de": DataverseDownload,
-    "lida.dataverse.lt": DataverseDownload,
-    "mxrdr.icm.edu.pl": DataverseDownload,
-    "osnadata.ub.uni-osnabrueck.de": DataverseDownload,
-    "planetary-data-portal.org": DataverseDownload,
-    "qdr.syr.edu": DataverseDownload,
-    "rdm.aau.edu.et": DataverseDownload,
-    "rdr.kuleuven.be": DataverseDownload,
-    "rds.icm.edu.pl": DataverseDownload,
-    "recherche.data.gouv.fr": DataverseDownload,
-    "redu.unicamp.br": DataverseDownload,
-    "repod.icm.edu.pl": DataverseDownload,
-    "repositoriopesquisas.ibict.br": DataverseDownload,
-    "research-data.urosario.edu.co": DataverseDownload,
-    "researchdata.cuhk.edu.hk": DataverseDownload,
-    "researchdata.ntu.edu.sg": DataverseDownload,
-    "rin.lipi.go.id": DataverseDownload,
-    "ssri.is": DataverseDownload,
-    "trolling.uit.no": DataverseDownload,
-    "www.sodha.be": DataverseDownload,
-    "www.uni-hildesheim.de": DataverseDownload,
+    "dataverse.acg.maine.edu": DataverseDataset,
+    "dataverse.icrisat.org": DataverseDataset,
+    "datos.pucp.edu.pe": DataverseDataset,
+    "datos.uchile.cl": DataverseDataset,
+    "opendata.pku.edu.cn": DataverseDataset,
+    "www.march.es": DataverseDataset,
+    "www.murray.harvard.edu": DataverseDataset,
+    "abacus.library.ubc.ca": DataverseDataset,
+    "ada.edu.au": DataverseDataset,
+    "adattar.unideb.hu": DataverseDataset,
+    "archive.data.jhu.edu": DataverseDataset,
+    "borealisdata.ca": DataverseDataset,
+    "dados.ipb.pt": DataverseDataset,
+    "dadosdepesquisa.fiocruz.br": DataverseDataset,
+    "darus.uni-stuttgart.de": DataverseDataset,
+    "data.aussda.at": DataverseDataset,
+    "data.cimmyt.org": DataverseDataset,
+    "data.fz-juelich.de": DataverseDataset,
+    "data.goettingen-research-online.de": DataverseDataset,
+    "data.inrae.fr": DataverseDataset,
+    "data.scielo.org": DataverseDataset,
+    "data.sciencespo.fr": DataverseDataset,
+    "data.tdl.org": DataverseDataset,
+    "data.univ-gustave-eiffel.fr": DataverseDataset,
+    "datarepositorium.uminho.pt": DataverseDataset,
+    "datasets.iisg.amsterdam": DataverseDataset,
+    "dataspace.ust.hk": DataverseDataset,
+    "dataverse.asu.edu": DataverseDataset,
+    "dataverse.cirad.fr": DataverseDataset,
+    "dataverse.csuc.cat": DataverseDataset,
+    "dataverse.harvard.edu": DataverseDataset,
+    "dataverse.iit.it": DataverseDataset,
+    "dataverse.ird.fr": DataverseDataset,
+    "dataverse.lib.umanitoba.ca": DataverseDataset,
+    "dataverse.lib.unb.ca": DataverseDataset,
+    "dataverse.lib.virginia.edu": DataverseDataset,
+    "dataverse.nl": DataverseDataset,
+    "dataverse.no": DataverseDataset,
+    "dataverse.openforestdata.pl": DataverseDataset,
+    "dataverse.scholarsportal.info": DataverseDataset,
+    "dataverse.theacss.org": DataverseDataset,
+    "dataverse.ucla.edu": DataverseDataset,
+    "dataverse.unc.edu": DataverseDataset,
+    "dataverse.unimi.it": DataverseDataset,
+    "dataverse.yale-nus.edu.sg": DataverseDataset,
+    "dorel.univ-lorraine.fr": DataverseDataset,
+    "dvn.fudan.edu.cn": DataverseDataset,
+    "edatos.consorciomadrono.es": DataverseDataset,
+    "edmond.mpdl.mpg.de": DataverseDataset,
+    "heidata.uni-heidelberg.de": DataverseDataset,
+    "lida.dataverse.lt": DataverseDataset,
+    "mxrdr.icm.edu.pl": DataverseDataset,
+    "osnadata.ub.uni-osnabrueck.de": DataverseDataset,
+    "planetary-data-portal.org": DataverseDataset,
+    "qdr.syr.edu": DataverseDataset,
+    "rdm.aau.edu.et": DataverseDataset,
+    "rdr.kuleuven.be": DataverseDataset,
+    "rds.icm.edu.pl": DataverseDataset,
+    "recherche.data.gouv.fr": DataverseDataset,
+    "redu.unicamp.br": DataverseDataset,
+    "repod.icm.edu.pl": DataverseDataset,
+    "repositoriopesquisas.ibict.br": DataverseDataset,
+    "research-data.urosario.edu.co": DataverseDataset,
+    "researchdata.cuhk.edu.hk": DataverseDataset,
+    "researchdata.ntu.edu.sg": DataverseDataset,
+    "rin.lipi.go.id": DataverseDataset,
+    "ssri.is": DataverseDataset,
+    "trolling.uit.no": DataverseDataset,
+    "www.sodha.be": DataverseDataset,
+    "www.uni-hildesheim.de": DataverseDataset,
 }
 
 # regexp lookup
-SERVICES_NETLOC_REGEXP = {r".*\.figshare\.com": FigShareDownload}
+SERVICES_NETLOC_REGEXP = {r".*\.figshare\.com": FigShareDataset}
 
 RE3DATA_SOFTWARE = {
-    "DataVerse": DataverseDownload,  # Hits on re3data 2022-09-02: (145)
-    # "DSpace": DSpaceDownload,  # Hits on re3data 2022-09-02: (115)
-    # "CKAN": CKANDownload,  # Hits on re3data 2022-09-02: (89)
-    # "MySQL": MySQLDownload,  # Hits on re3data 2022-09-02: (86)
-    # "Fedora": FedoraDownload,  # Hits on re3data 2022-09-02: (43)
-    # "EPrints": EPrintsDownload,  # Hits on re3data 2022-09-02: (34)
-    # "Nesstar": NesstarDownload,  # Hits on re3data 2022-09-02: (19)
-    # "DigitalCommons": DigitalCommonsDownload,  # Hits on re3data 2022-09-02: (4)
-    # "eSciDoc": eSciDocDownload,  # Hits on re3data 2022-09-02: (3)
-    # "Opus": OpusDownload,  # Hits on re3data 2022-09-02: (2)
-    # "dLibra": dLibraDownload,  # Hits on re3data 2022-09-02: (2)
+    "DataVerse": DataverseDataset,  # Hits on re3data 2022-09-02: (145)
+    # "DSpace": DSpaceDataset,  # Hits on re3data 2022-09-02: (115)
+    # "CKAN": CKANDataset,  # Hits on re3data 2022-09-02: (89)
+    # "MySQL": MySQLDataset,  # Hits on re3data 2022-09-02: (86)
+    # "Fedora": FedoraDataset,  # Hits on re3data 2022-09-02: (43)
+    # "EPrints": EPrintsDataset,  # Hits on re3data 2022-09-02: (34)
+    # "Nesstar": NesstarDataset,  # Hits on re3data 2022-09-02: (19)
+    # "DigitalCommons": DigitalCommonsDataset,  # Hits on re3data 2022-09-02: (4)
+    # "eSciDoc": eSciDocDataset,  # Hits on re3data 2022-09-02: (3)
+    # "Opus": OpusDataset,  # Hits on re3data 2022-09-02: (2)
+    # "dLibra": dLibraDataset,  # Hits on re3data 2022-09-02: (2)
 }
 
 
 def load_repository(
+    url,
+    output_folder,
+    doi=None,
+    max_file_size=None,
+    force_download=False,
+    unzip=True,
+    progress=True,
+    *args,
+    **kwargs,
+):
+    return get(
+        url,
+        output_folder,
+        doi=None,
+        max_file_size=None,
+        force_download=False,
+        unzip=True,
+        progress=True,
+        *args,
+        **kwargs,
+    )
+
+
+def get(
     url,
     output_folder,
     doi=None,
@@ -198,7 +222,7 @@ def load_repository(
 
         logging.info(f"Redirect from {url} to {r.url}")
 
-        return load_repository(
+        return get(
             r.url,
             output_folder,
             max_file_size=max_file_size,
@@ -218,6 +242,7 @@ def load_repository(
     logging.debug("Service found: " + str(service_class))
 
     return service_class(
+        url,
         base_url=get_base_url(url),
         max_file_size=max_file_size,
         force_download=force_download,
@@ -225,7 +250,7 @@ def load_repository(
         progress=progress,
         *args,
         **kwargs,
-    ).get(url, output_folder, doi=doi)
+    ).download(output_folder, doi=doi)
 
 
 def _resolve_service(url, doi):

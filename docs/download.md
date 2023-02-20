@@ -19,7 +19,7 @@ folder `data`.
     ``` python
     import datahugger
 
-    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data")
+    datahugger.get("10.5061/dryad.x3ffbg7m8", "data")
     ```
 
 ##  Download dataset from URL
@@ -37,5 +37,5 @@ folder `data`.
     ``` python
     import datahugger
 
-    datahugger.load_repository("https://datadryad.org/stash/dataset/doi:10.5061/dryad.x3ffbg7m8", "data")
+    datahugger.get("https://datadryad.org/stash/dataset/doi:10.5061/dryad.x3ffbg7m8", "data")
     ```

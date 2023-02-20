@@ -1,5 +1,5 @@
-from datahugger.api import load_repository
+from datahugger.api import get
 
-__all__ = ["load_repository"]
+__all__ = ["get"]
 
 __version__ = "0.1.0"

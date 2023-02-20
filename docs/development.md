@@ -6,33 +6,30 @@ Support for repositories can be achieved by implementing a "service". The
 file [datahugger/services.py](https://github.com/J535D165/datahugger/blob/main/datahugger/services.py) list various services.
 For the new service, one needs to develop a new class, ideally inherited from
 the `BaseRepoDownloader` class. The class of Open Science Framework
-(`OSFDownload`) is a good example of a simple implementation.
+(`OSFDataset`) is a good example of a simple implementation.
 
 ```python
-class OSFDownload(BaseRepoDownloader):
-    """Downloader for OSF repositories."""
+from datahugger.base import DatasetDownloader
+from datahugger.base import DatasetResult
 
-    API_URL = "https://api.osf.io/v2/registrations/"
+class OSFDataset(DatasetDownloader, DatasetResult):
+    """Downloader for OSF repository."""
+
     REGEXP_ID = r"osf\.io\/(.*)/"
 
-    def _get(
-        self,
-        record_id: Union[str, int],
-        output_folder: Union[Path, str],
-        **kwargs,
-    ):
+    # the base entry point of the REST API
+    API_URL = "https://api.osf.io/v2/registrations/"
 
-        r_meta = requests.get(
-            self.API_URL + record_id + "/files/osfstorage/?format=jsonapi")
-        dataset_metadata = r_meta.json()
+    # the files and metadata about the dataset
+    API_URL_META = API_URL + "{api_record_id}/files/osfstorage/?format=jsonapi"
+    META_FILES_JSONPATH = "data"
 
-        for f in dataset_metadata["data"]:
-            self.download(
-                f["links"]["download"],
-                output_folder,
-                f["attributes"]["name"],
-                file_size=f["attributes"]["size"],
-            )
+    # paths to file attributes
+    META_FILE_LINK_JSONPATH = "links.download"
+    META_FILE_NAME_JSONPATH = "attributes.name"
+    META_FILE_SIZE_JSONPATH = "attributes.size"
+    META_FILE_HASH_JSONPATH = "attributes.extra.hashes.sha256"
+    META_FILE_HASH_TYPE_VALUE = "sha256"
 
 ```
 

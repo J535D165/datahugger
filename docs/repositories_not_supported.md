@@ -26,9 +26,9 @@ When a repository is not supported, an error is returned (exit 1).
       File "/Users/Bruin056/.pyenv/versions/sra-dev/bin/datahugger", line 8, in <module>
         sys.exit(main())
       File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/__main__.py", line 65, in main
-        load_repository(
+        get(
       File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 185, in load_repository
-        return load_repository(
+        return get(
       File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 197, in load_repository
         service_class = _resolve_service(url, doi)
       File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 226, in _resolve_service
@@ -43,7 +43,7 @@ When a repository is not supported, an error is returned (exit 1).
 === "Python"
 
     ``` python
-    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data")
+    datahugger.get("10.5061/dryad.x3ffbg7m8", "data")
     ```
 
     ```
@@ -51,9 +51,9 @@ When a repository is not supported, an error is returned (exit 1).
       File "/Users/Bruin056/.pyenv/versions/sra-dev/bin/datahugger", line 8, in <module>
         sys.exit(main())
       File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/__main__.py", line 65, in main
-        load_repository(
+        get(
       File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 185, in load_repository
-        return load_repository(
+        return get(
       File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 197, in load_repository
         service_class = _resolve_service(url, doi)
       File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 226, in _resolve_service

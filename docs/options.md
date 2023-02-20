@@ -15,7 +15,7 @@ number of bytes. For example, you want to skip files larger than 50Mb.
 === "Python"
 
     ``` python
-    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", max_file_size=50000000)
+    datahugger.get("10.5061/dryad.x3ffbg7m8", "data", max_file_size=50000000)
     ```
 
 
@@ -36,7 +36,7 @@ Disable auto unzip function
 
 
     ``` python
-    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", auto_unzip=False)
+    datahugger.get("10.5061/dryad.x3ffbg7m8", "data", auto_unzip=False)
     ```
 
 
@@ -56,7 +56,7 @@ are: "skip_if_exists", "force_redownload".
 === "Python"
 
     ``` python
-    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", download_mode="force_redownload")
+    datahugger.get("10.5061/dryad.x3ffbg7m8", "data", download_mode="force_redownload")
     ```
 
 
@@ -75,5 +75,5 @@ progress indicator.
 === "Python"
 
     ``` python
-    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", progress=False)
+    datahugger.get("10.5061/dryad.x3ffbg7m8", "data", progress=False)
     ```

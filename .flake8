@@ -15,4 +15,7 @@ ignore =
     I201
     # Missing newline between import groups.
 
+per-file-ignores =
+     tests/test_repositories.py: E501
+
 application_import_names = datahugger

@@ -2,7 +2,7 @@ import argparse
 import logging
 
 from datahugger import __version__
-from datahugger import load_repository
+from datahugger import get
 from datahugger.exceptions import DOIError
 
 # test with
@@ -66,7 +66,7 @@ def main():
     try:
 
         # Start downloading
-        load_repository(
+        get(
             args.url_or_doi,
             args.output_dir,
             max_file_size=args.max_file_size,

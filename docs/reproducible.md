@@ -63,7 +63,7 @@ the progress indicator.
 === "Python"
 
     ``` python
-    datahugger.load_repository("10.5061/dryad.x3ffbg7m8", "data", progress=False)
+    datahugger.get("10.5061/dryad.x3ffbg7m8", "data", progress=False)
     ```
 
 ### Share your project
