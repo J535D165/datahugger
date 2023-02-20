@@ -301,4 +301,7 @@ class DatasetDownloader(object):
 
         self._get(output_folder, **kwargs)
 
+        # store the location of the last known output folder
+        self.output_folder = output_folder
+
         return self
