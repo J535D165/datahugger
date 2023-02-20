@@ -27,7 +27,7 @@ class ZenodoDataset(DatasetDownloader, DatasetResult):
     API_URL_META = API_URL + "records/{api_record_id}"
     META_FILES_JSONPATH = "files"
 
-    # jsonpaths to file attributes
+    # paths to file attributes
     META_FILE_NAME_JSONPATH = "key"
     META_FILE_LINK_JSONPATH = "links.self"
     META_FILE_SIZE_JSONPATH = "size"
@@ -51,14 +51,11 @@ class DataverseDataset(DatasetDownloader, DatasetResult):
 
     REGEXP_ID = r"dataset\.xhtml\?persistentId=(.*)"
 
-    # the base entry point of the REST API
-    # API_URL = "https://zenodo.org/api/"
-
     # the files and metadata about the dataset
     API_URL_META = "{base_url}/api/datasets/:persistentId/?persistentId={api_record_id}"
     META_FILES_JSONPATH = "data.latestVersion.files"
 
-    # jsonpaths to file attributes
+    # paths to file attributes
     META_FILE_NAME_JSONPATH = "dataFile.filename"
     META_FILE_SIZE_JSONPATH = "dataFile.filesize"
     META_FILE_HASH_JSONPATH = "dataFile.md5"
@@ -83,7 +80,7 @@ class FigShareDataset(DatasetDownloader, DatasetResult):
     # the files and metadata about the dataset
     API_URL_META = API_URL + "/articles/{api_record_id}/files"
 
-    # jsonpaths to file attributes
+    # paths to file attributes
     META_FILE_LINK_JSONPATH = "download_url"
     META_FILE_NAME_JSONPATH = "name"
     META_FILE_SIZE_JSONPATH = "size"
@@ -103,7 +100,7 @@ class OSFDataset(DatasetDownloader, DatasetResult):
     API_URL_META = API_URL + "{api_record_id}/files/osfstorage/?format=jsonapi"
     META_FILES_JSONPATH = "data"
 
-    # jsonpaths to file attributes
+    # paths to file attributes
     META_FILE_LINK_JSONPATH = "links.download"
     META_FILE_NAME_JSONPATH = "attributes.name"
     META_FILE_SIZE_JSONPATH = "attributes.size"
@@ -119,7 +116,7 @@ class DataDryadDataset(DatasetDownloader, DatasetResult):
     # the base entry point of the REST API
     API_URL = "https://datadryad.org/api/v2"
 
-    # jsonpaths to file attributes
+    # paths to file attributes
     META_FILE_NAME_JSONPATH = "path"
     META_FILE_SIZE_JSONPATH = "size"
 
@@ -227,7 +224,7 @@ class MendeleyDataset(DatasetDownloader, DatasetResult):
         API_URL + "datasets/{api_record_id}/files?folder_id=root&version={version}"
     )
 
-    # jsonpaths to file attributes
+    # paths to file attributes
     META_FILE_LINK_JSONPATH = "content_details.download_url"
     META_FILE_NAME_JSONPATH = "filename"
     META_FILE_SIZE_JSONPATH = "size"
