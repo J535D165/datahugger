@@ -1,3 +1,11 @@
+"""Powerful datahugger command line interface
+
+Example:
+
+    python -m datahugger https://doi.org/10.5061/dryad.31zcrjdm5 $(mktemp -d)
+
+"""
+
 import argparse
 import logging
 
@@ -5,15 +13,12 @@ from datahugger import __version__
 from datahugger import get
 from datahugger.exceptions import DOIError
 
-# test with
-# python -m datahugger https://doi.org/10.5061/dryad.31zcrjdm5 tmp/my_test; rm -r tmp/my_test
-
 
 def main():
 
     parser = argparse.ArgumentParser(
         prog="datahugger",
-        description="One data downloader for all scientific data.",
+        description="One downloader for all scientific data.",
     )
     parser.add_argument(
         "url_or_doi",
@@ -37,11 +42,9 @@ def main():
     )
     parser.set_defaults(force_download=False)
 
-    parser.add_argument("--unzip", action="store_true")
     parser.add_argument("--no-unzip", dest="unzip", action="store_false")
     parser.set_defaults(unzip=True)
 
-    parser.add_argument("--progress", action="store_true")
     parser.add_argument("--no-progress", dest="progress", action="store_false")
     parser.set_defaults(progress=True)
 
@@ -91,7 +94,8 @@ def main():
             print(f"\u001b[31mFailed to download: {err}\u001b[0m")
             exit(1)
 
-    print("\u001b[32mDataset successfully downloaded.\u001b[0m")
+    if args.progress:
+        print("\u001b[32mDataset successfully downloaded.\u001b[0m")
 
 
 if __name__ == "__main__":

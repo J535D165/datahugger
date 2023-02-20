@@ -155,7 +155,8 @@ class DatasetDownloader(object):
             and file_size >= self.max_file_size
         ):
             logging.info("Skipping large file {}".format(file_link))
-            print("{}: SKIPPED".format(_format_filename(file_name)))
+            if self.progress:
+                print("{}: SKIPPED".format(_format_filename(file_name)))
             return
 
         logging.info("Downloading file {}".format(file_link))
