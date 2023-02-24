@@ -184,6 +184,7 @@ class DatasetDownloader(object):
             res = requests.get(file_link, stream=True)
 
             output_fp = Path(output_folder, file_name)
+            Path(output_fp).parent.mkdir(parents=True, exist_ok=True)
 
             if not self.force_download and output_fp.exists():
                 print("File already exists:", file_name)
