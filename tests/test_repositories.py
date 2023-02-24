@@ -26,6 +26,7 @@ TESTS_URLS = [
     # OSF
     ("https://osf.io/kq573/", "nest_area_data.xlsx"),
     ("https://doi.org/10.17605/OSF.IO/KQ573", "nest_area_data.xlsx"),
+    ("https://doi.org/10.17605/OSF.IO/9X6CA", "jobs.sh"),
 
     # Mendeley
     ("https://doi.org/10.17632/p6wmtv6t5g.2", "READMI Stranding Sea Turtle records.pdf"),
