@@ -1,6 +1,7 @@
-import requests
 import re
 import xml.etree.ElementTree as ET
+
+import requests
 
 
 def get_count(url):
