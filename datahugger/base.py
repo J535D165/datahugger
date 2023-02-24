@@ -93,56 +93,56 @@ class DatasetDownloader(object):
         # get the link to the folder
         if self._get_attr_kind(record) == "folder":
 
-            if not hasattr(self, "META_FOLDER_JSONPATH"):
+            if not hasattr(self, "ATTR_FOLDER_LINK_JSONPATH"):
                 return None
 
-            return self._get_attr_attr(record, self.META_FOLDER_JSONPATH)
+            return self._get_attr_attr(record, self.ATTR_FOLDER_LINK_JSONPATH)
 
         # get the link to the file
         else:
 
-            if not hasattr(self, "META_FILE_LINK_JSONPATH"):
+            if not hasattr(self, "ATTR_FILE_LINK_JSONPATH"):
                 return None
 
-            return self._get_attr_attr(record, self.META_FILE_LINK_JSONPATH)
+            return self._get_attr_attr(record, self.ATTR_FILE_LINK_JSONPATH)
 
     def _get_attr_name(self, record):
 
-        if not hasattr(self, "META_FILE_NAME_JSONPATH"):
+        if not hasattr(self, "ATTR_NAME_JSONPATH"):
             return None
 
-        return self._get_attr_attr(record, self.META_FILE_NAME_JSONPATH)
+        return self._get_attr_attr(record, self.ATTR_NAME_JSONPATH)
 
     def _get_attr_size(self, record):
 
-        if not hasattr(self, "META_FILE_SIZE_JSONPATH"):
+        if not hasattr(self, "ATTR_SIZE_JSONPATH"):
             return None
 
-        return self._get_attr_attr(record, self.META_FILE_SIZE_JSONPATH)
+        return self._get_attr_attr(record, self.ATTR_SIZE_JSONPATH)
 
     def _get_attr_hash(self, record):
 
-        if not hasattr(self, "META_FILE_HASH_JSONPATH"):
+        if not hasattr(self, "ATTR_HASH_JSONPATH"):
             return None
 
-        return self._get_attr_attr(record, self.META_FILE_HASH_JSONPATH)
+        return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH)
 
     def _get_attr_hash_type(self, record):
 
-        if hasattr(self, "META_FILE_HASH_TYPE_VALUE"):
-            return self.META_FILE_HASH_TYPE_VALUE
+        if hasattr(self, "ATTR_HASH_TYPE_VALUE"):
+            return self.ATTR_HASH_TYPE_VALUE
 
-        if not hasattr(self, "META_FILE_HASH_TYPE_JSONPATH"):
+        if not hasattr(self, "ATTR_HASH_TYPE_JSONPATH"):
             return None
 
-        return self._get_attr_attr(record, self.META_FILE_HASH_TYPE_JSONPATH)
+        return self._get_attr_attr(record, self.ATTR_HASH_TYPE_JSONPATH)
 
     def _get_attr_kind(self, record):
 
-        if not hasattr(self, "META_FILE_KIND_JSONPATH"):
+        if not hasattr(self, "ATTR_KIND_JSONPATH"):
             return "file"
 
-        return self._get_attr_attr(record, self.META_FILE_KIND_JSONPATH)
+        return self._get_attr_attr(record, self.ATTR_KIND_JSONPATH)
 
     def download_file(
         self,

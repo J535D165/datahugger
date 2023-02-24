@@ -25,11 +25,11 @@ class OSFDataset(DatasetDownloader, DatasetResult):
     META_FILES_JSONPATH = "data"
 
     # paths to file attributes
-    META_FILE_LINK_JSONPATH = "links.download"
-    META_FILE_NAME_JSONPATH = "attributes.name"
-    META_FILE_SIZE_JSONPATH = "attributes.size"
-    META_FILE_HASH_JSONPATH = "attributes.extra.hashes.sha256"
-    META_FILE_HASH_TYPE_VALUE = "sha256"
+    ATTR_FILE_LINK_JSONPATH = "links.download"
+    ATTR_NAME_JSONPATH = "attributes.name"
+    ATTR_SIZE_JSONPATH = "attributes.size"
+    ATTR_HASH_JSONPATH = "attributes.extra.hashes.sha256"
+    ATTR_HASH_TYPE_VALUE = "sha256"
 
 ```
 

@@ -28,20 +28,20 @@ class ZenodoDataset(DatasetDownloader, DatasetResult):
     META_FILES_JSONPATH = "files"
 
     # paths to file attributes
-    META_FILE_NAME_JSONPATH = "key"
-    META_FILE_LINK_JSONPATH = "links.self"
-    META_FILE_SIZE_JSONPATH = "size"
-    META_FILE_HASH_JSONPATH = "checksum"
+    ATTR_NAME_JSONPATH = "key"
+    ATTR_FILE_LINK_JSONPATH = "links.self"
+    ATTR_SIZE_JSONPATH = "size"
+    ATTR_HASH_JSONPATH = "checksum"
 
     def _get_attr_hash(self, record):
 
-        return self._get_attr_attr(record, self.META_FILE_HASH_JSONPATH).split(
+        return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(
             ":"
         )[1]
 
     def _get_attr_hash_type(self, record):
 
-        return self._get_attr_attr(record, self.META_FILE_HASH_JSONPATH).split(
+        return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(
             ":"
         )[0]
 
@@ -56,10 +56,10 @@ class DataverseDataset(DatasetDownloader, DatasetResult):
     META_FILES_JSONPATH = "data.latestVersion.files"
 
     # paths to file attributes
-    META_FILE_NAME_JSONPATH = "dataFile.filename"
-    META_FILE_SIZE_JSONPATH = "dataFile.filesize"
-    META_FILE_HASH_JSONPATH = "dataFile.md5"
-    META_FILE_HASH_TYPE_VALUE = "md5"
+    ATTR_NAME_JSONPATH = "dataFile.filename"
+    ATTR_SIZE_JSONPATH = "dataFile.filesize"
+    ATTR_HASH_JSONPATH = "dataFile.md5"
+    ATTR_HASH_TYPE_VALUE = "md5"
 
     def _get_attr_link(self, record):
 
@@ -81,11 +81,11 @@ class FigShareDataset(DatasetDownloader, DatasetResult):
     API_URL_META = API_URL + "/articles/{api_record_id}/files"
 
     # paths to file attributes
-    META_FILE_LINK_JSONPATH = "download_url"
-    META_FILE_NAME_JSONPATH = "name"
-    META_FILE_SIZE_JSONPATH = "size"
-    META_FILE_HASH_JSONPATH = "computed_md5"
-    META_FILE_HASH_TYPE_VALUE = "md5"
+    ATTR_FILE_LINK_JSONPATH = "download_url"
+    ATTR_NAME_JSONPATH = "name"
+    ATTR_SIZE_JSONPATH = "size"
+    ATTR_HASH_JSONPATH = "computed_md5"
+    ATTR_HASH_TYPE_VALUE = "md5"
 
 
 class OSFDataset(DatasetDownloader, DatasetResult):
@@ -101,15 +101,15 @@ class OSFDataset(DatasetDownloader, DatasetResult):
     META_FILES_JSONPATH = "data"
 
     # paths to file attributes
-    META_FILE_KIND_JSONPATH = "attributes.kind"
+    ATTR_KIND_JSONPATH = "attributes.kind"
 
-    META_FILE_LINK_JSONPATH = "links.download"
-    META_FOLDER_JSONPATH = "relationships.files.links.related.href"
+    ATTR_FILE_LINK_JSONPATH = "links.download"
+    ATTR_FOLDER_LINK_JSONPATH = "relationships.files.links.related.href"
 
-    META_FILE_NAME_JSONPATH = "attributes.name"
-    META_FILE_SIZE_JSONPATH = "attributes.size"
-    META_FILE_HASH_JSONPATH = "attributes.extra.hashes.sha256"
-    META_FILE_HASH_TYPE_VALUE = "sha256"
+    ATTR_NAME_JSONPATH = "attributes.name"
+    ATTR_SIZE_JSONPATH = "attributes.size"
+    ATTR_HASH_JSONPATH = "attributes.extra.hashes.sha256"
+    ATTR_HASH_TYPE_VALUE = "sha256"
 
 
 class DataDryadDataset(DatasetDownloader, DatasetResult):
@@ -121,8 +121,8 @@ class DataDryadDataset(DatasetDownloader, DatasetResult):
     API_URL = "https://datadryad.org/api/v2"
 
     # paths to file attributes
-    META_FILE_NAME_JSONPATH = "path"
-    META_FILE_SIZE_JSONPATH = "size"
+    ATTR_NAME_JSONPATH = "path"
+    ATTR_SIZE_JSONPATH = "size"
 
     @property
     def files(self):
@@ -230,11 +230,11 @@ class MendeleyDataset(DatasetDownloader, DatasetResult):
     )
 
     # paths to file attributes
-    META_FILE_LINK_JSONPATH = "content_details.download_url"
-    META_FILE_NAME_JSONPATH = "filename"
-    META_FILE_SIZE_JSONPATH = "size"
-    META_FILE_HASH_JSONPATH = "content_details.sha256_hash"
-    META_FILE_HASH_TYPE_VALUE = "sha256"
+    ATTR_FILE_LINK_JSONPATH = "content_details.download_url"
+    ATTR_NAME_JSONPATH = "filename"
+    ATTR_SIZE_JSONPATH = "size"
+    ATTR_HASH_JSONPATH = "content_details.sha256_hash"
+    ATTR_HASH_TYPE_VALUE = "sha256"
 
     def _pre_files(self):
 
