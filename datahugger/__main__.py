@@ -74,6 +74,10 @@ def main():
 
     logging.basicConfig(level=args.log_level)
 
+
+    if args.progress:
+        print("Collecting...")
+
     try:
 
         # Start downloading
