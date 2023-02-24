@@ -26,6 +26,8 @@ def _format_filename(s, len_s=35) -> str:
 
     # README_Pfaller_Robinson_2022_Global_Sea_Turtle_Epibiont_Database.txt
 
+    s = str(s)
+
     if len(s) <= len_s:
         return s.ljust(len_s, " ")
 

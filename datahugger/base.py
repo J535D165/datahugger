@@ -68,6 +68,7 @@ class DatasetDownloader(object):
         force_download=False,
         progress=True,
         unzip=True,
+        print_only=False,
     ):
         super(DatasetDownloader, self).__init__()
         self.url = url
@@ -77,8 +78,9 @@ class DatasetDownloader(object):
         self.force_download = force_download
         self.progress = progress
         self.unzip = unzip
+        self.print_only = print_only
 
-    def _get_file_meta_attr(self, record, jsonp):
+    def _get_attr_attr(self, record, jsonp):
 
         try:
             jsonpath_expression = parse(jsonp)
@@ -86,35 +88,46 @@ class DatasetDownloader(object):
         except Exception:
             return None
 
-    def _get_file_meta_link(self, record):
+    def _get_attr_link(self, record):
 
-        if not hasattr(self, "META_FILE_LINK_JSONPATH"):
-            return None
+        # get the link to the folder
+        if self._get_attr_kind(record) == "folder":
 
-        return self._get_file_meta_attr(record, self.META_FILE_LINK_JSONPATH)
+            if not hasattr(self, "META_FOLDER_JSONPATH"):
+                return None
 
-    def _get_file_meta_name(self, record):
+            return self._get_attr_attr(record, self.META_FOLDER_JSONPATH)
+
+        # get the link to the file
+        else:
+
+            if not hasattr(self, "META_FILE_LINK_JSONPATH"):
+                return None
+
+            return self._get_attr_attr(record, self.META_FILE_LINK_JSONPATH)
+
+    def _get_attr_name(self, record):
 
         if not hasattr(self, "META_FILE_NAME_JSONPATH"):
             return None
 
-        return self._get_file_meta_attr(record, self.META_FILE_NAME_JSONPATH)
+        return self._get_attr_attr(record, self.META_FILE_NAME_JSONPATH)
 
-    def _get_file_meta_size(self, record):
+    def _get_attr_size(self, record):
 
         if not hasattr(self, "META_FILE_SIZE_JSONPATH"):
             return None
 
-        return self._get_file_meta_attr(record, self.META_FILE_SIZE_JSONPATH)
+        return self._get_attr_attr(record, self.META_FILE_SIZE_JSONPATH)
 
-    def _get_file_meta_hash(self, record):
+    def _get_attr_hash(self, record):
 
         if not hasattr(self, "META_FILE_HASH_JSONPATH"):
             return None
 
-        return self._get_file_meta_attr(record, self.META_FILE_HASH_JSONPATH)
+        return self._get_attr_attr(record, self.META_FILE_HASH_JSONPATH)
 
-    def _get_file_meta_hash_type(self, record):
+    def _get_attr_hash_type(self, record):
 
         if hasattr(self, "META_FILE_HASH_TYPE_VALUE"):
             return self.META_FILE_HASH_TYPE_VALUE
@@ -122,7 +135,14 @@ class DatasetDownloader(object):
         if not hasattr(self, "META_FILE_HASH_TYPE_JSONPATH"):
             return None
 
-        return self._get_file_meta_attr(record, self.META_FILE_HASH_TYPE_JSONPATH)
+        return self._get_attr_attr(record, self.META_FILE_HASH_TYPE_JSONPATH)
+
+    def _get_attr_kind(self, record):
+
+        if not hasattr(self, "META_FILE_KIND_JSONPATH"):
+            return "file"
+
+        return self._get_attr_attr(record, self.META_FILE_KIND_JSONPATH)
 
     def download_file(
         self,
@@ -159,28 +179,31 @@ class DatasetDownloader(object):
                 print("{}: SKIPPED".format(_format_filename(file_name)))
             return
 
-        logging.info("Downloading file {}".format(file_link))
-        res = requests.get(file_link, stream=True)
+        if not self.print_only:
+            logging.info("Downloading file {}".format(file_link))
+            res = requests.get(file_link, stream=True)
 
-        output_fp = Path(output_folder, file_name)
+            output_fp = Path(output_folder, file_name)
 
-        if not self.force_download and output_fp.exists():
-            print("File already exists:", file_name)
-            return
+            if not self.force_download and output_fp.exists():
+                print("File already exists:", file_name)
+                return
 
-        if self.progress:
-            with tqdm.wrapattr(
-                open(output_fp, "wb"),
-                "write",
-                miniters=1,
-                desc=_format_filename(file_name),
-                total=int(res.headers.get("content-length", 0)),
-            ) as fout:
-                for chunk in res.iter_content(chunk_size=4096):
-                    fout.write(chunk)
+            if self.progress:
+                with tqdm.wrapattr(
+                    open(output_fp, "wb"),
+                    "write",
+                    miniters=1,
+                    desc=_format_filename(file_name),
+                    total=int(res.headers.get("content-length", 0)),
+                ) as fout:
+                    for chunk in res.iter_content(chunk_size=4096):
+                        fout.write(chunk)
+            else:
+                with open(output_fp, "wb") as f:
+                    f.write(res.content)
         else:
-            with open(output_fp, "wb") as f:
-                f.write(res.content)
+            print("{}: COMPLETE".format(_format_filename(file_name)))
 
     def _parse_url(self, url):
         if not isinstance(url, str) or not _is_url(url):
@@ -231,6 +254,47 @@ class DatasetDownloader(object):
     def _pre_files(self):
         pass
 
+    def _get_files_recursive(self, url, folder_name=None):
+
+        result = []
+
+        # get the data from URL
+        res = requests.get(url)
+
+        # find path to raw files
+        if hasattr(self, "META_FILES_JSONPATH"):
+            jsonpath_expression = parse(self.META_FILES_JSONPATH)
+            files_raw = jsonpath_expression.find(res.json())[0].value
+        else:
+            files_raw = res.json()
+
+        for f in files_raw:
+
+            # create the file or folder path
+            if folder_name is None:
+                f_path = self._get_attr_name(f)
+            else:
+                f_path = str(Path(folder_name, self._get_attr_name(f)))
+
+            if self._get_attr_kind(f) == "folder":
+
+                result.extend(
+                    self._get_files_recursive(self._get_attr_link(f), folder_name=f_path)
+                )
+            else:
+
+                result.append(
+                    {
+                        "link": self._get_attr_link(f),
+                        "name": f_path,
+                        "size": self._get_attr_size(f),
+                        "hash": self._get_attr_hash(f),
+                        "hash_type": self._get_attr_hash_type(f),
+                    }
+                )
+
+        return result
+
     @property
     def files(self):
 
@@ -239,7 +303,7 @@ class DatasetDownloader(object):
 
         self._pre_files()
 
-        res = requests.get(
+        self._files = self._get_files_recursive(
             self.API_URL_META.format(
                 api_record_id=self.api_record_id,
                 version=self.version,
@@ -247,25 +311,6 @@ class DatasetDownloader(object):
             )
         )
 
-        if hasattr(self, "META_FILES_JSONPATH"):
-            jsonpath_expression = parse(self.META_FILES_JSONPATH)
-            files_raw = jsonpath_expression.find(res.json())[0].value
-        else:
-            files_raw = res.json()
-
-        x = []
-        for f in files_raw:
-            x.append(
-                {
-                    "file_link": self._get_file_meta_link(f),
-                    "file_name": self._get_file_meta_name(f),
-                    "file_size": self._get_file_meta_size(f),
-                    "file_hash": self._get_file_meta_hash(f),
-                    "file_hash_type": self._get_file_meta_hash_type(f),
-                }
-            )
-
-        self._files = x
         return self._files
 
     def _get(
@@ -274,12 +319,19 @@ class DatasetDownloader(object):
         **kwargs,
     ):
 
-        if len(self.files) == 1 and self.files[0]["file_link"].endswith(".zip"):
-            self._unpack_single_folder(self.files[0]["file_link"], output_folder)
+        if len(self.files) == 1 and self.files[0]["link"].endswith(".zip"):
+            self._unpack_single_folder(self.files[0]["link"], output_folder)
             return
 
         for f in self.files:
-            self.download_file(output_folder=output_folder, **f)
+            self.download_file(
+                f["link"],
+                output_folder,
+                file_name=f["name"],
+                file_size=f["size"],
+                file_hash=f["hash"],
+                file_hash_type=f["hash_type"]
+            )
 
     def download(
         self,

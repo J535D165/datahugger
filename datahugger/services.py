@@ -33,15 +33,15 @@ class ZenodoDataset(DatasetDownloader, DatasetResult):
     META_FILE_SIZE_JSONPATH = "size"
     META_FILE_HASH_JSONPATH = "checksum"
 
-    def _get_file_meta_hash(self, record):
+    def _get_attr_hash(self, record):
 
-        return self._get_file_meta_attr(record, self.META_FILE_HASH_JSONPATH).split(
+        return self._get_attr_attr(record, self.META_FILE_HASH_JSONPATH).split(
             ":"
         )[1]
 
-    def _get_file_meta_hash_type(self, record):
+    def _get_attr_hash_type(self, record):
 
-        return self._get_file_meta_attr(record, self.META_FILE_HASH_JSONPATH).split(
+        return self._get_attr_attr(record, self.META_FILE_HASH_JSONPATH).split(
             ":"
         )[0]
 
@@ -61,7 +61,7 @@ class DataverseDataset(DatasetDownloader, DatasetResult):
     META_FILE_HASH_JSONPATH = "dataFile.md5"
     META_FILE_HASH_TYPE_VALUE = "md5"
 
-    def _get_file_meta_link(self, record):
+    def _get_attr_link(self, record):
 
         return "{}/api/access/datafile/{}".format(
             self.base_url, record["dataFile"]["id"]
@@ -101,7 +101,11 @@ class OSFDataset(DatasetDownloader, DatasetResult):
     META_FILES_JSONPATH = "data"
 
     # paths to file attributes
+    META_FILE_KIND_JSONPATH = "attributes.kind"
+
     META_FILE_LINK_JSONPATH = "links.download"
+    META_FOLDER_JSONPATH = "relationships.files.links.related.href"
+
     META_FILE_NAME_JSONPATH = "attributes.name"
     META_FILE_SIZE_JSONPATH = "attributes.size"
     META_FILE_HASH_JSONPATH = "attributes.extra.hashes.sha256"
@@ -149,18 +153,19 @@ class DataDryadDataset(DatasetDownloader, DatasetResult):
         for f in files_raw["_embedded"]["stash:files"]:
             x.append(
                 {
-                    "file_link": self._get_file_meta_link(f),
-                    "file_name": self._get_file_meta_name(f),
-                    "file_size": self._get_file_meta_size(f),
-                    "file_hash": self._get_file_meta_hash(f),
-                    "file_hash_type": self._get_file_meta_hash_type(f),
+                    "kind": "file",
+                    "link": self._get_attr_link(f),
+                    "name": self._get_attr_name(f),
+                    "size": self._get_attr_size(f),
+                    "hash": self._get_attr_hash(f),
+                    "hash_type": self._get_attr_hash_type(f),
                 }
             )
 
         self._files = x
         return self._files
 
-    def _get_file_meta_link(self, record):
+    def _get_attr_link(self, record):
 
         return "https://datadryad.org" + record["_links"]["stash:file-download"]["href"]
 
@@ -193,13 +198,13 @@ class DataOneDataset(DatasetDownloader, DatasetResult):
             if data_elem.tag in ["otherEntity", "dataTable"]:
                 x.append(
                     {
-                        "file_link": data_elem.find(
+                        "link": data_elem.find(
                             "./physical/distribution/online/url[@function='download']"
                         ).text,
-                        "file_name": data_elem.find("entityName").text,
-                        "file_size": data_elem.find("./physical/size").text,
-                        "file_hash": None,
-                        "file_hash_type": None,
+                        "name": data_elem.find("entityName").text,
+                        "size": data_elem.find("./physical/size").text,
+                        "hash": None,
+                        "hash_type": None,
                     }
                 )
 

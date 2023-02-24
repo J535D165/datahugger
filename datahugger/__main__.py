@@ -49,6 +49,14 @@ def main():
     parser.set_defaults(progress=True)
 
     parser.add_argument(
+        "-d",
+        "--dry-run",
+        dest="print_only",
+        action="store_true",
+        help="Only print the files to download without downloading them.",
+    )
+
+    parser.add_argument(
         "--log-level",
         default="WARNING",
         help="Python based log levels. Default: WARNING.",
@@ -76,6 +84,7 @@ def main():
             force_download=args.force_download,
             unzip=args.unzip,
             progress=args.progress,
+            print_only=args.print_only,
         )
 
     except DOIError as doi_err:
