@@ -183,9 +183,8 @@ def _base_request(
 
         logging.info(f"Redirect from {url} to {r.url}")
 
-        return get(
+        return _base_request(
             r.url,
-            output_folder,
             max_file_size=max_file_size,
             doi=doi,
             force_download=force_download,
