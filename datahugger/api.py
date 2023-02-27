@@ -144,9 +144,8 @@ RE3DATA_SOFTWARE = {
 }
 
 
-def load_repository(
+def _base_request(
     url,
-    output_folder,
     doi=None,
     max_file_size=None,
     force_download=False,
@@ -156,47 +155,6 @@ def load_repository(
     *args,
     **kwargs,
 ):
-    return get(
-        url,
-        output_folder,
-        doi=doi,
-        max_file_size=max_file_size,
-        force_download=force_download,
-        unzip=unzip,
-        progress=progress,
-        print_only=print_only,
-        *args,
-        **kwargs,
-    )
-
-
-def get(
-    url,
-    output_folder,
-    doi=None,
-    max_file_size=None,
-    force_download=False,
-    unzip=True,
-    progress=True,
-    print_only=False,
-    *args,
-    **kwargs,
-):
-    """Load content of repository.
-
-    Arguments
-    ---------
-    url:
-        The url to the repo.
-    output_folder:
-        The folder to download the files to.
-
-    Returns
-    -------
-
-    FileTree
-        The file tree of the repository.
-    """
 
     # check if the url is a doi, if so, make a proper doi url out of it.
     if url.startswith("doi:"):
@@ -255,7 +213,79 @@ def get(
         print_only=print_only,
         *args,
         **kwargs,
+    )
+
+
+def get(
+    url,
+    output_folder,
+    doi=None,
+    max_file_size=None,
+    force_download=False,
+    unzip=True,
+    progress=True,
+    print_only=False,
+    *args,
+    **kwargs,
+):
+    """Load content of repository.
+
+    Arguments
+    ---------
+    url:
+        The url to the repo.
+    output_folder:
+        The folder to download the files to.
+
+    Returns
+    -------
+
+    FileTree
+        The file tree of the repository.
+    """
+    return _base_request(
+        url,
+        doi=doi,
+        max_file_size=max_file_size,
+        force_download=force_download,
+        unzip=unzip,
+        progress=progress,
+        print_only=print_only,
+        *args,
+        **kwargs,
     ).download(output_folder, doi=doi)
+
+
+def info(
+    url,
+    doi=None,
+    *args,
+    **kwargs,
+):
+    """Info on the content of the dataset.
+
+    Arguments
+    ---------
+    url:
+        The url to the dataset.
+
+    Returns
+    -------
+
+    FileTree
+        The file tree of the repository.
+    """
+    b = _base_request(
+        url,
+        doi=doi,
+        *args,
+        **kwargs,
+    )
+
+    # collect the files
+    logging.info(b.files)
+
+    return b
 
 
 def _resolve_service(url, doi):
