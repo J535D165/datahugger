@@ -39,6 +39,10 @@ TESTS_URLS = [
     ("https://doi.org/10.17632/p6wmtv6t5g", "READMI Stranding Sea Turtle records.pdf"),
     # Dataone
     ("https://doi.org/10.18739/A2KH0DZ42", "2012F_Temperature_Data.csv"),
+
+    # DSpace
+    ("https://uhra.herts.ac.uk/handle/2299/26087", "pdf.pdf"),
+    ("https://repositorioinstitucional.ceu.es/handle/10637/2741", "Aquaporin_1_JAMartin_et_al_MedSport_2009.pdf"),
 ]
 
 

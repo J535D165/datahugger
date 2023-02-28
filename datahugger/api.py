@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 import requests
 
 from datahugger.exceptions import DOIError
+from datahugger.services import DSpaceDataset
 from datahugger.services import DataDryadDataset
 from datahugger.services import DataOneDataset
 from datahugger.services import DataverseDataset
@@ -127,7 +128,10 @@ SERVICES_NETLOC = {
 }
 
 # regexp lookup
-SERVICES_NETLOC_REGEXP = {r".*\.figshare\.com": FigShareDataset}
+SERVICES_NETLOC_REGEXP = {
+    r".*\.figshare\.com": FigShareDataset,
+    r".*\/handle\/\d+\/\d+": DSpaceDataset,
+}
 
 RE3DATA_SOFTWARE = {
     "DataVerse": DataverseDataset,  # Hits on re3data 2022-09-02: (145)
@@ -331,7 +335,7 @@ def _resolve_service_from_netloc(url):
         return SERVICES_NETLOC[uri.hostname]
 
     for netloc_re, service in SERVICES_NETLOC_REGEXP.items():
-        if re.match(netloc_re, uri.hostname):
+        if re.match(netloc_re, url):
             return service
 
 
