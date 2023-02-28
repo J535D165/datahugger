@@ -38,7 +38,7 @@ created if it does not exist).
 ```python
 import datahugger
 
-# download the data to your device
+# download the dataset to the folder "data"
 datahugger.get("10.5061/dryad.x3ffbg7m8", "data")
 ```
 
