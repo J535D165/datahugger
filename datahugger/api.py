@@ -34,7 +34,6 @@ SERVICES_NETLOC = {
     "data.mendeley.com": MendeleyDataset,
     # Figshare download
     "figshare.com": FigShareDataset,
-    "data.4tu.nl": FigShareDataset,
     # DataOne repositories
     "arcticdata.io": DataOneDataset,
     "knb.ecoinformatics.org": DataOneDataset,
@@ -129,7 +128,7 @@ SERVICES_NETLOC = {
 
 # regexp lookup
 SERVICES_NETLOC_REGEXP = {
-    r".*\.figshare\.com": FigShareDataset,
+    r".*\/articles\/.*\/.*\/\d+": FigShareDataset,
     r".*\/handle\/\d+\/\d+": DSpaceDataset,
 }
 
