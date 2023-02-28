@@ -17,6 +17,11 @@ n_dataverse = get_count(
 )
 # print("DataVerse", n_dataverse)
 
+n_dspace = get_count(
+    "https://www.re3data.org/api/beta/repositories?software%5B%5D=DSpace"
+)
+# print("DSpace", n_dspace)
+
 n_figshare = get_count("https://www.re3data.org/api/beta/repositories?query=figshare")
 # print("FigShare", n_figshare)
 
@@ -25,7 +30,7 @@ n_dataone = get_count("https://www.re3data.org/api/beta/repositories?query=datao
 
 single_instance_repos = ["zenodo", "mendeley", "osf", "dryad", "github", "huggingface"]
 
-n_total = n_dataverse + n_figshare + n_dataone + len(single_instance_repos)
+n_total = n_dataverse + n_figshare + n_dspace + n_dataone + len(single_instance_repos)
 print("Number of supported data repositories", n_total)
 
 
