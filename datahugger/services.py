@@ -208,6 +208,36 @@ class DataOneDataset(DatasetDownloader, DatasetResult):
         return self._files
 
 
+class DSpaceDataset(DatasetDownloader, DatasetResult):
+    """Downloader for DSpaceDataset repositories."""
+
+    REGEXP_ID = r"handle/(\d+\/\d+)"
+
+    # paths to file attributes
+    ATTR_KIND_JSONPATH = "attributes.kind"
+
+    ATTR_FILE_LINK_JSONPATH = "link"
+
+    ATTR_NAME_JSONPATH = "name"
+    ATTR_SIZE_JSONPATH = "sizeBytes"
+    ATTR_HASH_JSONPATH = "checkSum.checkSumAlgorithm"
+    ATTR_HASH_TYPE_VALUE = "checkSum.value"
+
+    def _get_attr_link(self, record):
+
+        return self.base_url + record["retrieveLink"]
+
+    def _pre_files(self):
+
+        handle_id_url = "{base_url}/rest/handle/{api_record_id}".format(
+            base_url=self.base_url, api_record_id=self.api_record_id
+        )
+        res = requests.get(handle_id_url)
+
+        # set the API_URL_META
+        self.API_URL_META = self.base_url + res.json()["link"] + "/bitstreams"
+
+
 class MendeleyDataset(DatasetDownloader, DatasetResult):
     """Downloader for Mendeley repository."""
 

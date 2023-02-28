@@ -226,7 +226,7 @@ class DatasetDownloader(object):
             if match and match.group(1):
                 return match.group(1), None
 
-        return None, None
+        raise ValueError(f"Failed to parse record identifier from URL '{url}'")
 
     def _unpack_single_folder(self, zip_url, output_folder):
 
