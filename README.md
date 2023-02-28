@@ -31,7 +31,7 @@ pip install datahugger
 ### Download with Python
 
 Load a dataset (or any digital asset) from a repository with the
-`datahugger.load_repository` function. The first argument is the DOI or URL
+`datahugger.get` function. The first argument is the DOI or URL
 and the second argument the name of the folder to store the dataset (will be
 created if it does not exist).
 
