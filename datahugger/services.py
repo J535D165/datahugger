@@ -189,10 +189,6 @@ class DataOneDataset(DatasetDownloader, DatasetResult):
         res = requests.get(self.API_URL + doi_safe)
         meta_tree = ET.fromstring(res.content)
 
-        print(self.url)
-        print(self.api_record_id)
-        print(res.content)
-
         x = []
         for data_elem in meta_tree.find("dataset"):
             if data_elem.tag in ["otherEntity", "dataTable"]:
