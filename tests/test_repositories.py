@@ -21,6 +21,7 @@ TESTS_URLS = [
         "cross_year_data2.csv",
     ),
     ("https://doi.org/10.4121/21989216.v1", "README.txt"),
+    ("https://doi.org/10.15131/shef.data.22010159.v2", "ScHARR QUIT evaluation statistical and health economic analysis plan.pdf")
     # Dryad
     (
         "https://datadryad.org/stash/dataset/doi:10.5061/dryad.31zcrjdm5",
