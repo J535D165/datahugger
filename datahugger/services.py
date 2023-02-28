@@ -71,8 +71,8 @@ class DataverseDataset(DatasetDownloader, DatasetResult):
 class FigShareDataset(DatasetDownloader, DatasetResult):
     """Downloader for FigShare repository."""
 
-    REGEXP_ID_AND_VERSION = r"articles\/dataset\/.*\/(\d+)\/(\d+)"
-    REGEXP_ID = r"articles\/dataset\/.*\/(\d+)"
+    REGEXP_ID_AND_VERSION = r"articles\/.*\/.*\/(\d+)\/(\d+)"
+    REGEXP_ID = r"articles\/.*\/.*\/(\d+)"
 
     # the base entry point of the REST API
     API_URL = "https://api.figshare.com/v2"
