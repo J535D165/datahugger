@@ -144,9 +144,8 @@ RE3DATA_SOFTWARE = {
 }
 
 
-def load_repository(
+def _base_request(
     url,
-    output_folder,
     doi=None,
     max_file_size=None,
     force_download=False,
@@ -156,10 +155,56 @@ def load_repository(
     *args,
     **kwargs,
 ):
-    return get(
+
+    # check if the url is a doi, if so, make a proper doi url out of it.
+    if url.startswith("doi:"):
+        url = url[4:]
+
+    if _is_doi(url):
+        doi = url
+        url = "https://doi.org/" + url
+
+    if _is_url(url) and "doi.org" in url:
+        doi = url.split("doi.org/")[1]
+
+    # is url
+    uri = urlparse(url)
+
+    # if netloc is doi.org, follow the redirect
+    if uri.hostname in URL_RESOLVE:
+
+        r = requests.head(url, allow_redirects=True)
+        if r.status_code == 404:
+            raise DOIError(
+                f"DOI cannot be found in the DOI System, see https://doi.org/{doi}"
+            )
+        if r.status_code != 200:
+            raise ValueError("Error")
+
+        logging.info(f"Redirect from {url} to {r.url}")
+
+        return _base_request(
+            r.url,
+            max_file_size=max_file_size,
+            doi=doi,
+            force_download=force_download,
+            unzip=unzip,
+            progress=progress,
+            print_only=print_only,
+            *args,
+            **kwargs,
+        )
+
+    service_class = _resolve_service(url, doi)
+
+    if service_class is None:
+        raise ValueError(f"Data service for {url} is not supported.")
+
+    logging.debug("Service found: " + str(service_class))
+
+    return service_class(
         url,
-        output_folder,
-        doi=doi,
+        base_url=get_base_url(url),
         max_file_size=max_file_size,
         force_download=force_download,
         unzip=unzip,
@@ -197,57 +242,9 @@ def get(
     FileTree
         The file tree of the repository.
     """
-
-    # check if the url is a doi, if so, make a proper doi url out of it.
-    if url.startswith("doi:"):
-        url = url[4:]
-
-    if _is_doi(url):
-        doi = url
-        url = "https://doi.org/" + url
-
-    if _is_url(url) and "doi.org" in url:
-        doi = url.split("doi.org/")[1]
-
-    # is url
-    uri = urlparse(url)
-
-    # if netloc is doi.org, follow the redirect
-    if uri.hostname in URL_RESOLVE:
-
-        r = requests.head(url, allow_redirects=True)
-        if r.status_code == 404:
-            raise DOIError(
-                f"DOI cannot be found in the DOI System, see https://doi.org/{doi}"
-            )
-        if r.status_code != 200:
-            raise ValueError("Error")
-
-        logging.info(f"Redirect from {url} to {r.url}")
-
-        return get(
-            r.url,
-            output_folder,
-            max_file_size=max_file_size,
-            doi=doi,
-            force_download=force_download,
-            unzip=unzip,
-            progress=progress,
-            print_only=print_only,
-            *args,
-            **kwargs,
-        )
-
-    service_class = _resolve_service(url, doi)
-
-    if service_class is None:
-        raise ValueError(f"Data service for {url} is not supported.")
-
-    logging.debug("Service found: " + str(service_class))
-
-    return service_class(
+    return _base_request(
         url,
-        base_url=get_base_url(url),
+        doi=doi,
         max_file_size=max_file_size,
         force_download=force_download,
         unzip=unzip,
@@ -256,6 +253,38 @@ def get(
         *args,
         **kwargs,
     ).download(output_folder, doi=doi)
+
+
+def info(
+    url,
+    doi=None,
+    *args,
+    **kwargs,
+):
+    """Info on the content of the dataset.
+
+    Arguments
+    ---------
+    url:
+        The url to the dataset.
+
+    Returns
+    -------
+
+    FileTree
+        The file tree of the repository.
+    """
+    b = _base_request(
+        url,
+        doi=doi,
+        *args,
+        **kwargs,
+    )
+
+    # collect the files
+    logging.info(b.files)
+
+    return b
 
 
 def _resolve_service(url, doi):
