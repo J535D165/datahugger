@@ -227,20 +227,36 @@ def get(
     *args,
     **kwargs,
 ):
-    """Load content of repository.
+    """Get the content of repository.
+
+    Download the content of the dataset to a local folder. Provide a
+    URL or DOI to the dataset in the data repository.
 
     Arguments
     ---------
-    url:
-        The url to the repo.
-    output_folder:
-        The folder to download the files to.
+    url: str, pathlib.Path
+        The DOI of URL to the dataset.
+    output_folder: str, pathlib.Path
+        The folder to download the dataset files to.
+    max_file_size: int
+        The maximum number of bytes for a single file. If exceeded,
+        the file is skipped.
+    force_download: bool
+        Force the download of the dataset even if there are already
+        files in the distination folder. Default: False.
+    unzip: bool
+        Unzip is the output is a single zip file. Default: True.
+    progress: bool
+        Print the progress of the download. Default: True.
+    print_only: bool
+        Print the output of the dataset download without downloading
+        the actual files (Dry run). Default: False.
 
     Returns
     -------
 
-    FileTree
-        The file tree of the repository.
+    datahugger.base.DatasetDownloader
+        The dataset download object for the specific service.
     """
     return _base_request(
         url,
@@ -261,18 +277,18 @@ def info(
     *args,
     **kwargs,
 ):
-    """Info on the content of the dataset.
+    """Get info on the content of the dataset.
 
     Arguments
     ---------
-    url:
-        The url to the dataset.
+    url: str, pathlib.Path
+        The DOI of URL to the dataset.
 
     Returns
     -------
 
-    FileTree
-        The file tree of the repository.
+    datahugger.base.DatasetDownloader
+        The dataset download object for the specific service.
     """
     b = _base_request(
         url,
