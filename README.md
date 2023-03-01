@@ -28,32 +28,29 @@ pip install datahugger
 
 ## Getting started
 
-### Download with Python
+### Datahugger with Python
 
 Load a dataset (or any digital asset) from a repository with the
-`datahugger.get` function. The first argument is the DOI or URL
+`datahugger.get()` function. The first argument is the DOI or URL
 and the second argument the name of the folder to store the dataset (will be
 created if it does not exist).
+
+The following code loads dataset [10.5061/dryad.mj8m0](https://doi.org/10.5061/dryad.mj8m0) into
+the folder `data`. 
 
 ```python
 import datahugger
 
 # download the dataset to the folder "data"
-datahugger.get("10.5061/dryad.x3ffbg7m8", "data")
+datahugger.get("10.5061/dryad.mj8m0", "data")
 ```
 
-The data from DOI [10.5061/dryad.x3ffbg7m8](https://doi.org/10.5061/dryad.x3ffbg7m8) is now stored in the folder `data`. The data can now be accessed and analyzed. For example:
-
-```python
-
-import pandas as pd
-
-df = pd.read_csv("data/Pfaller_Robinson_2022_Global_Sea_Turtle_Epibiont_Database.csv")
-print(df["Higher Taxon"].value_counts())
-```
+For an example how this can integrate with your work, see the 
+[example workflow notebook](https://github/J535D165/datahugger/blob/main/examples/example_datahugger_in_workflow.ipynb) or 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/J535D165/datahugger/blob/main/examples/example_datahugger_in_workflow.ipynb)
 
 
-### Download with command line
+### Datahugger with command line
 
 The command line function `datahugger` provides an easy interface to download data. The first
 argument is the DOI or URL and the second argument the name of the folder to store the dataset (will be
