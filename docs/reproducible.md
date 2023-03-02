@@ -18,7 +18,7 @@ is no DOI available, use the URL to the dataset.
 
 If the user doesn't have datahugger installed on their device, it is required
 to install datahugger. Datahugger can be added to an existing Python
-installation file like `requirements.txt` of via documentation `pip install
+installation file like `requirements.txt` or via documentation `pip install
 datahugger`.
 
 ### Scenario 1: Standalone project setup
