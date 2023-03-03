@@ -62,8 +62,8 @@ datahugger 10.5061/dryad.31zcrjdm5 data
 
 ```bash
 % datahugger 10.5061/dryad.x3ffbg7m8 data
-README_Pfaller_Robinson_20[...].txt: 100%|█████████████████████████████████████| 17.1k/17.1k [00:00<00:00, 2.62MB/s]
-Pfaller_Robinson_2022_Glob[...].csv: 100%|████████████████████████████████████████| 709k/709k [00:00<00:00, 904kB/s]
+README_Pfaller_Robinson_20[...].txt: 100%|█████████████████████████████████████| 17.1k/17.1k
+Pfaller_Robinson_2022_Glob[...].csv: 100%|████████████████████████████████████████| 709k/709k
 Repository content successfully downloaded.
 ```
 

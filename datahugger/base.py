@@ -197,6 +197,7 @@ class DatasetDownloader(object):
                     miniters=1,
                     desc=_format_filename(file_name),
                     total=int(res.headers.get("content-length", 0)),
+                    bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt}",
                 ) as fout:
                     for chunk in res.iter_content(chunk_size=4096):
                         fout.write(chunk)
