@@ -57,17 +57,24 @@ argument is the DOI or URL and the second argument the name of the folder to sto
 created if it does not exist).
 
 ```bash
-datahugger 10.5061/dryad.31zcrjdm5 data
+datahugger 10.5061/dryad.mj8m0 data
 ```
 
 ```bash
-% datahugger 10.5061/dryad.x3ffbg7m8 data
-README_Pfaller_Robinson_20[...].txt: 100%|█████████████████████████████████████| 17.1k/17.1k
-Pfaller_Robinson_2022_Glob[...].csv: 100%|████████████████████████████████████████| 709k/709k
-Repository content successfully downloaded.
+% datahugger 10.5061/dryad.mj8m0 data
+Collecting...
+NestTemperatureData.csv            : 100%|████████████████████████████████████████| 607k/607k
+README_for_NestTemperatureData.txt : 100%|██████████████████████████████████████| 2.82k/2.82k
+ExternalTemps.csv                  : 100%|██████████████████████████████████████| 1.06k/1.06k
+README_for_ExternalTemps.txt       : 100%|██████████████████████████████████████| 2.82k/2.82k
+InternalEggTempData.csv            : 100%|██████████████████████████████████████████| 664/664
+README_for_InternalEggTempData.txt : 100%|██████████████████████████████████████| 2.82k/2.82k
+SoilSimulation_Output.csv          : 100%|████████████████████████████████████████| 229M/229M
+README_for_SoilSimulation_[...].txt: 100%|██████████████████████████████████████| 2.82k/2.82k
+Dataset successfully downloaded.
 ```
 
-**Tip:** On some systems, you have to quote the DOI or URL. For example: `datahugger "10.5061/dryad.31zcrjdm5" data`. 
+**Tip:** On some systems, you have to quote the DOI or URL. For example: `datahugger "10.5061/dryad.mj8m0" data`. 
 
 ## Tips and tricks
 
