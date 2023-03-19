@@ -46,7 +46,7 @@ datahugger.get("10.5061/dryad.mj8m0", "data")
 ```
 
 For an example how this can integrate with your work, see the 
-[example workflow notebook](https://github/J535D165/datahugger/blob/main/examples/example_datahugger_in_workflow.ipynb) or 
+[example workflow notebook](https://github.com/J535D165/datahugger/blob/main/examples/example_datahugger_in_workflow.ipynb) or 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/J535D165/datahugger/blob/main/examples/example_datahugger_in_workflow.ipynb)
 
 
