@@ -258,17 +258,21 @@ class DatasetDownloader:
 
     def _get_files_recursive(self, url, folder_name=None):
 
+        if not isinstance(url, str):
+            ValueError(f"Expected url to be string type, got {type(url)}")
+
         result = []
 
         # get the data from URL
         res = requests.get(url)
+        reponse = res.json()
 
         # find path to raw files
         if hasattr(self, "META_FILES_JSONPATH"):
             jsonpath_expression = parse(self.META_FILES_JSONPATH)
-            files_raw = jsonpath_expression.find(res.json())[0].value
+            files_raw = jsonpath_expression.find(reponse)[0].value
         else:
-            files_raw = res.json()
+            files_raw = reponse
 
         for f in files_raw:
 
@@ -294,6 +298,16 @@ class DatasetDownloader:
                         "hash": self._get_attr_hash(f),
                         "hash_type": self._get_attr_hash_type(f),
                     }
+                )
+
+        if hasattr(self, "PAGINATION_JSONPATH"):
+            jsonpath_expression = parse(self.PAGINATION_JSONPATH)
+            next_url = jsonpath_expression.find(reponse)[0].value
+
+            if next_url:
+                result.extend(
+                    self._get_files_recursive(
+                        next_url, folder_name=folder_name)
                 )
 
         return result
