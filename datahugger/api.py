@@ -5,10 +5,10 @@ from urllib.parse import urlparse
 import requests
 
 from datahugger.exceptions import DOIError
-from datahugger.services import DSpaceDataset
 from datahugger.services import DataDryadDataset
 from datahugger.services import DataOneDataset
 from datahugger.services import DataverseDataset
+from datahugger.services import DSpaceDataset
 from datahugger.services import FigShareDataset
 from datahugger.services import GitHubDataset
 from datahugger.services import HuggingFaceDataset
@@ -155,7 +155,6 @@ def _base_request(
     unzip=True,
     progress=True,
     print_only=False,
-    *args,
     **kwargs,
 ):
 
@@ -194,7 +193,6 @@ def _base_request(
             unzip=unzip,
             progress=progress,
             print_only=print_only,
-            *args,
             **kwargs,
         )
 
@@ -213,7 +211,6 @@ def _base_request(
         unzip=unzip,
         progress=progress,
         print_only=print_only,
-        *args,
         **kwargs,
     )
 
@@ -227,7 +224,6 @@ def get(
     unzip=True,
     progress=True,
     print_only=False,
-    *args,
     **kwargs,
 ):
     """Get the content of repository.
@@ -269,7 +265,6 @@ def get(
         unzip=unzip,
         progress=progress,
         print_only=print_only,
-        *args,
         **kwargs,
     ).download(output_folder, doi=doi)
 
@@ -277,7 +272,6 @@ def get(
 def info(
     url,
     doi=None,
-    *args,
     **kwargs,
 ):
     """Get info on the content of the dataset.
@@ -296,7 +290,6 @@ def info(
     b = _base_request(
         url,
         doi=doi,
-        *args,
         **kwargs,
     )
 

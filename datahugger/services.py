@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import Union
 from urllib.parse import quote
 
-from jsonpath_ng import parse
 import requests
+from jsonpath_ng import parse
 
 from datahugger.base import DatasetDownloader
 from datahugger.base import DatasetResult
@@ -299,10 +299,10 @@ class HuggingFaceDataset(DatasetDownloader, DatasetResult):
 
         try:
             from datasets import load_dataset
-        except ImportError:
+        except ImportError as err:
             raise ImportError(
                 "Install 'datasets' to use HuggingFace Datasets"
                 " or use 'pip install datahugger[all]'"
-            )
+            ) from err
 
         load_dataset(self.api_record_id, cache_dir=output_folder, **kwargs)
