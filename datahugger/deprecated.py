@@ -10,7 +10,6 @@ def load_repository(
     unzip=True,
     progress=True,
     print_only=False,
-    *args,
     **kwargs,
 ):
     """Load repository is deprecated.
@@ -26,6 +25,5 @@ def load_repository(
         unzip=unzip,
         progress=progress,
         print_only=print_only,
-        *args,
         **kwargs,
     )

@@ -6,9 +6,9 @@ import zipfile
 from pathlib import Path
 from typing import Union
 
-from jsonpath_ng import parse
 import natsort as ns
 import requests
+from jsonpath_ng import parse
 from scitree import scitree
 from tqdm import tqdm
 
@@ -36,7 +36,7 @@ def _scientific_sort(f, alg=ns.PATH):
     return x
 
 
-class DatasetResult(object):
+class DatasetResult:
     """Result class after downloading the dataset."""
 
     def __str__(self):
@@ -56,7 +56,7 @@ class DatasetResult(object):
         return scitree(self.output_folder, **kwargs)
 
 
-class DatasetDownloader(object):
+class DatasetDownloader:
     """Base class for downloading resources from repositories."""
 
     def __init__(
@@ -70,7 +70,7 @@ class DatasetDownloader(object):
         unzip=True,
         print_only=False,
     ):
-        super(DatasetDownloader, self).__init__()
+        super().__init__()
         self.url = url
         self.version = version
         self.base_url = base_url
@@ -174,13 +174,13 @@ class DatasetDownloader(object):
             and self.max_file_size is not None
             and file_size >= self.max_file_size
         ):
-            logging.info("Skipping large file {}".format(file_link))
+            logging.info(f"Skipping large file {file_link}")
             if self.progress:
-                print("{}: SKIPPED".format(_format_filename(file_name)))
+                print(f"{_format_filename(file_name)}: SKIPPED")
             return
 
         if not self.print_only:
-            logging.info("Downloading file {}".format(file_link))
+            logging.info(f"Downloading file {file_link}")
             res = requests.get(file_link, stream=True)
 
             output_fp = Path(output_folder, file_name)
@@ -205,7 +205,7 @@ class DatasetDownloader(object):
                 with open(output_fp, "wb") as f:
                     f.write(res.content)
         else:
-            print("{}: COMPLETE".format(_format_filename(file_name)))
+            print(f"{_format_filename(file_name)}: COMPLETE")
 
     def _parse_url(self, url):
         if not isinstance(url, str) or not _is_url(url):
@@ -281,7 +281,8 @@ class DatasetDownloader(object):
             if self._get_attr_kind(f) == "folder":
 
                 result.extend(
-                    self._get_files_recursive(self._get_attr_link(f), folder_name=f_path)
+                    self._get_files_recursive(
+                        self._get_attr_link(f), folder_name=f_path)
                 )
             else:
 
