@@ -100,6 +100,8 @@ class OSFDataset(DatasetDownloader, DatasetResult):
     API_URL_META = API_URL + "{api_record_id}/files/osfstorage/?format=jsonapi"
     META_FILES_JSONPATH = "data"
 
+    PAGINATION_JSONPATH = "links.next"
+
     # paths to file attributes
     ATTR_KIND_JSONPATH = "attributes.kind"
 
