@@ -176,12 +176,12 @@ def _base_request(
     if uri.hostname in URL_RESOLVE:
 
         r = requests.head(url, allow_redirects=True)
-        if r.status_code == 404:
+        if r.status_code == 404 and r.url and r.url.startswith("https://doi.org"):
             raise DOIError(
                 f"DOI cannot be found in the DOI System, see https://doi.org/{doi}"
             )
         if r.status_code != 200:
-            raise ValueError("Error")
+            r.raise_for_status()
 
         logging.info(f"Redirect from {url} to {r.url}")
 
