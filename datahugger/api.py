@@ -8,6 +8,7 @@ from datahugger.exceptions import DOIError
 from datahugger.services import DataDryadDataset
 from datahugger.services import DataOneDataset
 from datahugger.services import DataverseDataset
+from datahugger.services import Djehuty
 from datahugger.services import DSpaceDataset
 from datahugger.services import FigShareDataset
 from datahugger.services import GitHubDataset
@@ -34,6 +35,8 @@ SERVICES_NETLOC = {
     "data.mendeley.com": MendeleyDataset,
     # Figshare download
     "figshare.com": FigShareDataset,
+    # Djehuty
+    "data.4tu.nl": Djehuty,
     # DataOne repositories
     "arcticdata.io": DataOneDataset,
     "knb.ecoinformatics.org": DataOneDataset,
@@ -180,7 +183,10 @@ def _base_request(
             raise DOIError(
                 f"DOI cannot be found in the DOI System, see https://doi.org/{doi}"
             )
-        if r.status_code != 200:
+        elif r.status_code == 405:
+            # head request not allowed, try get request
+            r = requests.get(url, allow_redirects=True)
+        else:
             r.raise_for_status()
 
         logging.info(f"Redirect from {url} to {r.url}")

@@ -322,6 +322,7 @@ class DatasetDownloader:
 
         self._files = self._get_files_recursive(
             self.API_URL_META.format(
+                api_url=self.API_URL,
                 api_record_id=self.api_record_id,
                 version=self.version,
                 base_url=self.base_url,
