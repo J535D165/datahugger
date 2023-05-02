@@ -59,6 +59,8 @@ class DatasetResult:
 class DatasetDownloader:
     """Base class for downloading resources from repositories."""
 
+    API_URL = None
+
     def __init__(
         self,
         url: Union[str, int],
