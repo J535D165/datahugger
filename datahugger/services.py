@@ -24,7 +24,7 @@ class ZenodoDataset(DatasetDownloader, DatasetResult):
     API_URL = "https://zenodo.org/api/"
 
     # the files and metadata about the dataset
-    API_URL_META = API_URL + "records/{api_record_id}"
+    API_URL_META = "{api_url}records/{api_record_id}"
     META_FILES_JSONPATH = "files"
 
     # paths to file attributes
@@ -78,7 +78,7 @@ class FigShareDataset(DatasetDownloader, DatasetResult):
     API_URL = "https://api.figshare.com/v2"
 
     # the files and metadata about the dataset
-    API_URL_META = API_URL + "/articles/{api_record_id}/files"
+    API_URL_META = "{api_url}/articles/{api_record_id}/files"
 
     # paths to file attributes
     ATTR_FILE_LINK_JSONPATH = "download_url"
@@ -86,6 +86,16 @@ class FigShareDataset(DatasetDownloader, DatasetResult):
     ATTR_SIZE_JSONPATH = "size"
     ATTR_HASH_JSONPATH = "computed_md5"
     ATTR_HASH_TYPE_VALUE = "md5"
+
+
+class Djehuty(FigShareDataset):
+    """Downloader for Djehuty repository."""
+
+    REGEXP_ID_AND_VERSION = r"articles\/.*\/(\d+)\/(\d+)"
+    REGEXP_ID = r"articles\/.*\/(\d+)"
+
+    # the base entry point of the REST API
+    API_URL = "https://data.4tu.nl/v2"
 
 
 class OSFDataset(DatasetDownloader, DatasetResult):
@@ -97,7 +107,7 @@ class OSFDataset(DatasetDownloader, DatasetResult):
     API_URL = "https://api.osf.io/v2/registrations/"
 
     # the files and metadata about the dataset
-    API_URL_META = API_URL + "{api_record_id}/files/osfstorage/?format=jsonapi"
+    API_URL_META = "{api_url}{api_record_id}/files/osfstorage/?format=jsonapi"
     META_FILES_JSONPATH = "data"
 
     PAGINATION_JSONPATH = "links.next"
@@ -250,11 +260,11 @@ class MendeleyDataset(DatasetDownloader, DatasetResult):
     API_URL = "https://data.mendeley.com/public-api/"
 
     # version url
-    API_URL_VERSION = API_URL + "datasets/{api_record_id}/versions"
+    API_URL_VERSION = "{api_url}datasets/{api_record_id}/versions"
 
     # the files and metadata about the dataset
     API_URL_META = (
-        API_URL + "datasets/{api_record_id}/files?folder_id=root&version={version}"
+        "{api_url}datasets/{api_record_id}/files?folder_id=root&version={version}"
     )
 
     # paths to file attributes
@@ -268,7 +278,9 @@ class MendeleyDataset(DatasetDownloader, DatasetResult):
 
         if self.version is None:
             r_version = requests.get(
-                self.API_URL_VERSION.format(api_record_id=self.api_record_id)
+                self.API_URL_VERSION.format(
+                    api_url=self.API_URL,
+                    api_record_id=self.api_record_id)
             )
             self.version = r_version.json()[-1]["version"]
 
