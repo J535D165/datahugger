@@ -310,6 +310,8 @@ class HuggingFaceDataset(DatasetDownloader, DatasetResult):
         output_folder: Union[Path, str],
         **kwargs,
     ):
+        if "doi" in kwargs:
+            del kwargs["doi"]
 
         try:
             from datasets import load_dataset
