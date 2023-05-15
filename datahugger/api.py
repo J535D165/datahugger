@@ -272,7 +272,7 @@ def get(
         progress=progress,
         print_only=print_only,
         **kwargs,
-    ).download(output_folder, doi=doi)
+    ).download(output_folder, doi=doi, **kwargs)
 
 
 def info(
