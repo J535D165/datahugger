@@ -71,6 +71,7 @@ class DatasetDownloader:
         progress=True,
         unzip=True,
         print_only=False,
+        **kwargs,
     ):
         super().__init__()
         self.url = url
