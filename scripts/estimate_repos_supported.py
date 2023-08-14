@@ -43,7 +43,7 @@ if 1:
         r"\<\!\-\-\scount\s\-\-\>(\d+)\<\!\-\-\scount\s\-\-\>",
         f"<!-- count -->{n_total}<!-- count -->",
         readme,
-        re.MULTILINE,
+        flags=re.MULTILINE,
     )
 
     with open("README.md", "w") as f_write:

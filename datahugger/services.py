@@ -241,9 +241,7 @@ class DSpaceDataset(DatasetDownloader, DatasetResult):
 
     def _pre_files(self):
 
-        handle_id_url = "{base_url}/rest/handle/{api_record_id}".format(
-            base_url=self.base_url, api_record_id=self.api_record_id
-        )
+        handle_id_url = f"{self.base_url}/rest/handle/{self.api_record_id}"
         res = requests.get(handle_id_url)
 
         # set the API_URL_META
