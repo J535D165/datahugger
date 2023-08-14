@@ -135,8 +135,9 @@ SERVICES_NETLOC_REGEXP = {
     r".*\/handle\/\d+\/\d+": DSpaceDataset,
 }
 
+# add keys in lower-case for fast case-insensitive lookups
 RE3DATA_SOFTWARE = {
-    "DataVerse": DataverseDataset,  # Hits on re3data 2022-09-02: (145)
+    "dataverse": DataverseDataset,  # Hits on re3data 2022-09-02: (145)
     # "DSpace": DSpaceDataset,  # Hits on re3data 2022-09-02: (115)
     # "CKAN": CKANDataset,  # Hits on re3data 2022-09-02: (89)
     # "MySQL": MySQLDataset,  # Hits on re3data 2022-09-02: (86)
@@ -353,4 +354,4 @@ def _resolve_service_with_re3data(doi):
 
             r_software = get_re3data_repository(repo["id"])
 
-            return RE3DATA_SOFTWARE[r_software]
+            return RE3DATA_SOFTWARE[r_software.lower()]
