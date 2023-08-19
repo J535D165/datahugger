@@ -15,7 +15,6 @@ from datahugger.exceptions import DOIError
 
 
 def main():
-
     parser = argparse.ArgumentParser(
         prog="datahugger",
         description="One downloader for all scientific data.",
@@ -78,7 +77,6 @@ def main():
         print("Collecting...")
 
     try:
-
         # Start downloading
         get(
             args.url_or_doi,
@@ -111,5 +109,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()

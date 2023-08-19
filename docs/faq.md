@@ -8,5 +8,3 @@ APIs for supplementary material. Please let us know if there is a journal
 with a proper API.
 
 ## The data repository is not supported by Datahugger
-
-

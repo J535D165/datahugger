@@ -52,4 +52,3 @@ DataOne software is supported by Datahugger.
 ### DataVerse repositories
 
 See [https://dataverse.org/institutions](https://dataverse.org/institutions) and [DataVerse on Re3data.org](https://www.re3data.org/search?query=&software%5B%5D=DataVerse) for an overview of DataVerse repositories.
-

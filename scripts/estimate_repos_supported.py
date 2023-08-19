@@ -23,7 +23,6 @@ print("Number of supported data repositories", n_total)
 
 
 if 1:
-
     with open("README.md") as f_read:
         readme = f_read.read()
 
