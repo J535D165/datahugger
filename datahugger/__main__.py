@@ -14,6 +14,11 @@ from datahugger import get
 from datahugger.exceptions import DOIError
 
 
+def _red(s):
+
+    return f"\u001b[31m{s}\u001b[0m"
+
+
 def main():
 
     parser = argparse.ArgumentParser(
@@ -74,9 +79,6 @@ def main():
 
     logging.basicConfig(level=args.log_level)
 
-    if args.progress:
-        print("Collecting...")
-
     try:
 
         # Start downloading
@@ -95,7 +97,7 @@ def main():
         if logging.DEBUG == logging.root.level:
             raise doi_err
         else:
-            print(f"\u001b[31mDOI Error: {doi_err}\u001b[0m")
+            print(_red(f"DOI Error: {doi_err}"))
             exit(1)
 
     except Exception as err:
@@ -103,7 +105,13 @@ def main():
         if logging.DEBUG == logging.root.level:
             raise err
         else:
-            print(f"\u001b[31mFailed to download: {err}\u001b[0m")
+            print(_red(f"Error: {err}"))
+            print("")
+            print("Do you think this is a data repository that needs to be supported?")
+            print("Please request support in the issue tracker:")
+            print("")
+            print("\thttps://github.com/J535D165/datahugger/issues/new/choose")
+            print()
             exit(1)
 
     if args.progress:

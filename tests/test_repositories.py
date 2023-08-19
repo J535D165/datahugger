@@ -20,8 +20,10 @@ TESTS_URLS = [
         "https://figshare.com/articles/dataset/Long-term_behavioral_repeatability_in_wild_adult_and_captive_juvenile_turtles_implications_for_personality_development/8851784",
         "cross_year_data2.csv",
     ),
-    ("https://doi.org/10.15131/shef.data.22010159.v2",
-     "ScHARR QUIT evaluation statistical and health economic analysis plan.pdf"),
+    (
+        "https://doi.org/10.15131/shef.data.22010159.v2",
+        "ScHARR QUIT evaluation statistical and health economic analysis plan.pdf",
+    ),
     # Djehuty
     ("https://doi.org/10.4121/21989216.v1", "README.txt"),
     # Dryad
@@ -42,11 +44,12 @@ TESTS_URLS = [
     ("https://doi.org/10.17632/p6wmtv6t5g", "READMI Stranding Sea Turtle records.pdf"),
     # Dataone
     ("https://doi.org/10.18739/A2KH0DZ42", "2012F_Temperature_Data.csv"),
-
     # DSpace
     ("https://uhra.herts.ac.uk/handle/2299/26087", "pdf.pdf"),
-    ("https://repositorioinstitucional.ceu.es/handle/10637/2741",
-     "Aquaporin_1_JAMartin_et_al_MedSport_2009.pdf"),
+    (
+        "https://repositorioinstitucional.ceu.es/handle/10637/2741",
+        "Aquaporin_1_JAMartin_et_al_MedSport_2009.pdf",
+    ),
 ]
 
 

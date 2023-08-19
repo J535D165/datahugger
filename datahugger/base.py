@@ -288,7 +288,8 @@ class DatasetDownloader:
 
                 result.extend(
                     self._get_files_recursive(
-                        self._get_attr_link(f), folder_name=f_path)
+                        self._get_attr_link(f), folder_name=f_path
+                    )
                 )
             else:
 
@@ -308,8 +309,7 @@ class DatasetDownloader:
 
             if next_url:
                 result.extend(
-                    self._get_files_recursive(
-                        next_url, folder_name=folder_name)
+                    self._get_files_recursive(next_url, folder_name=folder_name)
                 )
 
         return result
@@ -350,7 +350,7 @@ class DatasetDownloader:
                 file_name=f["name"],
                 file_size=f["size"],
                 file_hash=f["hash"],
-                file_hash_type=f["hash_type"]
+                file_hash_type=f["hash_type"],
             )
 
     def download(

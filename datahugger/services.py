@@ -35,15 +35,11 @@ class ZenodoDataset(DatasetDownloader, DatasetResult):
 
     def _get_attr_hash(self, record):
 
-        return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(
-            ":"
-        )[1]
+        return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(":")[1]
 
     def _get_attr_hash_type(self, record):
 
-        return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(
-            ":"
-        )[0]
+        return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(":")[0]
 
 
 class DataverseDataset(DatasetDownloader, DatasetResult):
@@ -277,8 +273,8 @@ class MendeleyDataset(DatasetDownloader, DatasetResult):
         if self.version is None:
             r_version = requests.get(
                 self.API_URL_VERSION.format(
-                    api_url=self.API_URL,
-                    api_record_id=self.api_record_id)
+                    api_url=self.API_URL, api_record_id=self.api_record_id
+                )
             )
             self.version = r_version.json()[-1]["version"]
 
