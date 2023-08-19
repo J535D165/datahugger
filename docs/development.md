@@ -44,5 +44,3 @@ Scientific software rarely offers the options to import datasets from a DOI.
 Imagine what it would look like if you could. You can open a statistical
 software and you can start working on any published dataset. This is why we
 need persistent identifiers.
-
-

@@ -15,12 +15,10 @@ from datahugger.exceptions import DOIError
 
 
 def _red(s):
-
     return f"\u001b[31m{s}\u001b[0m"
 
 
 def main():
-
     parser = argparse.ArgumentParser(
         prog="datahugger",
         description="One downloader for all scientific data.",
@@ -80,7 +78,6 @@ def main():
     logging.basicConfig(level=args.log_level)
 
     try:
-
         # Start downloading
         get(
             args.url_or_doi,
@@ -119,5 +116,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()

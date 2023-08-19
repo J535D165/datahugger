@@ -25,7 +25,6 @@ def _is_url(s: str) -> bool:
 
 
 def _format_filename(s, len_s=35) -> str:
-
     # README_Pfaller_Robinson_2022_Global_Sea_Turtle_Epibiont_Database.txt
 
     if len_s is None:
@@ -62,7 +61,6 @@ def _is_doi(s: str) -> bool:
 
 
 def get_base_url(url):
-
     uri = urlparse(url)
 
     return uri.scheme + "://" + uri.netloc
@@ -100,7 +98,6 @@ def get_datapublisher_from_doi(doi):
 
 
 def get_re3data_repositories(url="https://www.re3data.org/api/v1/repositories"):
-
     r = requests.get(url)
 
     if r.status_code != 200:
@@ -113,7 +110,6 @@ def get_re3data_repositories(url="https://www.re3data.org/api/v1/repositories"):
 
 
 def get_re3data_repository(re3data_id):
-
     namespaces = {"r3d": "http://www.re3data.org/schema/2-2"}
     r = requests.get(f"https://www.re3data.org/api/v1/repository/{re3data_id}")
 

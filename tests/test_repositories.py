@@ -54,7 +54,6 @@ TESTS_URLS = [
 
 
 def test_url_checker():
-
     assert not _is_url("82949")
     assert _is_url("https://doi.org/10.5281/zenodo.6614829")
 
@@ -83,12 +82,10 @@ def test_load_zenodo_6614829(url_or_id, tmpdir):
 
 
 def test_load_github_cbsodata(tmpdir):
-
     datahugger.get("https://github.com/j535d165/cbsodata", tmpdir)
 
 
 def test_info_without_loading(tmpdir):
-
     dh_get = datahugger.get("https://osf.io/wdzh5/", output_folder=".", print_only=True)
 
     dh_info = datahugger.info("https://osf.io/wdzh5/")

@@ -23,7 +23,6 @@ FILE_RANKING = [
 
 
 def _scientific_sort(f, alg=ns.PATH):
-
     for rank, names in enumerate(FILE_RANKING):
         if Path(f).stem.lower() in names:
             prio = rank
@@ -40,11 +39,9 @@ class DatasetResult:
     """Result class after downloading the dataset."""
 
     def __str__(self):
-
         return f"<{self.__class__.__name__} n_files={len(self)} >"
 
     def __len__(self):
-
         return len(self.files)
 
     def tree(self, **kwargs):
@@ -83,7 +80,6 @@ class DatasetDownloader:
         self.print_only = print_only
 
     def _get_attr_attr(self, record, jsonp):
-
         try:
             jsonpath_expression = parse(jsonp)
             return jsonpath_expression.find(record)[0].value
@@ -91,10 +87,8 @@ class DatasetDownloader:
             return None
 
     def _get_attr_link(self, record):
-
         # get the link to the folder
         if self._get_attr_kind(record) == "folder":
-
             if not hasattr(self, "ATTR_FOLDER_LINK_JSONPATH"):
                 return None
 
@@ -102,35 +96,30 @@ class DatasetDownloader:
 
         # get the link to the file
         else:
-
             if not hasattr(self, "ATTR_FILE_LINK_JSONPATH"):
                 return None
 
             return self._get_attr_attr(record, self.ATTR_FILE_LINK_JSONPATH)
 
     def _get_attr_name(self, record):
-
         if not hasattr(self, "ATTR_NAME_JSONPATH"):
             return None
 
         return self._get_attr_attr(record, self.ATTR_NAME_JSONPATH)
 
     def _get_attr_size(self, record):
-
         if not hasattr(self, "ATTR_SIZE_JSONPATH"):
             return None
 
         return self._get_attr_attr(record, self.ATTR_SIZE_JSONPATH)
 
     def _get_attr_hash(self, record):
-
         if not hasattr(self, "ATTR_HASH_JSONPATH"):
             return None
 
         return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH)
 
     def _get_attr_hash_type(self, record):
-
         if hasattr(self, "ATTR_HASH_TYPE_VALUE"):
             return self.ATTR_HASH_TYPE_VALUE
 
@@ -140,7 +129,6 @@ class DatasetDownloader:
         return self._get_attr_attr(record, self.ATTR_HASH_TYPE_JSONPATH)
 
     def _get_attr_kind(self, record):
-
         if not hasattr(self, "ATTR_KIND_JSONPATH"):
             return "file"
 
@@ -232,7 +220,6 @@ class DatasetDownloader:
         raise ValueError(f"Failed to parse record identifier from URL '{url}'")
 
     def _unpack_single_folder(self, zip_url, output_folder):
-
         r = requests.get(zip_url)
         z = zipfile.ZipFile(io.BytesIO(r.content))
 
@@ -244,7 +231,6 @@ class DatasetDownloader:
 
     @property
     def api_record_id(self):
-
         if hasattr(self, "_api_record_id"):
             return self._api_record_id
 
@@ -259,7 +245,6 @@ class DatasetDownloader:
         pass
 
     def _get_files_recursive(self, url, folder_name=None):
-
         if not isinstance(url, str):
             ValueError(f"Expected url to be string type, got {type(url)}")
 
@@ -277,7 +262,6 @@ class DatasetDownloader:
             files_raw = reponse
 
         for f in files_raw:
-
             # create the file or folder path
             if folder_name is None:
                 f_path = self._get_attr_name(f)
@@ -285,14 +269,12 @@ class DatasetDownloader:
                 f_path = str(Path(folder_name, self._get_attr_name(f)))
 
             if self._get_attr_kind(f) == "folder":
-
                 result.extend(
                     self._get_files_recursive(
                         self._get_attr_link(f), folder_name=f_path
                     )
                 )
             else:
-
                 result.append(
                     {
                         "link": self._get_attr_link(f),
@@ -316,7 +298,6 @@ class DatasetDownloader:
 
     @property
     def files(self):
-
         if hasattr(self, "_files"):
             return self._files
 
@@ -338,7 +319,6 @@ class DatasetDownloader:
         output_folder: Union[Path, str],
         **kwargs,
     ):
-
         if len(self.files) == 1 and self.files[0]["link"].endswith(".zip"):
             self._unpack_single_folder(self.files[0]["link"], output_folder)
             return

@@ -8,7 +8,7 @@ Datahugger is a tool to download scientific datasets, software, and code from a 
 
 ## Supported repositories
 
-Datahugger offers support for more than [<!-- count -->350<!-- count --> generic and specific (scientific) repositories](https://j535d165.github.io/datahugger/repositories) (and more to come!).
+Datahugger offers support for more than [<!-- count -->371<!-- count --> generic and specific (scientific) repositories](https://j535d165.github.io/datahugger/repositories) (and more to come!).
 
 [![Datahugger support Zenodo, Dataverse, DataOne, GitHub, FigShare, HuggingFace, Mendeley Data, Dryad, OSF, and many more](https://github.com/J535D165/datahugger/raw/main/docs/images/logos.png)](https://j535d165.github.io/datahugger/repositories)
 
@@ -36,7 +36,7 @@ and the second argument the name of the folder to store the dataset (will be
 created if it does not exist).
 
 The following code loads dataset [10.5061/dryad.mj8m0](https://doi.org/10.5061/dryad.mj8m0) into
-the folder `data`. 
+the folder `data`.
 
 ```python
 import datahugger
@@ -45,8 +45,8 @@ import datahugger
 datahugger.get("10.5061/dryad.mj8m0", "data")
 ```
 
-For an example how this can integrate with your work, see the 
-[example workflow notebook](https://github.com/J535D165/datahugger/blob/main/examples/example_datahugger_in_workflow.ipynb) or 
+For an example how this can integrate with your work, see the
+[example workflow notebook](https://github.com/J535D165/datahugger/blob/main/examples/example_datahugger_in_workflow.ipynb) or
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/J535D165/datahugger/blob/main/examples/example_datahugger_in_workflow.ipynb)
 
 
@@ -74,7 +74,7 @@ README_for_SoilSimulation_[...].txt: 100%|████████████�
 Dataset successfully downloaded.
 ```
 
-**Tip:** On some systems, you have to quote the DOI or URL. For example: `datahugger "10.5061/dryad.mj8m0" data`. 
+**Tip:** On some systems, you have to quote the DOI or URL. For example: `datahugger "10.5061/dryad.mj8m0" data`.
 
 ## Tips and tricks
 

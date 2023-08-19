@@ -161,7 +161,6 @@ def _base_request(
     print_only=False,
     **kwargs,
 ):
-
     # check if the url is a doi, if so, make a proper doi url out of it.
     if url.startswith("doi:"):
         url = url[4:]
@@ -178,7 +177,6 @@ def _base_request(
 
     # if netloc is doi.org, follow the redirect
     if uri.hostname in URL_RESOLVE:
-
         r = requests.head(url, allow_redirects=True)
         if r.status_code == 404 and r.url and r.url.startswith("https://doi.org"):
             raise DOIError(
@@ -307,7 +305,6 @@ def info(
 
 
 def _resolve_service(url, doi):
-
     # initial attempt to resolve service
     service_class = _resolve_service_from_netloc(url)
 
@@ -327,7 +324,6 @@ def _resolve_service(url, doi):
 
 
 def _resolve_service_from_netloc(url):
-
     uri = urlparse(url)
 
     logging.info(f"Resolve service for netloc '{uri.hostname}'")
@@ -342,7 +338,6 @@ def _resolve_service_from_netloc(url):
 
 
 def _resolve_service_with_re3data(doi):
-
     logging.info("Resolve service with datacite and re3data")
     publisher = get_datapublisher_from_doi(doi)
     logging.info(f"Datacite publisher of dataset: {publisher}")
@@ -353,9 +348,7 @@ def _resolve_service_with_re3data(doi):
     data_repos = get_re3data_repositories()
 
     for repo in data_repos:
-
         if publisher.lower() == repo["name"].lower():
-
             r_software = get_re3data_repository(repo["id"])
 
             return RE3DATA_SOFTWARE[r_software.lower()]

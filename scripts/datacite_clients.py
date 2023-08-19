@@ -7,7 +7,6 @@ url_datacite_clients = (
 
 data = []
 while url_datacite_clients:
-
     r = requests.get(url_datacite_clients)
     res = r.json()
     data.extend(res["data"])
@@ -19,7 +18,6 @@ print(len(data))
 result = []
 
 for client in data:
-
     result.append(
         {
             "datacite_id": client["id"],

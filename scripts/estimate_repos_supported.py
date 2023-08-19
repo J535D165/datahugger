@@ -1,41 +1,28 @@
 import re
-import xml.etree.ElementTree as ET
+from pprint import pprint
 
-import requests
+from py3data import Repositories
 
+counts = {
+    "dataverse": Repositories().filter(software="Dataverse").count(),
+    "dspace": Repositories().filter(software="DSpace").count(),
+    "figshare": Repositories().query("figshare").count(),
+    "dataone": Repositories().query("dataone").count(),
+    "zenodo": 1,
+    "mendeley": 1,
+    "osf": 1,
+    "dryad": 1,
+    "github": 1,
+    "huggingface": 1,
+}
 
-def get_count(url):
+n_total = sum([v for k, v in counts.items()])
 
-    r = requests.get(url)
-    tree = ET.fromstring(r.content)
-
-    return len(tree)
-
-
-n_dataverse = get_count(
-    "https://www.re3data.org/api/beta/repositories?software%5B%5D=DataVerse"
-)
-# print("DataVerse", n_dataverse)
-
-n_dspace = get_count(
-    "https://www.re3data.org/api/beta/repositories?software%5B%5D=DSpace"
-)
-# print("DSpace", n_dspace)
-
-n_figshare = get_count("https://www.re3data.org/api/beta/repositories?query=figshare")
-# print("FigShare", n_figshare)
-
-n_dataone = get_count("https://www.re3data.org/api/beta/repositories?query=dataone")
-# print("DataOne", n_dataone)
-
-single_instance_repos = ["zenodo", "mendeley", "osf", "dryad", "github", "huggingface"]
-
-n_total = n_dataverse + n_figshare + n_dspace + n_dataone + len(single_instance_repos)
+pprint(counts)
 print("Number of supported data repositories", n_total)
 
 
 if 1:
-
     with open("README.md") as f_read:
         readme = f_read.read()
 

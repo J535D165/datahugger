@@ -34,11 +34,9 @@ class ZenodoDataset(DatasetDownloader, DatasetResult):
     ATTR_HASH_JSONPATH = "checksum"
 
     def _get_attr_hash(self, record):
-
         return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(":")[1]
 
     def _get_attr_hash_type(self, record):
-
         return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(":")[0]
 
 
@@ -58,7 +56,6 @@ class DataverseDataset(DatasetDownloader, DatasetResult):
     ATTR_HASH_TYPE_VALUE = "md5"
 
     def _get_attr_link(self, record):
-
         return "{}/api/access/datafile/{}".format(
             self.base_url, record["dataFile"]["id"]
         )
@@ -134,7 +131,6 @@ class DataDryadDataset(DatasetDownloader, DatasetResult):
 
     @property
     def files(self):
-
         if hasattr(self, "_files"):
             return self._files
 
@@ -174,7 +170,6 @@ class DataDryadDataset(DatasetDownloader, DatasetResult):
         return self._files
 
     def _get_attr_link(self, record):
-
         return "https://datadryad.org" + record["_links"]["stash:file-download"]["href"]
 
 
@@ -188,7 +183,6 @@ class DataOneDataset(DatasetDownloader, DatasetResult):
 
     @property
     def files(self):
-
         if hasattr(self, "_files"):
             return self._files
 
@@ -232,11 +226,9 @@ class DSpaceDataset(DatasetDownloader, DatasetResult):
     ATTR_HASH_TYPE_VALUE = "checkSum.value"
 
     def _get_attr_link(self, record):
-
         return self.base_url + record["retrieveLink"]
 
     def _pre_files(self):
-
         handle_id_url = f"{self.base_url}/rest/handle/{self.api_record_id}"
         res = requests.get(handle_id_url)
 
@@ -269,7 +261,6 @@ class MendeleyDataset(DatasetDownloader, DatasetResult):
     ATTR_HASH_TYPE_VALUE = "sha256"
 
     def _pre_files(self):
-
         if self.version is None:
             r_version = requests.get(
                 self.API_URL_VERSION.format(
@@ -286,7 +277,6 @@ class GitHubDataset(DatasetDownloader, DatasetResult):
     REGEXP_ID = r"github\.com\/([a-zA-Z0-9]+\/[a-zA-Z0-9]+)[\/]*.*"
 
     def _get(self, output_folder: Union[Path, str], *args, **kwargs):
-
         res = requests.get(
             f"{self.API_URL}{self.api_record_id}/archive/refs/heads/master.zip"
         )
@@ -304,7 +294,6 @@ class HuggingFaceDataset(DatasetDownloader, DatasetResult):
         output_folder: Union[Path, str],
         **kwargs,
     ):
-
         try:
             from datasets import load_dataset
         except ImportError as err:
