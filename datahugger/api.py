@@ -179,9 +179,7 @@ def _base_request(
     if uri.hostname in URL_RESOLVE:
         r = requests.head(url, allow_redirects=True)
         if r.status_code == 404 and r.url and r.url.startswith("https://doi.org"):
-            raise DOIError(
-                f"DOI cannot be found in the DOI System, see https://doi.org/{doi}"
-            )
+            raise DOIError(f"DOI {doi} not found in the DOI system")
         elif r.status_code == 405:
             # head request not allowed, try get request
             r = requests.get(url, allow_redirects=True)
@@ -326,6 +324,9 @@ def _resolve_service(url, doi):
 def _resolve_service_from_netloc(url):
     uri = urlparse(url)
 
+    if not uri.hostname:
+        return None
+
     logging.info(f"Resolve service for netloc '{uri.hostname}'")
     if uri.hostname in SERVICES_NETLOC.keys():
         return SERVICES_NETLOC[uri.hostname]
@@ -338,6 +339,9 @@ def _resolve_service_from_netloc(url):
 
 
 def _resolve_service_with_re3data(doi):
+    if not doi:
+        return None
+
     logging.info("Resolve service with datacite and re3data")
     publisher = get_datapublisher_from_doi(doi)
     logging.info(f"Datacite publisher of dataset: {publisher}")

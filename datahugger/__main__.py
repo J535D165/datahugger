@@ -14,8 +14,12 @@ from datahugger import get
 from datahugger.exceptions import DOIError
 
 
-def _red(s):
-    return f"\u001b[31m{s}\u001b[0m"
+def print_red(s):
+    print(f"\u001b[31m{s}\u001b[0m")
+
+
+def print_green(s):
+    print(f"\u001b[32m{s}\u001b[0m")
 
 
 def main():
@@ -94,7 +98,13 @@ def main():
         if logging.DEBUG == logging.root.level:
             raise doi_err
         else:
-            print(_red(f"DOI Error: {doi_err}"))
+            print_red(f"Error: {doi_err}")
+            print("")
+            print("Check if your DOI is correct at doi.org. Is the DOI valid?")
+            print("Please request support in the issue tracker:")
+            print("")
+            print("\thttps://github.com/J535D165/datahugger/issues/new/choose")
+            print()
             exit(1)
 
     except Exception as err:
@@ -102,7 +112,7 @@ def main():
         if logging.DEBUG == logging.root.level:
             raise err
         else:
-            print(_red(f"Error: {err}"))
+            print_red(f"Error: {err}")
             print("")
             print("Do you think this is a data repository that needs to be supported?")
             print("Please request support in the issue tracker:")
@@ -112,7 +122,7 @@ def main():
             exit(1)
 
     if args.progress:
-        print("\u001b[32mDataset successfully downloaded.\u001b[0m")
+        print_green("Dataset successfully downloaded.")
 
 
 if __name__ == "__main__":
