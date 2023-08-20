@@ -133,6 +133,7 @@ SERVICES_NETLOC = {
 SERVICES_NETLOC_REGEXP = {
     r".*\/articles\/.*\/.*\/\d+": FigShareDataset,
     r".*\/handle\/\d+\/\d+": DSpaceDataset,
+    r".*\/dataset\.xhtml\?persistentId\=.*": DataverseDataset,
 }
 
 # add keys in lower-case for fast case-insensitive lookups
