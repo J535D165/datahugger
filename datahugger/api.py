@@ -23,7 +23,7 @@ from datahugger.utils import get_datapublisher_from_doi
 from datahugger.utils import get_re3data_repositories
 from datahugger.utils import get_re3data_repository
 
-URL_RESOLVE = ["doi.org"]
+URL_RESOLVE = ["doi.org", "hdl.handle.net"]
 
 # fast lookup
 SERVICES_NETLOC = {
