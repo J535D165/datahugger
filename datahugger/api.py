@@ -138,8 +138,8 @@ SERVICES_NETLOC_REGEXP = {
 
 # add keys in lower-case for fast case-insensitive lookups
 RE3DATA_SOFTWARE = {
-    "dataverse": DataverseDataset,  # Hits on re3data 2022-09-02: (145)
-    # "DSpace": DSpaceDataset,  # Hits on re3data 2022-09-02: (115)
+    "dataverse": DataverseDataset,
+    "dspace": DSpaceDataset,
     # "CKAN": CKANDataset,  # Hits on re3data 2022-09-02: (89)
     # "MySQL": MySQLDataset,  # Hits on re3data 2022-09-02: (86)
     # "Fedora": FedoraDataset,  # Hits on re3data 2022-09-02: (43)
