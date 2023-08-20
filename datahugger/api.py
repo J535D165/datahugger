@@ -246,7 +246,7 @@ def get(
         the file is skipped.
     force_download: bool
         Force the download of the dataset even if there are already
-        files in the distination folder. Default: False.
+        files in the destination folder. Default: False.
     unzip: bool
         Unzip is the output is a single zip file. Default: True.
     progress: bool
