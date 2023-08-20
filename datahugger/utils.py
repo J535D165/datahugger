@@ -5,6 +5,8 @@ from urllib.parse import urlparse
 
 import requests
 
+from datahugger.exceptions import DataCiteError
+
 
 def _is_url(s: str) -> bool:
     """Check if the string is a URL.
@@ -86,20 +88,13 @@ def get_datapublisher_from_doi(doi):
 
     """
 
-    r = requests.get(
-        f"https://doi.org/{doi}",
-        headers={"Accept": "application/vnd.datacite.datacite+xml"},
-        allow_redirects=True,
-    )
+    r = requests.get(f"https://api.datacite.org/dois/{doi}")
+    record = r.json()
 
-    if r.status_code == 406:
-        raise ValueError("Publisher not known to DataCite")
+    if r.status_code != 200:
+        raise DataCiteError(record["errors"][0]["title"])
 
-    tree = ET.fromstring(r.content)
-
-    node_pub = tree.find("{http://datacite.org/schema/kernel-4}publisher")
-    if node_pub is not None:
-        return node_pub.text
+    return record["data"]["attributes"]["publisher"]
 
 
 def get_re3data_repositories(url="https://www.re3data.org/api/v1/repositories"):

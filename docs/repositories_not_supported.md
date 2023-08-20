@@ -18,26 +18,17 @@ When a repository is not supported, an error is returned (exit 1).
 === "CLI"
 
     ``` bash
-    datahugger 10.5061/dryad.31zcrjdm5 data
+    datahugger https://hdl.handle.net/10622/NHJZUD data
     ```
 
     ```
-    Traceback (most recent call last):
-      File "/Users/Bruin056/.pyenv/versions/sra-dev/bin/datahugger", line 8, in <module>
-        sys.exit(main())
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/__main__.py", line 65, in main
-        get(
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 185, in load_repository
-        return get(
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 197, in load_repository
-        service_class = _resolve_service(url, doi)
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 226, in _resolve_service
-        service_class = _resolve_service_with_re3data(doi)
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 246, in _resolve_service_with_re3data
-        publisher = get_datapublisher_from_doi(doi)
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/utils.py", line 93, in get_datapublisher_from_doi
-        raise ValueError("DOI not found")
-    ValueError: DOI not found
+    Error: Data protocol for https://hdl.handle.net/10622/NHJZUD not found.
+
+    Do you think this is a data repository that needs to be supported?
+    Please request support in the issue tracker:
+
+      https://github.com/J535D165/datahugger/issues/new/choose
+
     ```
 
 === "Python"
@@ -48,21 +39,12 @@ When a repository is not supported, an error is returned (exit 1).
 
     ```
     Traceback (most recent call last):
-      File "/Users/Bruin056/.pyenv/versions/sra-dev/bin/datahugger", line 8, in <module>
-        sys.exit(main())
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/__main__.py", line 65, in main
-        get(
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 185, in load_repository
-        return get(
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 197, in load_repository
-        service_class = _resolve_service(url, doi)
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 226, in _resolve_service
-        service_class = _resolve_service_with_re3data(doi)
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/api.py", line 246, in _resolve_service_with_re3data
-        publisher = get_datapublisher_from_doi(doi)
-      File "/Users/Bruin056/Documents/GitHub/datahugger/datahugger/utils.py", line 93, in get_datapublisher_from_doi
-        raise ValueError("DOI not found")
-    ValueError: DOI not found
+      File "<stdin>", line 1, in <module>
+      File "/Users/User/projects/datahugger/api.py", line 263, in get
+        return _base_request(
+      File "/Users/User/projects/datahugger/api.py", line 205, in _base_request
+        raise ValueError(f"Data protocol for {url} not found.")
+    ValueError: Data protocol for https://hdl.handle.net/10622/NHJZUD not found.
     ```
 
 ## Request support

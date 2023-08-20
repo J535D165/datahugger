@@ -179,9 +179,7 @@ def _base_request(
     if uri.hostname in URL_RESOLVE:
         r = requests.head(url, allow_redirects=True)
         if r.status_code == 404 and r.url and r.url.startswith("https://doi.org"):
-            raise DOIError(
-                f"DOI cannot be found in the DOI System, see https://doi.org/{doi}"
-            )
+            raise DOIError(f"DOI {doi} not found in the DOI system")
         elif r.status_code == 405:
             # head request not allowed, try get request
             r = requests.get(url, allow_redirects=True)
@@ -204,9 +202,9 @@ def _base_request(
     service_class = _resolve_service(url, doi)
 
     if service_class is None:
-        raise ValueError(f"Data service for {url} is not supported.")
+        raise ValueError(f"Data protocol for {url} not found.")
 
-    logging.debug("Service found: " + str(service_class))
+    logging.info("Service found: " + str(service_class))
 
     return service_class(
         url,
@@ -308,14 +306,17 @@ def _resolve_service(url, doi):
     # initial attempt to resolve service
     service_class = _resolve_service_from_netloc(url)
 
-    if service_class is not None:
-        return service_class
+    try:
+        if service_class is not None:
+            return service_class
 
-    # try to resolve from re3data
-    service_class = _resolve_service_with_re3data(doi)
+        # try to resolve from re3data
+        service_class = _resolve_service_with_re3data(doi)
 
-    if service_class is not None:
-        return service_class
+        if service_class is not None:
+            return service_class
+    except Exception:
+        return None
 
     return None
 
@@ -323,20 +324,27 @@ def _resolve_service(url, doi):
 def _resolve_service_from_netloc(url):
     uri = urlparse(url)
 
-    logging.debug(f"Resolve service: search netloc '{uri.hostname}'")
-    if uri.hostname in SERVICES_NETLOC.keys():
-        logging.debug("Service found: " + uri.hostname)
+    if not uri.hostname:
+        return None
 
+    logging.info(f"Resolve service for netloc '{uri.hostname}'")
+    if uri.hostname in SERVICES_NETLOC.keys():
         return SERVICES_NETLOC[uri.hostname]
 
     for netloc_re, service in SERVICES_NETLOC_REGEXP.items():
         if re.match(netloc_re, url):
             return service
 
+    logging.info("Netloc not found")
+
 
 def _resolve_service_with_re3data(doi):
+    if not doi:
+        return None
+
+    logging.info("Resolve service with datacite and re3data")
     publisher = get_datapublisher_from_doi(doi)
-    logging.debug(f"Publisher of dataset: {publisher}")
+    logging.info(f"Datacite publisher of dataset: {publisher}")
 
     if not publisher:
         raise ValueError("Can't resolve the publisher from the DOI.")
@@ -348,3 +356,5 @@ def _resolve_service_with_re3data(doi):
             r_software = get_re3data_repository(repo["id"])
 
             return RE3DATA_SOFTWARE[r_software.lower()]
+
+    logging.info("Repository not found")
