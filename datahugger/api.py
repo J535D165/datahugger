@@ -178,12 +178,12 @@ def _base_request(
 
     # if netloc is doi.org, follow the redirect
     if uri.hostname in URL_RESOLVE:
-        r = requests.head(url, allow_redirects=True)
+        r = requests.head(url, allow_redirects=True, timeout=(3, 10))
         if r.status_code == 404 and r.url and r.url.startswith("https://doi.org"):
             raise DOIError(f"DOI {doi} not found in the DOI system")
         elif r.status_code == 405:
             # head request not allowed, try get request
-            r = requests.get(url, allow_redirects=True)
+            r = requests.get(url, allow_redirects=True, timeout=(3, 10))
         else:
             r.raise_for_status()
 
