@@ -11,21 +11,20 @@ def collect():
         yield {"id": r["id"], "type": r["type"], "url": r["attributes"]["url"]}
 
 
-def test_repo(df):
-    for index, record in df.iterrows():
-        print(index)
-        try:
-            print(dh.info(record["id"]).__class__.__name__)
-        except Exception as err:
-            print(err)
+def test_repo(r):
+    try:
+        cl = dh.info(r["id"]).__class__.__name__
+        print(r["id"], f"service found: {cl}")
+        return {"service": cl, "error": None}
+    except Exception as err:
+        print(r["id"], f"results in: {err}")
+        return {"service": None, "error": str(err)}
 
 
 if __name__ == "__main__":
-    # df = pd.DataFrame(collect())
-    # print(df)
-
-    # df.to_csv("repos_benchmark.csv", index=False)
-
     df = pd.read_csv("repos_benchmark.csv")
 
-    test_repo(df)
+    df[["service", "error"]] = df.apply(test_repo, axis=1, result_type="expand")
+    df.to_csv("repos_benchmark_tested.csv")
+
+    print(df)
