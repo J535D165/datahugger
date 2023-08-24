@@ -210,6 +210,12 @@ class DataOneDataset(DatasetDownloader, DatasetResult):
         return self._files
 
 
+class PangaeaDataset(DataOneDataset):
+    """Downloader for PangaeaDataset repository."""
+
+    REGEXP_ID = r"doi\.pangaea\.de/(.*)"
+
+
 class DSpaceDataset(DatasetDownloader, DatasetResult):
     """Downloader for DSpaceDataset repositories."""
 
