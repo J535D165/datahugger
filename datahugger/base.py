@@ -252,14 +252,14 @@ class DatasetDownloader:
 
         # get the data from URL
         res = requests.get(url)
-        reponse = res.json()
+        response = res.json()
 
         # find path to raw files
         if hasattr(self, "META_FILES_JSONPATH"):
             jsonpath_expression = parse(self.META_FILES_JSONPATH)
-            files_raw = jsonpath_expression.find(reponse)[0].value
+            files_raw = jsonpath_expression.find(response)[0].value
         else:
-            files_raw = reponse
+            files_raw = response
 
         for f in files_raw:
             # create the file or folder path
@@ -287,7 +287,7 @@ class DatasetDownloader:
 
         if hasattr(self, "PAGINATION_JSONPATH"):
             jsonpath_expression = parse(self.PAGINATION_JSONPATH)
-            next_url = jsonpath_expression.find(reponse)[0].value
+            next_url = jsonpath_expression.find(response)[0].value
 
             if next_url:
                 result.extend(

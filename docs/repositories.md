@@ -44,7 +44,7 @@ DataOne software is supported by Datahugger.
 - [EarthChem](https://ecl.earthchem.org)
 - [IEDA2](https://get.iedadata.org)
 - [U.S. ANTARCTIC PROGRAM DATA CENTER](https://usap-dc.org)
-- [Internation Year of the Salmon](https://iys.hakai.org)
+- [International Year of the Salmon](https://iys.hakai.org)
 - [PANGAEA](https://doi.pangaea.de)
 - [Rolling Deck to Repository (R2R)](https://rvdata.us)
 - [SEAD](https://sead-published.ncsa.illinois.edu)
