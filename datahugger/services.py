@@ -138,6 +138,7 @@ class DataDryadDataset(DatasetDownloader, DatasetResult):
         dataset_metadata_url = self.API_URL + "/datasets/" + doi_safe
 
         res = requests.get(dataset_metadata_url)
+        res.raise_for_status()
         dataset_metadata = res.json()
 
         # get the latest version of the dataset
@@ -145,6 +146,7 @@ class DataDryadDataset(DatasetDownloader, DatasetResult):
         url_latest_version = "https://datadryad.org" + latest_version + "/files"
 
         res = requests.get(url_latest_version)
+        res.raise_for_status()
         res.json()["_embedded"]["stash:files"]
 
         if hasattr(self, "META_FILES_JSONPATH"):
@@ -189,6 +191,7 @@ class DataOneDataset(DatasetDownloader, DatasetResult):
         doi_safe = quote(f"doi:{self.api_record_id}", safe="")
 
         res = requests.get(self.API_URL + doi_safe)
+        res.raise_for_status()
         meta_tree = ET.fromstring(res.content)
 
         x = []
@@ -231,6 +234,7 @@ class DSpaceDataset(DatasetDownloader, DatasetResult):
     def _pre_files(self):
         handle_id_url = f"{self.base_url}/rest/handle/{self.api_record_id}"
         res = requests.get(handle_id_url)
+        res.raise_for_status()
 
         # set the API_URL_META
         self.API_URL_META = self.base_url + res.json()["link"] + "/bitstreams"
@@ -267,6 +271,7 @@ class MendeleyDataset(DatasetDownloader, DatasetResult):
                     api_url=self.API_URL, api_record_id=self.api_record_id
                 )
             )
+            r_version.raise_for_status()
             self.version = r_version.json()[-1]["version"]
 
 
