@@ -34,7 +34,7 @@
 32,10.5169/seals-169922,dois,https://www.e-periodica.ch/digbib/view?pid=ant-001:2009:48::510,,Data protocol for https://www.e-periodica.ch/digbib/view?pid=ant-001:2009:48::510 not found.
 33,10.60516/au6834147,dois,https://pid.geoscience.gov.au/sample/AU6834147,,Data protocol for https://ld.pid.geoscience.gov.au/dataset/sites-samples-surveys/collections/samples/items/AU6834147 not found.
 34,10.20345/digitue.9430.6,dois,http://idb.ub.uni-tuebingen.de/opendigi/thq_1949#p=7,,500 Server Error: Internal Server Error for url: https://idb.ub.uni-tuebingen.de/opendigi/thq_1949#p=7
-35,10.26253/heal.uth.6259,dois,http://ir.lib.uth.gr/handle/11615/43801,,Expecting value: line 1 column 1 (char 0)
+35,10.26253/heal.uth.6259,dois,http://ir.lib.uth.gr/handle/11615/43801,,"HTTPConnectionPool(host='ir.lib.uth.gr', port=80): Max retries exceeded with url: /handle/11615/43801 (Caused by ConnectTimeoutError(<urllib3.connection.HTTPConnection object at 0x14102c130>, 'Connection to ir.lib.uth.gr timed out. (connect timeout=3)'))"
 36,10.7483/opendata.cms.hpeb.br66,dois,http://opendata.cern.ch/record/19849,,Data protocol for http://opendata.cern.ch/record/19849 not found.
 37,10.15468/dl.u7tn4q,dois,https://www.gbif.org/occurrence/download/0064046-230530130749713,,Data protocol for https://www.gbif.org/occurrence/download/0064046-230530130749713 not found.
 38,10.5284/1015686,dois,http://archaeologydataservice.ac.uk/archives/view/greylit/details.cfm?id=14259,,Data protocol for https://archaeologydataservice.ac.uk/library/browse/issue.xhtml?recordId=1110590&recordType=GreyLitSeries not found.
@@ -44,7 +44,7 @@
 42,10.2314/gbv:833134833,dois,https://www.tib.eu/suchen/id/TIBKAT:833134833/,,Data protocol for https://www.tib.eu/en/search/id/TIBKAT:833134833/ not found.
 43,10.5281/zenodo.2616244,dois,https://zenodo.org/record/2616244,ZenodoDataset,
 44,10.60516/au410484,dois,https://pid.geoscience.gov.au/sample/AU410484,,Data protocol for https://ld.pid.geoscience.gov.au/dataset/sites-samples-surveys/collections/samples/items/AU410484 not found.
-45,10.25673/opendata2-160592,dois,https://opendata2.uni-halle.de//handle/1516514412012/160616,,Expecting value: line 19 column 1 (char 18)
+45,10.25673/opendata2-160592,dois,https://opendata2.uni-halle.de//handle/1516514412012/160616,,404 Client Error:  for url: https://opendata2.uni-halle.de/rest/handle/1516514412012/160616
 46,10.13145/bacdive11149.20170829.2,dois,http://bacdive.dsmz.de/index.php?site=pdf_view&id=11149&doi=doi:10.13145/bacdive11149.20170829.2,,Data protocol for https://bacdive.dsmz.de/pdf-view/11149?site=pdf_view&id=11149&doi=doi%3A10.13145%2Fbacdive11149.20170829.2 not found.
 47,10.48550/arxiv.2001.01632,dois,https://arxiv.org/abs/2001.01632,,Data protocol for https://arxiv.org/abs/2001.01632 not found.
 48,10.34675/l30408,dois,https://www.royaltystat.com/doi_landing.cfm?doi=L30408,,Data protocol for https://www.royaltystat.com/doi_landing.cfm?doi=L30408 not found.
@@ -76,10 +76,10 @@
 74,10.60471/odp022ocy,dois,https://app.geosamples.org/sample/igsn/10.60471/ODP022OCY,,Data protocol for https://app.geosamples.org/sample/igsn/10.60471/ODP022OCY not found.
 75,10.25326/176,dois,https://sofog3d.aeris-data.fr/landing-page/?uuid=3adfdbde-c4bd-4926-8ee7-2c65090973e8,,Data protocol for https://sofog3d.aeris-data.fr/landing-page/?uuid=3adfdbde-c4bd-4926-8ee7-2c65090973e8 not found.
 76,10.60471/odp01yn0r,dois,https://app.geosamples.org/sample/igsn/10.60471/ODP01YN0R,,Data protocol for https://app.geosamples.org/sample/igsn/10.60471/ODP01YN0R not found.
-77,10.6084/m9.figshare.65357,dois,https://figshare.com/articles/figure/Differential_gene_expression_in_an_elite_hybrid_rice_cultivar_()_and_its_parental_lines_based_on_SAGE_data-0/65357,,404 Client Error: Not Found for url: https://figshare.com/articles/figure/Differential_gene_expression_in_an_elite_hybrid_rice_cultivar_()_and_its_parental_lines_based_on_SAGE_data-0/65357
-78,10.22008/fk2/b674ar/fpakcq,dois,https://dataverse01.geus.dk/file.xhtml?persistentId=doi:10.22008/FK2/B674AR/FPAKCQ,,404 Client Error: Not Found for url: https://dataverse.geus.dk/file.xhtml?persistentId=doi:10.22008/FK2/B674AR/FPAKCQ
+77,10.6084/m9.figshare.65357,dois,https://figshare.com/articles/figure/Differential_gene_expression_in_an_elite_hybrid_rice_cultivar_()_and_its_parental_lines_based_on_SAGE_data-0/65357,FigShareDataset,
+78,10.22008/fk2/b674ar/fpakcq,dois,https://dataverse01.geus.dk/file.xhtml?persistentId=doi:10.22008/FK2/B674AR/FPAKCQ,,"HTTPSConnectionPool(host='dataverse01.geus.dk', port=443): Max retries exceeded with url: /file.xhtml?persistentId=doi:10.22008/FK2/B674AR/FPAKCQ (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x140e66b80>, 'Connection to dataverse01.geus.dk timed out. (connect timeout=3)'))"
 79,10.48550/arxiv.astro-ph/9802301,dois,https://arxiv.org/abs/astro-ph/9802301,,Data protocol for https://arxiv.org/abs/astro-ph/9802301 not found.
-80,10.25642/ipk/gbis/225999,dois,https://apex.ipk-gatersleben.de/apex/f?p=DOI:RESOLVE:::NO:RP:DOI:10.25642/IPK/GBIS/225999,,404 Client Error: Not Found for url: https://apex.ipk-gatersleben.de/apex/f?p=DOI:RESOLVE:::NO:RP:DOI:10.25642/IPK/GBIS/225999
+80,10.25642/ipk/gbis/225999,dois,https://apex.ipk-gatersleben.de/apex/f?p=DOI:RESOLVE:::NO:RP:DOI:10.25642/IPK/GBIS/225999,,Data protocol for https://apex.ipk-gatersleben.de/apex/f?p=DOI:RESOLVE:::NO:RP:DOI:10.25642/IPK/GBIS/225999 not found.
 81,10.60516/au968117,dois,https://pid.geoscience.gov.au/sample/AU968117,,Data protocol for https://ld.pid.geoscience.gov.au/dataset/sites-samples-surveys/collections/samples/items/AU968117 not found.
 82,10.7891/e-manuscripta-81475,dois,https://www.e-manuscripta.ch/zut/doi/10.7891/e-manuscripta-81475,,Data protocol for https://www.e-manuscripta.ch/zut/doi/10.7891/e-manuscripta-81475 not found.
 83,10.60516/au6666150,dois,https://pid.geoscience.gov.au/sample/AU6666150,,Data protocol for https://ld.pid.geoscience.gov.au/dataset/sites-samples-surveys/collections/samples/items/AU6666150 not found.
@@ -114,7 +114,7 @@
 112,10.26036/cnp0003914,dois,https://db.cngb.org/search/project/CNP0003914/,,Data protocol for https://db.cngb.org/search/project/CNP0003914/ not found.
 113,10.60471/odp02xdwb,dois,https://app.geosamples.org/sample/igsn/10.60471/ODP02XDWB,,Data protocol for https://app.geosamples.org/sample/igsn/10.60471/ODP02XDWB not found.
 114,10.60471/odp023ggk,dois,https://app.geosamples.org/sample/igsn/10.60471/ODP023GGK,,Data protocol for https://app.geosamples.org/sample/igsn/10.60471/ODP023GGK not found.
-115,10.25911/5d63c0809ea32,dois,https://openresearch-repository.anu.edu.au/handle/1885/148235,,"HTTPSConnectionPool(host='openresearch-repository.anu.edu.au', port=443): Max retries exceeded with url: /handle/1885/148235 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)')))"
+115,10.25911/5d63c0809ea32,dois,https://openresearch-repository.anu.edu.au/handle/1885/148235,,403 Client Error: Forbidden for url: https://openresearch-repository.anu.edu.au/rest/handle/1885/148235
 116,10.17614/q46970z6j,dois,http://pqr.pitt.edu/mol/WWLDRJMXWRULQB-AEJSXWLSSA-N,,Data protocol for http://pqr.pitt.edu/mol/WWLDRJMXWRULQB-AEJSXWLSSA-N not found.
 117,10.48550/arxiv.1102.5540,dois,https://arxiv.org/abs/1102.5540,,Data protocol for https://arxiv.org/abs/1102.5540 not found.
 118,10.60516/au1634983,dois,https://pid.geoscience.gov.au/sample/AU1634983,,Data protocol for https://ld.pid.geoscience.gov.au/dataset/sites-samples-surveys/collections/samples/items/AU1634983 not found.
@@ -146,10 +146,10 @@
 144,10.18730/rh227,dois,https://glis.fao.org/glis/doi/10.18730/RH227,,Data protocol for https://glis.fao.org/glis/doi/10.18730/RH227 not found.
 145,10.60516/au951571,dois,https://pid.geoscience.gov.au/sample/AU951571,,Data protocol for https://ld.pid.geoscience.gov.au/dataset/sites-samples-surveys/collections/samples/items/AU951571 not found.
 146,10.60516/au7962058,dois,https://pid.geoscience.gov.au/sample/AU7962058,,Data protocol for https://ld.pid.geoscience.gov.au/dataset/sites-samples-surveys/collections/samples/items/AU7962058 not found.
-147,10.14469/ch/57295,dois,https://spectradspace.lib.imperial.ac.uk:8443/dspace/handle/10042/63744,,Expecting value: line 1 column 1 (char 0)
-148,10.25642/ipk/gbis/301448,dois,https://apex.ipk-gatersleben.de/apex/f?p=DOI:RESOLVE:::NO:RP:DOI:10.25642/IPK/GBIS/301448,,404 Client Error: Not Found for url: https://apex.ipk-gatersleben.de/apex/f?p=DOI:RESOLVE:::NO:RP:DOI:10.25642/IPK/GBIS/301448
+147,10.14469/ch/57295,dois,https://spectradspace.lib.imperial.ac.uk:8443/dspace/handle/10042/63744,,404 Client Error: Not Found for url: https://spectradspace.lib.imperial.ac.uk:8443/rest/handle/10042/63744
+148,10.25642/ipk/gbis/301448,dois,https://apex.ipk-gatersleben.de/apex/f?p=DOI:RESOLVE:::NO:RP:DOI:10.25642/IPK/GBIS/301448,,Data protocol for https://apex.ipk-gatersleben.de/apex/f?p=DOI:RESOLVE:::NO:RP:DOI:10.25642/IPK/GBIS/301448 not found.
 149,10.15468/dl.gp3r88,dois,https://www.gbif.org/occurrence/download/0321014-200613084148143,,Data protocol for https://www.gbif.org/occurrence/download/0321014-200613084148143 not found.
-150,10.60516/au2210047,dois,https://pid.geoscience.gov.au/sample/AU2210047,,"HTTPSConnectionPool(host='ld.pid.geoscience.gov.au', port=443): Read timed out. (read timeout=3)"
+150,10.60516/au2210047,dois,https://pid.geoscience.gov.au/sample/AU2210047,,Data protocol for https://ld.pid.geoscience.gov.au/dataset/sites-samples-surveys/collections/samples/items/AU2210047 not found.
 151,10.21268/20211124-1,dois,https://dokumente.ub.tu-clausthal.de/receive/clausthal_mods_00001893,,Data protocol for https://dokumente.ub.tu-clausthal.de/receive/clausthal_mods_00001893 not found.
 152,10.58052/iebeg1bdq,dois,https://app.geosamples.org/sample/igsn/10.58052/IEBEG1BDQ,,Data protocol for https://app.geosamples.org/sample/igsn/10.58052/IEBEG1BDQ not found.
 153,10.48781/ntnu.53157,dois,https://ntnu.tind.io/record/53157,,Data protocol for https://ntnu.tind.io/record/53157 not found.
