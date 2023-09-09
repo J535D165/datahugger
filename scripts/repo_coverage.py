@@ -1,21 +1,40 @@
 import argparse
+import datetime
 import json
+from pathlib import Path
 
 import pandas as pd
 from pydatacite import DOIs
 
 import datahugger as dh
 
+BENCHMARK_FILE = Path("benchmark", "benchmark_datasets.csv")
 
-def collect(args):
-    records = [x for y in range(10) for x in DOIs().random().get(per_page=100)]
 
+def create_dataset(args):
+    records = [x for y in range(1) for x in DOIs().random().get(per_page=100)]
+
+    result = []
     for r in records:
-        yield {"id": r["id"], "type": r["type"], "url": r["attributes"]["url"]}
+        result.append({"id": r["id"], "type": r["type"], "url": r["attributes"]["url"]})
+
+    pd.DataFrame(result).to_csv(
+        Path("benchmark", "datacite", f"datacite_random_{datetime.datetime.now()}"),
+        index=False,
+    )
+
+
+def merge_datasets(args):
+    datasets = Path("benchmark", "datacite").glob("*")
+
+    df = pd.concat([pd.read_csv(d) for d in datasets], axis=0)
+    df.drop_duplicates(inplace=True)
+
+    df.to_csv(BENCHMARK_FILE, index=False)
 
 
 def run(args):
-    df = pd.read_csv("repos_benchmark.csv")
+    df = pd.read_csv(BENCHMARK_FILE)
 
     df[["service", "error"]] = df.apply(test_repo, axis=1, result_type="expand")
     df.to_csv("repos_benchmark_tested.csv")
@@ -75,7 +94,10 @@ if __name__ == "__main__":
     subparsers = parser.add_subparsers(help="Coverage tool")
 
     parser_create = subparsers.add_parser("create_dataset", help="Create dataset")
-    parser_create.set_defaults(func=collect)
+    parser_create.set_defaults(func=create_dataset)
+
+    parser_merge = subparsers.add_parser("merge_dataset", help="merge dataset")
+    parser_merge.set_defaults(func=merge_datasets)
 
     parser_run = subparsers.add_parser("run", help="Run coverage on dataset")
     parser_run.set_defaults(func=run)
