@@ -4,3 +4,7 @@ class DOIError(ValueError):
 
 class DataCiteError(Exception):
     pass
+
+
+class RepositoryNotSupportedError(Exception):
+    pass
