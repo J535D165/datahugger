@@ -21,11 +21,11 @@ jobs:
       run: |
         python scripts/repo_coverage.py run
         python scripts/repo_coverage.py coverage
+        python scripts/repo_coverage.py report > ./coverage.md
     - name: Update release with benchmark stats
       uses: tubone24/update_release@v1.0
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-        body: |
-          python scripts/repo_coverage.py report
+        body_path: ./coverage.md
         is_append_body: true
