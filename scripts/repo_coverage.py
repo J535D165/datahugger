@@ -72,22 +72,23 @@ def get_coverage(args):
 def get_report(args):
     df = pd.read_csv("repos_benchmark_tested.csv", index_col=0)
 
-    print("Percentage of datasets supported:", df["service"].notnull().sum() / len(df))
-    print(
-        "Percentage of datasets not supported:",
-        df["error"].str.startswith("Data protocol").sum() / len(df),
+    perc_supported = df["service"].notnull().sum() / len(df) * 100
+    perc_not_supported = (
+        df["error"].str.startswith("Data protocol").sum() / len(df) * 100
     )
-    print(
-        "Percentage of datasets with error:",
-        (
-            len(df)
-            - df["service"].notnull().sum()
-            - df["error"].str.startswith("Data protocol").sum()
-        )
-        / len(df),
-    )
+    perc_with_error = 100 - perc_supported - perc_not_supported
+
+    print("## Coverage report")
+    print(f"The following benchmark was applied to {len(df)}")
+    print("randomly selected records from Datacite.")
+    print()
+    print("### Percentages")
+    print(f"Percentage of datasets supported: {perc_supported:.1f}%")
+    print(f"Percentage of datasets not supported: {perc_not_supported:.1f}%")
+    print(f"Percentage of datasets with error: {perc_with_error:.1f}%")
 
     print()
+    print("### Table with unexpected errors")
     print(
         df[
             df["error"].notnull()
