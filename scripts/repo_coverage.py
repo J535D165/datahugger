@@ -79,8 +79,10 @@ def get_report(args):
     perc_with_error = 100 - perc_supported - perc_not_supported
 
     print("## Coverage report")
-    print(f"The following benchmark was applied to {len(df)}")
-    print("randomly selected records from Datacite.")
+    print(
+        f"The following benchmark was applied to {len(df)}",
+        "randomly selected records from Datacite.",
+    )
     print()
     print("### Percentages")
     print(f"Percentage of datasets supported: {perc_supported:.1f}%")
