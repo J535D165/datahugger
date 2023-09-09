@@ -185,6 +185,10 @@ def _base_request(
         elif r.status_code in [404, 405]:
             # head request not allowed or possible, try get request
             r = requests.get(url, allow_redirects=True, timeout=(3, 10))
+        elif r.status_code in [403]:
+            # Most likely a service that tries to prevent webscraping.
+            # Might still have an API, so forwaring the response url.
+            pass
         else:
             r.raise_for_status()
 
