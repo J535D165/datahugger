@@ -4,15 +4,22 @@ import json
 from pathlib import Path
 
 import pandas as pd
-from pydatacite import DOIs
+import requests
 
+# from pydatacite import DOIs
 import datahugger as dh
 
 BENCHMARK_FILE = Path("benchmark", "benchmark_datasets.csv")
 
 
 def create_dataset(args):
-    records = [x for y in range(1) for x in DOIs().random().get(per_page=100)]
+    records = [
+        x
+        for y in range(1)
+        for x in requests.get(
+            "https://api.datacite.org/dois?random=true&page[size]=100"
+        ).json()["data"]
+    ]
 
     result = []
     for r in records:
