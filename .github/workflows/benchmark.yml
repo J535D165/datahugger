@@ -23,7 +23,7 @@ jobs:
         python scripts/repo_coverage.py coverage
         python scripts/repo_coverage.py report > ./coverage.md
     - name: Update release with benchmark stats
-      uses: tubone24/update_release@v1.0
+      uses: tubone24/update_release@v1.3.1
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
