@@ -43,7 +43,7 @@ class ZenodoDataset(DatasetDownloader, DatasetResult):
 class DataverseDataset(DatasetDownloader, DatasetResult):
     """Downloader for Dataverse repository."""
 
-    REGEXP_ID = r"(?P<type>:dataset|file)\.xhtml\?persistentId=(?P<record_id>.*)"
+    REGEXP_ID = r"(?P<type>dataset|file)\.xhtml\?persistentId=(?P<record_id>.*)"
 
     # the files and metadata about the dataset
     API_URL_META = "{base_url}/api/datasets/:persistentId/?persistentId={record_id}"

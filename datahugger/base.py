@@ -218,16 +218,16 @@ class DatasetDownloader:
             z.extract(zip_info, output_folder)
 
     @property
-    def api_record_id(self):
-        if hasattr(self, "_params"):
-            return self._params
+    def _params(self):
+        if hasattr(self, "__params"):
+            return self.__params
 
         if isinstance(self.url, str) and _is_url(self.url):
-            self._params = self._parse_url(self.url)
+            self.__params = self._parse_url(self.url)
         else:
-            self._params = {"pid": self.url, "version": None}
+            self.__params = {"record_id": self.url, "version": None}
 
-        return self._params
+        return self.__params
 
     def _pre_files(self):
         pass
@@ -309,13 +309,13 @@ class DatasetDownloader:
         if hasattr(self, "is_singleton") and self.is_singleton:
             self._files = self._get_single_file(
                 self.API_URL_META_SINGLE.format(
-                    api_url=self.API_URL, base_url=self.base_url, **self.api_record_id
+                    api_url=self.API_URL, base_url=self.base_url, **self._params
                 )
             )
         else:
             self._files = self._get_files_recursive(
                 self.API_URL_META.format(
-                    api_url=self.API_URL, base_url=self.base_url, **self.api_record_id
+                    api_url=self.API_URL, base_url=self.base_url, **self._params
                 )
             )
 
