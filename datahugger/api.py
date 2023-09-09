@@ -53,7 +53,7 @@ SERVICES_NETLOC = {
     "get.iedadata.org": DataOneDataset,
     "usap-dc.org": DataOneDataset,
     "iys.hakai.org": DataOneDataset,
-    "doi.pangaea.de": DataOneDataset,
+    # "doi.pangaea.de": DataOneDataset,
     "rvdata.us": DataOneDataset,
     "sead-published.ncsa.illinois.edu": DataOneDataset,
     # DataVerse repositories (extracted from re3data)
