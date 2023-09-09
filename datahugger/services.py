@@ -18,13 +18,13 @@ class ZenodoDataset(DatasetDownloader, DatasetResult):
     For Zenodo records, new versions have new identifiers.
     """
 
-    REGEXP_ID = r"zenodo\.org\/record\/(\d+).*"
+    REGEXP_ID = r"zenodo\.org\/record\/(?P<record_id>\d+).*"
 
     # the base entry point of the REST API
     API_URL = "https://zenodo.org/api/"
 
     # the files and metadata about the dataset
-    API_URL_META = "{api_url}records/{api_record_id}"
+    API_URL_META = "{api_url}records/{record_id}"
     META_FILES_JSONPATH = "files"
 
     # paths to file attributes
@@ -43,11 +43,14 @@ class ZenodoDataset(DatasetDownloader, DatasetResult):
 class DataverseDataset(DatasetDownloader, DatasetResult):
     """Downloader for Dataverse repository."""
 
-    REGEXP_ID = r"dataset\.xhtml\?persistentId=(.*)"
+    REGEXP_ID = r"(?P<type>:dataset|file)\.xhtml\?persistentId=(?P<record_id>.*)"
 
     # the files and metadata about the dataset
-    API_URL_META = "{base_url}/api/datasets/:persistentId/?persistentId={api_record_id}"
+    API_URL_META = "{base_url}/api/datasets/:persistentId/?persistentId={record_id}"
     META_FILES_JSONPATH = "data.latestVersion.files"
+
+    API_URL_META_SINGLE = "{base_url}/api/files/:persistentId/?persistentId={record_id}"
+    META_FILES_SINGLE_JSONPATH = "data"
 
     # paths to file attributes
     ATTR_NAME_JSONPATH = "dataFile.filename"
@@ -60,18 +63,21 @@ class DataverseDataset(DatasetDownloader, DatasetResult):
             self.base_url, record["dataFile"]["id"]
         )
 
+    def _pre_files(self):
+        if "type" in self._params and self._params["type"] == "file":
+            self.is_singleton = True
+
 
 class FigShareDataset(DatasetDownloader, DatasetResult):
     """Downloader for FigShare repository."""
 
-    REGEXP_ID_AND_VERSION = r"articles\/.*\/.*\/(\d+)\/(\d+)"
-    REGEXP_ID = r"articles\/.*\/.*\/(\d+)"
+    REGEXP_ID = r"articles\/.*?\/.*?\/(?P<record_id>\d+)(?:\/(?P<version>\d+)|)"
 
     # the base entry point of the REST API
     API_URL = "https://api.figshare.com/v2"
 
     # the files and metadata about the dataset
-    API_URL_META = "{api_url}/articles/{api_record_id}/files"
+    API_URL_META = "{api_url}/articles/{record_id}/files"
 
     # paths to file attributes
     ATTR_FILE_LINK_JSONPATH = "download_url"
@@ -84,8 +90,7 @@ class FigShareDataset(DatasetDownloader, DatasetResult):
 class Djehuty(FigShareDataset):
     """Downloader for Djehuty repository."""
 
-    REGEXP_ID_AND_VERSION = r"articles\/.*\/(\d+)\/(\d+)"
-    REGEXP_ID = r"articles\/.*\/(\d+)"
+    REGEXP_ID = r"articles\/.*?\/(?P<record_id>\d+)(?:\/(?P<version>\d+)|)"
 
     # the base entry point of the REST API
     API_URL = "https://data.4tu.nl/v2"
@@ -94,13 +99,13 @@ class Djehuty(FigShareDataset):
 class OSFDataset(DatasetDownloader, DatasetResult):
     """Downloader for OSF repository."""
 
-    REGEXP_ID = r"osf\.io\/(.*)/"
+    REGEXP_ID = r"osf\.io\/(?P<record_id>.*)/"
 
     # the base entry point of the REST API
     API_URL = "https://api.osf.io/v2/registrations/"
 
     # the files and metadata about the dataset
-    API_URL_META = "{api_url}{api_record_id}/files/osfstorage/?format=jsonapi"
+    API_URL_META = "{api_url}{record_id}/files/osfstorage/?format=jsonapi"
     META_FILES_JSONPATH = "data"
 
     PAGINATION_JSONPATH = "links.next"
@@ -120,7 +125,7 @@ class OSFDataset(DatasetDownloader, DatasetResult):
 class DataDryadDataset(DatasetDownloader, DatasetResult):
     """Downloader for DataDryad repository."""
 
-    REGEXP_ID = r"datadryad\.org[\:]*[43]{0,3}\/stash\/dataset\/doi:(.*)"
+    REGEXP_ID = r"datadryad\.org[\:]*[43]{0,3}\/stash\/dataset\/doi:(?P<record_id>.*)"
 
     # the base entry point of the REST API
     API_URL = "https://datadryad.org/api/v2"
@@ -178,7 +183,7 @@ class DataDryadDataset(DatasetDownloader, DatasetResult):
 class DataOneDataset(DatasetDownloader, DatasetResult):
     """Downloader for DataOne repositories."""
 
-    REGEXP_ID = r"view/doi:(.*)"
+    REGEXP_ID = r"view/doi:(?P<record_id>.*)"
 
     # the base entry point of the REST API
     API_URL = "https://cn.dataone.org/cn/v2/object/"
@@ -216,7 +221,7 @@ class DataOneDataset(DatasetDownloader, DatasetResult):
 class DSpaceDataset(DatasetDownloader, DatasetResult):
     """Downloader for DSpaceDataset repositories."""
 
-    REGEXP_ID = r"handle/(\d+\/\d+)"
+    REGEXP_ID = r"handle/(?P<record_id>\d+\/\d+)"
 
     # paths to file attributes
     ATTR_KIND_JSONPATH = "attributes.kind"
@@ -243,18 +248,17 @@ class DSpaceDataset(DatasetDownloader, DatasetResult):
 class MendeleyDataset(DatasetDownloader, DatasetResult):
     """Downloader for Mendeley repository."""
 
-    REGEXP_ID_WITH_VERSION = r"data\.mendeley\.com\/datasets\/([0-9a-z]+)\/(\d+)"
-    REGEXP_ID = r"data\.mendeley\.com\/datasets\/([0-9a-z]+)"
+    REGEXP_ID = r"data\.mendeley\.com\/datasets\/(?P<record_id>[0-9a-z]+)(?:\/(?P<version>\d+)|)"  # noqa
 
     # the base entry point of the REST API
     API_URL = "https://data.mendeley.com/public-api/"
 
     # version url
-    API_URL_VERSION = "{api_url}datasets/{api_record_id}/versions"
+    API_URL_VERSION = "{api_url}datasets/{record_id}/versions"
 
     # the files and metadata about the dataset
     API_URL_META = (
-        "{api_url}datasets/{api_record_id}/files?folder_id=root&version={version}"
+        "{api_url}datasets/{record_id}/files?folder_id=root&version={version}"
     )
 
     # paths to file attributes
@@ -279,7 +283,7 @@ class GitHubDataset(DatasetDownloader, DatasetResult):
     """Downloader for GitHub repository."""
 
     API_URL = "https://github.com/"
-    REGEXP_ID = r"github\.com\/([a-zA-Z0-9]+\/[a-zA-Z0-9]+)[\/]*.*"
+    REGEXP_ID = r"github\.com\/(?P<record_id>[a-zA-Z0-9]+\/[a-zA-Z0-9]+)[\/]*.*"
 
     def _get(self, output_folder: Union[Path, str], *args, **kwargs):
         res = requests.get(
@@ -292,7 +296,7 @@ class GitHubDataset(DatasetDownloader, DatasetResult):
 class HuggingFaceDataset(DatasetDownloader, DatasetResult):
     """Downloader for Huggingface repository."""
 
-    REGEXP_ID = r"huggingface.co/datasets/(.*)"
+    REGEXP_ID = r"huggingface.co/datasets/(?P<record_id>.*)"
 
     def _get(
         self,
