@@ -27,3 +27,4 @@ jobs:
       with:
         body: |
           python scripts/repo_coverage.py report
+        is_append_body: true
