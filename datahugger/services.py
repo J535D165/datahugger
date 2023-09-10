@@ -271,9 +271,7 @@ class MendeleyDataset(DatasetDownloader, DatasetResult):
     def _pre_files(self):
         if self.version is None:
             r_version = requests.get(
-                self.API_URL_VERSION.format(
-                    api_url=self.API_URL, api_record_id=self._params["record_id"]
-                )
+                self.API_URL_VERSION.format(api_url=self.API_URL, **self._params)
             )
             r_version.raise_for_status()
             self.version = r_version.json()[-1]["version"]
