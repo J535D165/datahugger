@@ -15,7 +15,7 @@ TESTS_URLS = [
     ),
     ("https://doi.org/10.7910/DVN/KBHLOD", "tutorial1.py"),
     # Dataverse single file
-    ("10.7910/DVN/HZBYG7/RQ26H2", "Table 2.do")
+    ("10.7910/DVN/HZBYG7/RQ26H2", "Table 2.do"),
     # Figshare
     ("https://doi.org/10.6084/m9.figshare.8851784.v1", "cross_year_data2.csv"),
     (
