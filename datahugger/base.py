@@ -295,9 +295,22 @@ class DatasetDownloader:
         # find path to raw files
         if hasattr(self, "META_FILES_SINGLE_JSONPATH"):
             jsonpath_expression = parse(self.META_FILES_SINGLE_JSONPATH)
-            files_raw = jsonpath_expression.find(response)[0].value
+            file_raw = jsonpath_expression.find(response)[0].value
 
-        return [files_raw]
+        if folder_name is None:
+            f_path = self._get_attr_name(file_raw)
+        else:
+            f_path = str(Path(folder_name, self._get_attr_name(file_raw)))
+
+        return [
+            {
+                "link": self._get_attr_link(file_raw),
+                "name": f_path,
+                "size": self._get_attr_size(file_raw),
+                "hash": self._get_attr_hash(file_raw),
+                "hash_type": self._get_attr_hash_type(file_raw),
+            }
+        ]
 
     @property
     def files(self):

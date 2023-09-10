@@ -139,7 +139,7 @@ class DataDryadDataset(DatasetDownloader, DatasetResult):
         if hasattr(self, "_files"):
             return self._files
 
-        doi_safe = quote(f"doi:{self.api_record_id}", safe="")
+        doi_safe = quote(f"doi:{self._params['record_id']}", safe="")
         dataset_metadata_url = self.API_URL + "/datasets/" + doi_safe
 
         res = requests.get(dataset_metadata_url)
@@ -193,7 +193,7 @@ class DataOneDataset(DatasetDownloader, DatasetResult):
         if hasattr(self, "_files"):
             return self._files
 
-        doi_safe = quote(f"doi:{self.api_record_id}", safe="")
+        doi_safe = quote(f"doi:{self._params['record_id']}", safe="")
 
         res = requests.get(self.API_URL + doi_safe)
         res.raise_for_status()
@@ -237,7 +237,7 @@ class DSpaceDataset(DatasetDownloader, DatasetResult):
         return self.base_url + record["retrieveLink"]
 
     def _pre_files(self):
-        handle_id_url = f"{self.base_url}/rest/handle/{self.api_record_id}"
+        handle_id_url = f"{self.base_url}/rest/handle/{self._params['record_id']}"
         res = requests.get(handle_id_url)
         res.raise_for_status()
 
@@ -272,7 +272,7 @@ class MendeleyDataset(DatasetDownloader, DatasetResult):
         if self.version is None:
             r_version = requests.get(
                 self.API_URL_VERSION.format(
-                    api_url=self.API_URL, api_record_id=self.api_record_id
+                    api_url=self.API_URL, api_record_id=self._params["record_id"]
                 )
             )
             r_version.raise_for_status()
@@ -287,7 +287,7 @@ class GitHubDataset(DatasetDownloader, DatasetResult):
 
     def _get(self, output_folder: Union[Path, str], *args, **kwargs):
         res = requests.get(
-            f"{self.API_URL}{self.api_record_id}/archive/refs/heads/master.zip"
+            f"{self.API_URL}{self._params['record_id']}/archive/refs/heads/master.zip"
         )
         z = zipfile.ZipFile(io.BytesIO(res.content))
         z.extractall(output_folder)
@@ -311,4 +311,4 @@ class HuggingFaceDataset(DatasetDownloader, DatasetResult):
                 " or use 'pip install datahugger[all]'"
             ) from err
 
-        load_dataset(self.api_record_id, cache_dir=output_folder, **kwargs)
+        load_dataset(self._params["record_id"], cache_dir=output_folder, **kwargs)
