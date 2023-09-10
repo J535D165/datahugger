@@ -201,23 +201,11 @@ class DatasetDownloader:
         if not isinstance(url, str) or not _is_url(url):
             raise ValueError("Not a valid URL.")
 
-        # first try to parse with version number
-        if hasattr(self, "REGEXP_ID_AND_VERSION"):
-            match = re.search(self.REGEXP_ID_AND_VERSION, url)
-
-            if match and match.group(1):
-                if match.group(2) == "":
-                    return match.group(1), None
-                return match.group(1), match.group(2)
-
-        # then try to parse without version number
-        if hasattr(self, "REGEXP_ID"):
+        try:
             match = re.search(self.REGEXP_ID, url)
-
-            if match and match.group(1):
-                return match.group(1), None
-
-        raise ValueError(f"Failed to parse record identifier from URL '{url}'")
+            return match.groupdict()
+        except Exception as err:
+            raise ValueError(f"Failed to parse URL '{url}'") from err
 
     def _unpack_single_folder(self, zip_url, output_folder):
         r = requests.get(zip_url)
@@ -230,16 +218,16 @@ class DatasetDownloader:
             z.extract(zip_info, output_folder)
 
     @property
-    def api_record_id(self):
-        if hasattr(self, "_api_record_id"):
-            return self._api_record_id
+    def _params(self):
+        if hasattr(self, "__params"):
+            return self.__params
 
         if isinstance(self.url, str) and _is_url(self.url):
-            self._api_record_id, self.version = self._parse_url(self.url)
+            self.__params = self._parse_url(self.url)
         else:
-            self._api_record_id, self.version = self.url, self.version
+            self.__params = {"record_id": self.url, "version": None}
 
-        return self._api_record_id
+        return self.__params
 
     def _pre_files(self):
         pass
@@ -296,6 +284,34 @@ class DatasetDownloader:
 
         return result
 
+    def _get_single_file(self, url, folder_name=None):
+        if not isinstance(url, str):
+            ValueError(f"Expected url to be string type, got {type(url)}")
+
+        # get the data from URL
+        res = requests.get(url)
+        response = res.json()
+
+        # find path to raw files
+        if hasattr(self, "META_FILES_SINGLE_JSONPATH"):
+            jsonpath_expression = parse(self.META_FILES_SINGLE_JSONPATH)
+            file_raw = jsonpath_expression.find(response)[0].value
+
+        if folder_name is None:
+            f_path = self._get_attr_name(file_raw)
+        else:
+            f_path = str(Path(folder_name, self._get_attr_name(file_raw)))
+
+        return [
+            {
+                "link": self._get_attr_link(file_raw),
+                "name": f_path,
+                "size": self._get_attr_size(file_raw),
+                "hash": self._get_attr_hash(file_raw),
+                "hash_type": self._get_attr_hash_type(file_raw),
+            }
+        ]
+
     @property
     def files(self):
         if hasattr(self, "_files"):
@@ -303,14 +319,18 @@ class DatasetDownloader:
 
         self._pre_files()
 
-        self._files = self._get_files_recursive(
-            self.API_URL_META.format(
-                api_url=self.API_URL,
-                api_record_id=self.api_record_id,
-                version=self.version,
-                base_url=self.base_url,
+        if hasattr(self, "is_singleton") and self.is_singleton:
+            self._files = self._get_single_file(
+                self.API_URL_META_SINGLE.format(
+                    api_url=self.API_URL, base_url=self.base_url, **self._params
+                )
             )
-        )
+        else:
+            self._files = self._get_files_recursive(
+                self.API_URL_META.format(
+                    api_url=self.API_URL, base_url=self.base_url, **self._params
+                )
+            )
 
         return self._files
 
