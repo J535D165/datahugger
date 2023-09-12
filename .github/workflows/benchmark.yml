@@ -1,0 +1,31 @@
+name: Run benchmark suite
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r benchmark/requirements.txt
+        pip install .
+    - name: Run benchmark
+      run: |
+        python scripts/repo_coverage.py run
+        python scripts/repo_coverage.py coverage
+        python scripts/repo_coverage.py report > ./coverage.md
+    - name: Update release with benchmark stats
+      uses: tubone24/update_release@v1.3.1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        body_path: ./coverage.md
+        is_append_body: true

@@ -36,6 +36,7 @@ requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
 packages = ["datahugger"]
 
 [tool.setuptools_scm]
+write_to = "datahugger/_version.py"
 
 [tool.ruff]
 select = ["E", "F", "UP", "I", "B"]

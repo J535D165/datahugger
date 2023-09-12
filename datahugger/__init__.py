@@ -4,4 +4,9 @@ from datahugger.deprecated import load_repository  # noqa
 
 __all__ = ["get", "info"]
 
-__version__ = "0.1.0"
+try:
+    from datahugger._version import __version__
+    from datahugger._version import __version_tuple__
+except ImportError:
+    __version__ = "0.0.0"
+    __version_tuple__ = (0, 0, 0)

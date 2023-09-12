@@ -53,7 +53,7 @@ SERVICES_NETLOC = {
     "get.iedadata.org": DataOneDataset,
     "usap-dc.org": DataOneDataset,
     "iys.hakai.org": DataOneDataset,
-    "doi.pangaea.de": DataOneDataset,
+    # "doi.pangaea.de": DataOneDataset,
     "rvdata.us": DataOneDataset,
     "sead-published.ncsa.illinois.edu": DataOneDataset,
     # DataVerse repositories (extracted from re3data)
@@ -179,11 +179,16 @@ def _base_request(
     # if netloc is doi.org, follow the redirect
     if uri.hostname in URL_RESOLVE:
         r = requests.head(url, allow_redirects=True, timeout=(3, 10))
+
         if r.status_code == 404 and r.url and r.url.startswith("https://doi.org"):
             raise DOIError(f"DOI {doi} not found in the DOI system")
-        elif r.status_code == 405:
-            # head request not allowed, try get request
+        elif r.status_code in [404, 405]:
+            # head request not allowed or possible, try get request
             r = requests.get(url, allow_redirects=True, timeout=(3, 10))
+        elif r.status_code in [403]:
+            # Most likely a service that tries to prevent webscraping.
+            # Might still have an API, so forwaring the response url.
+            pass
         else:
             r.raise_for_status()
 
