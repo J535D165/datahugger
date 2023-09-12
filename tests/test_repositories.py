@@ -14,6 +14,7 @@ TESTS_URLS = [
         "tutorial1.py",
     ),
     ("https://doi.org/10.7910/DVN/KBHLOD", "tutorial1.py"),
+    ("https://hdl.handle.net/10622/NHJZUD", "ERRHS_7_01_data_1795.tab"),
     # Dataverse single file
     ("10.7910/DVN/HZBYG7/RQ26H2", "Table 2.do"),
     # Figshare
@@ -52,6 +53,8 @@ TESTS_URLS = [
         "https://repositorioinstitucional.ceu.es/handle/10637/2741",
         "Aquaporin_1_JAMartin_et_al_MedSport_2009.pdf",
     ),
+    # huggingface
+    ("10.57967/hf/0034", "test.csv"),
 ]
 
 

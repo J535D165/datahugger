@@ -24,6 +24,10 @@ def _is_url(s: str) -> bool:
     return urlparse(s).netloc != ""
 
 
+def _get_url(s: str) -> str:
+    return s if isinstance(s, str) else s.url
+
+
 def _format_filename(s, len_s=35) -> str:
     # README_Pfaller_Robinson_2022_Global_Sea_Turtle_Epibiont_Database.txt
 
@@ -38,32 +42,6 @@ def _format_filename(s, len_s=35) -> str:
     len_suffixes = len("".join(Path(s).suffixes))
 
     return s[0 : (len_s - (len_suffixes + 5))] + "[...]" + "".join(Path(s).suffixes)
-
-
-def _is_doi(s: str) -> bool:
-    """Check if string is DOI.
-
-    Parameters
-    ----------
-    s: str
-        The string to check for DOI
-
-    Returns
-    -------
-    bool:
-        Is the string a pure DOI or not.
-    """
-    # Thanks to Andrew Gilmartin
-    # https://www.crossref.org/blog/dois-and-matching-regular-expressions/
-    match = re.match(r"^10.\d{4,9}/[-._;()/:A-Z0-9]+$", s, re.IGNORECASE)
-
-    return match is not None and match.group() is not None
-
-
-def get_base_url(url):
-    uri = urlparse(url)
-
-    return uri.scheme + "://" + uri.netloc
 
 
 def get_id_from_url(regexp, url):

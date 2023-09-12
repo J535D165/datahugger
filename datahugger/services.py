@@ -4,12 +4,14 @@ import zipfile
 from pathlib import Path
 from typing import Union
 from urllib.parse import quote
+from urllib.parse import urlparse
 
 import requests
 from jsonpath_ng import parse
 
 from datahugger.base import DatasetDownloader
 from datahugger.base import DatasetResult
+from datahugger.utils import _get_url
 
 
 class ZenodoDataset(DatasetDownloader, DatasetResult):
@@ -58,10 +60,8 @@ class DataverseDataset(DatasetDownloader, DatasetResult):
     ATTR_HASH_JSONPATH = "dataFile.md5"
     ATTR_HASH_TYPE_VALUE = "md5"
 
-    def _get_attr_link(self, record):
-        return "{}/api/access/datafile/{}".format(
-            self.base_url, record["dataFile"]["id"]
-        )
+    def _get_attr_link(self, record, base_url=None):
+        return "{}/api/access/datafile/{}".format(base_url, record["dataFile"]["id"])
 
     def _pre_files(self):
         if "type" in self._params and self._params["type"] == "file":
@@ -233,16 +233,19 @@ class DSpaceDataset(DatasetDownloader, DatasetResult):
     ATTR_HASH_JSONPATH = "checkSum.checkSumAlgorithm"
     ATTR_HASH_TYPE_VALUE = "checkSum.value"
 
-    def _get_attr_link(self, record):
-        return self.base_url + record["retrieveLink"]
+    def _get_attr_link(self, record, base_url):
+        return base_url + record["retrieveLink"]
 
     def _pre_files(self):
-        handle_id_url = f"{self.base_url}/rest/handle/{self._params['record_id']}"
+        uri = urlparse(_get_url(self.url))
+        base_url = uri.scheme + "://" + uri.netloc
+
+        handle_id_url = f"{base_url}/rest/handle/{self._params['record_id']}"
         res = requests.get(handle_id_url)
         res.raise_for_status()
 
         # set the API_URL_META
-        self.API_URL_META = self.base_url + res.json()["link"] + "/bitstreams"
+        self.API_URL_META = base_url + res.json()["link"] + "/bitstreams"
 
 
 class MendeleyDataset(DatasetDownloader, DatasetResult):

@@ -5,6 +5,7 @@ import re
 import zipfile
 from pathlib import Path
 from typing import Union
+from urllib.parse import urlparse
 
 import natsort as ns
 import requests
@@ -13,6 +14,7 @@ from scitree import scitree
 from tqdm import tqdm
 
 from datahugger.utils import _format_filename
+from datahugger.utils import _get_url
 from datahugger.utils import _is_url
 
 FILE_RANKING = [
@@ -62,7 +64,6 @@ class DatasetDownloader:
         self,
         url: Union[str, int],
         version=None,
-        base_url=None,
         max_file_size=None,
         force_download=False,
         progress=True,
@@ -72,7 +73,6 @@ class DatasetDownloader:
         super().__init__()
         self.url = url
         self.version = version
-        self.base_url = base_url
         self.max_file_size = max_file_size
         self.force_download = force_download
         self.progress = progress
@@ -222,17 +222,19 @@ class DatasetDownloader:
         if hasattr(self, "__params"):
             return self.__params
 
-        if isinstance(self.url, str) and _is_url(self.url):
-            self.__params = self._parse_url(self.url)
-        else:
-            self.__params = {"record_id": self.url, "version": None}
+        url = _get_url(self.url)
+
+        # if isinstance(url, str) and _is_url(url):
+        self.__params = self._parse_url(url)
+        # else:
+        #     self.__params = {"record_id": url, "version": None}
 
         return self.__params
 
     def _pre_files(self):
         pass
 
-    def _get_files_recursive(self, url, folder_name=None):
+    def _get_files_recursive(self, url, folder_name=None, base_url=None):
         if not isinstance(url, str):
             ValueError(f"Expected url to be string type, got {type(url)}")
 
@@ -265,7 +267,7 @@ class DatasetDownloader:
             else:
                 result.append(
                     {
-                        "link": self._get_attr_link(f),
+                        "link": self._get_attr_link(f, base_url=base_url),
                         "name": f_path,
                         "size": self._get_attr_size(f),
                         "hash": self._get_attr_hash(f),
@@ -284,7 +286,7 @@ class DatasetDownloader:
 
         return result
 
-    def _get_single_file(self, url, folder_name=None):
+    def _get_single_file(self, url, folder_name=None, base_url=None):
         if not isinstance(url, str):
             ValueError(f"Expected url to be string type, got {type(url)}")
 
@@ -304,7 +306,7 @@ class DatasetDownloader:
 
         return [
             {
-                "link": self._get_attr_link(file_raw),
+                "link": self._get_attr_link(file_raw, base_url=base_url),
                 "name": f_path,
                 "size": self._get_attr_size(file_raw),
                 "hash": self._get_attr_hash(file_raw),
@@ -319,17 +321,22 @@ class DatasetDownloader:
 
         self._pre_files()
 
+        uri = urlparse(_get_url(self.url))
+        base_url = uri.scheme + "://" + uri.netloc
+
         if hasattr(self, "is_singleton") and self.is_singleton:
             self._files = self._get_single_file(
                 self.API_URL_META_SINGLE.format(
-                    api_url=self.API_URL, base_url=self.base_url, **self._params
-                )
+                    api_url=self.API_URL, base_url=base_url, **self._params
+                ),
+                base_url=base_url,
             )
         else:
             self._files = self._get_files_recursive(
                 self.API_URL_META.format(
-                    api_url=self.API_URL, base_url=self.base_url, **self._params
-                )
+                    api_url=self.API_URL, base_url=base_url, **self._params
+                ),
+                base_url=base_url,
             )
 
         return self._files
@@ -379,3 +386,17 @@ class DatasetDownloader:
         self.output_folder = output_folder
 
         return self
+
+
+class MetaData:
+    def __init__(self):
+        pass
+
+    def get_doi_metadata(doi):
+        r = requests.get(
+            f"https://doi.org/{doi}",
+            headers={"Accept": "application/vnd.citationstyles.csl+json"},
+        )
+        r.raise_for_status()
+
+        return r.json()
