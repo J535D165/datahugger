@@ -43,5 +43,4 @@ def test_get_doi_metadata_bibtex(tmpdir):
 
     m = doi.metadata.bibtex()
 
-    assert m == "tets"
-    assert isinstance(m, dict)
+    assert isinstance(m, str)
