@@ -8,7 +8,7 @@ from datahugger.resolvers import _resolve_service
 
 
 def info(
-    url,
+    resource,
     max_file_size=None,
     force_download=False,
     unzip=True,
@@ -20,7 +20,7 @@ def info(
 
     Arguments
     ---------
-    url: str, pathlib.Path
+    resource: str, pathlib.Path
         The DOI of URL to the dataset.
     output_folder: str, pathlib.Path
         The folder to download the dataset files to.
@@ -45,14 +45,14 @@ def info(
         The dataset download object for the specific service.
     """
 
-    if is_doi(url):
-        handle = DOI.parse(url)
+    if isinstance(resource, str) and is_doi(resource):
+        handle = DOI.parse(resource)
         handle.resolve()
-    elif is_handle(url):
-        handle = Handle.parse(url)
+    elif isinstance(resource, str) and is_handle(resource):
+        handle = Handle.parse(resource)
         handle.resolve()
     else:
-        handle = url
+        handle = resource
 
     service_class = _resolve_service(handle)
 
@@ -73,7 +73,7 @@ def info(
 
 
 def get(
-    url,
+    resource,
     output_folder,
     max_file_size=None,
     force_download=False,
@@ -89,7 +89,7 @@ def get(
 
     Arguments
     ---------
-    url: str, pathlib.Path
+    resource: str, pathlib.Path
         The DOI of URL to the dataset.
     output_folder: str, pathlib.Path
         The folder to download the dataset files to.
@@ -115,7 +115,7 @@ def get(
     """
 
     service = info(
-        url,
+        resource,
         max_file_size=max_file_size,
         force_download=force_download,
         unzip=unzip,

@@ -4,6 +4,7 @@ import re
 import requests
 
 from datahugger.exceptions import DOIError
+from datahugger.metadata import MetaData
 from datahugger.utils import _is_url
 
 
@@ -65,6 +66,15 @@ class DOI:
         self._resolved_url = r.url
 
         return self._resolved_url
+
+    @property
+    def metadata(self):
+        if hasattr(self, "_metadata_obj"):
+            return self._metadata_obj
+
+        self._metadata_obj = MetaData(self.doi)
+
+        return self._metadata_obj
 
 
 def is_doi(s: str) -> bool:

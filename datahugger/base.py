@@ -386,17 +386,3 @@ class DatasetDownloader:
         self.output_folder = output_folder
 
         return self
-
-
-class MetaData:
-    def __init__(self):
-        pass
-
-    def get_doi_metadata(doi):
-        r = requests.get(
-            f"https://doi.org/{doi}",
-            headers={"Accept": "application/vnd.citationstyles.csl+json"},
-        )
-        r.raise_for_status()
-
-        return r.json()
