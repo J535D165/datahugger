@@ -62,7 +62,7 @@ class DatasetDownloader:
 
     def __init__(
         self,
-        url: Union[str, int],
+        resource,
         version=None,
         max_file_size=None,
         force_download=False,
@@ -71,7 +71,7 @@ class DatasetDownloader:
         print_only=False,
     ):
         super().__init__()
-        self.url = url
+        self.resource = resource
         self.version = version
         self.max_file_size = max_file_size
         self.force_download = force_download
@@ -222,7 +222,7 @@ class DatasetDownloader:
         if hasattr(self, "__params"):
             return self.__params
 
-        url = _get_url(self.url)
+        url = _get_url(self.resource)
 
         # if isinstance(url, str) and _is_url(url):
         self.__params = self._parse_url(url)
@@ -321,7 +321,7 @@ class DatasetDownloader:
 
         self._pre_files()
 
-        uri = urlparse(_get_url(self.url))
+        uri = urlparse(_get_url(self.resource))
         base_url = uri.scheme + "://" + uri.netloc
 
         if hasattr(self, "is_singleton") and self.is_singleton:

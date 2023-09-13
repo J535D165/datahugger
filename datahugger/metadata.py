@@ -2,6 +2,8 @@ import requests
 
 
 class MetaData:
+    """MetaData for a resource"""
+
     def __init__(self, resource):
         self.resource = resource
 
@@ -15,23 +17,28 @@ class MetaData:
         return r
 
     def rdf(self):
+        """Return metadata in RDF representation"""
         return self._get_doi_metadata("application/rdf+xml").text
 
     def cls(self):
+        """Return metadata in CLS representation"""
         return self._get_doi_metadata("application/vnd.citationstyles.csl+json").json()
 
     def bibtex(self):
+        """Return metadata in BibTex representation"""
         return self._get_doi_metadata("application/x-bibtex").text
 
     def ris(self):
+        """Return metadata in RIS representation"""
         return self._get_doi_metadata("application/x-research-info-systems").text
 
     def citation(self, style=None, locale=None):
+        """Return metadata as formatted citation"""
         content_type = "text/x-bibliography"
 
         if style:
-            content_type += "; style=harvard3"
+            content_type += f"; style={style}"
         if locale:
-            content_type += "; locale=fr-FR"
+            content_type += f"; locale={locale}"
 
         return self._get_doi_metadata(content_type).text

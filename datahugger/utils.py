@@ -99,23 +99,3 @@ def get_re3data_repository(re3data_id):
         .find("r3d:softwareName", namespaces)
         .text
     )
-
-
-def get_url_from_doi(doi):
-    """Get the url from the DOI.
-    Arguments
-    ---------
-    doi: str
-        The DOI to find the url for.
-    Returns
-    -------
-    str:
-        The url.
-    """
-
-    try:
-        r = requests.head(f"https://doi.org/{doi}", allow_redirects=True)
-    except requests.exceptions.ConnectionError:
-        return None
-
-    return r.url

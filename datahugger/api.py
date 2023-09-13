@@ -1,7 +1,9 @@
 import logging
 
 from datahugger.handles import DOI
+from datahugger.handles import ArXiv
 from datahugger.handles import Handle
+from datahugger.handles import is_arxiv
 from datahugger.handles import is_doi
 from datahugger.handles import is_handle
 from datahugger.resolvers import _resolve_service
@@ -21,7 +23,7 @@ def info(
     Arguments
     ---------
     resource: str, pathlib.Path
-        The DOI of URL to the dataset.
+        The URL, DOI, or Handle of the dataset.
     output_folder: str, pathlib.Path
         The folder to download the dataset files to.
     max_file_size: int
@@ -51,6 +53,8 @@ def info(
     elif isinstance(resource, str) and is_handle(resource):
         handle = Handle.parse(resource)
         handle.resolve()
+    elif isinstance(resource, str) and is_arxiv(resource):
+        handle = ArXiv.parse(resource)
     else:
         handle = resource
 
@@ -90,7 +94,7 @@ def get(
     Arguments
     ---------
     resource: str, pathlib.Path
-        The DOI of URL to the dataset.
+        The URL, DOI, or Handle of the dataset.
     output_folder: str, pathlib.Path
         The folder to download the dataset files to.
     max_file_size: int

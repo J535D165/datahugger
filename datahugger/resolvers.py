@@ -12,28 +12,23 @@ from datahugger.utils import get_re3data_repositories
 from datahugger.utils import get_re3data_repository
 
 
-def _resolve_service(uri):
-    # initial attempt to resolve service
-    service_class = _resolve_service_from_netloc(uri)
+def _resolve_service(resource):
+    for resolver in [
+        _resolve_service_from_netloc,
+        _resolve_service_from_url_pattern,
+        _resolve_service_with_re3data,
+    ]:
+        service_class = resolver(resource)
 
-    if service_class is not None:
-        logging.info("Service found: " + str(service_class))
-        return service_class
+        if service_class is not None:
+            logging.info(f"Service found: {service_class}")
+            return service_class
 
-    # try to resolve from re3data
-    service_class = _resolve_service_with_re3data(uri)
-
-    if service_class is not None:
-        logging.info("Service found: " + str(service_class))
-        return service_class
-
-    raise ValueError(f"Data protocol for {uri} not found.")
+    raise ValueError(f"Data protocol for {resource} not found.")
 
 
-def _resolve_service_from_netloc(uri):
-    url = _get_url(uri)
-
-    uri = urlparse(url)
+def _resolve_service_from_netloc(resource):
+    uri = urlparse(_get_url(resource))
 
     if not uri.hostname:
         return None
@@ -42,11 +37,13 @@ def _resolve_service_from_netloc(uri):
     if uri.hostname in SERVICES_NETLOC.keys():
         return SERVICES_NETLOC[uri.hostname]
 
+
+def _resolve_service_from_url_pattern(resource):
+    url = _get_url(resource)
+
     for netloc_re, service in SERVICES_NETLOC_REGEXP.items():
         if re.match(netloc_re, url):
             return service
-
-    logging.info("Netloc not found")
 
 
 def _resolve_service_with_re3data(doi):
@@ -67,5 +64,3 @@ def _resolve_service_with_re3data(doi):
             r_software = get_re3data_repository(repo["id"])
 
             return RE3DATA_SOFTWARE[r_software.lower()]
-
-    logging.info("Repository not found")

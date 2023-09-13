@@ -9,7 +9,7 @@ from datahugger.utils import _is_url
 
 
 class DOI:
-    """docstring for DOI"""
+    """DOI class"""
 
     def __init__(self, doi):
         super().__init__()
@@ -169,6 +169,66 @@ def is_handle(s: str) -> bool:
 
     try:
         Handle.parse(s)
+        return True
+    except ValueError:
+        return False
+
+
+class ArXiv:
+    """docstring for arXiv"""
+
+    def __init__(self, handle, version=None):
+        super().__init__()
+        self.handle = handle
+        self.version = version
+
+    def __str__(self):
+        return f"{self.handle}"
+
+    @classmethod
+    def parse(cls, s):
+        match = re.match(
+            r".*(arxiv\.org/abs/|arXiv:)(\d{4}.\d{4,5}|[a-z\-]+(\.[A-Z]{2})?\/\d{7})(v\d+)?$",
+            s,
+            re.IGNORECASE,
+        )
+
+        if not (match is not None and match.group() is not None):
+            raise ValueError("Not a valid arXiv identifier")
+
+        return cls(match.group(2))
+
+    @property
+    def url(self):
+        """Return the url."""
+
+        return f"https://arxiv.org/abs/{self.handle}"
+
+    @property
+    def metadata(self):
+        if hasattr(self, "_metadata_obj"):
+            return self._metadata_obj
+
+        self._metadata_obj = MetaData(f"https://doi.org/10.48550/arXiv.{self.handle}")
+        return self._metadata_obj
+
+
+def is_arxiv(s: str) -> bool:
+    """Check if string is arXiv.
+
+    Parameters
+    ----------
+    s: str
+        The string to check for arXiv
+
+    Returns
+    -------
+    bool:
+        Is the string a pure arXiv or not.
+    """
+
+    try:
+        ArXiv.parse(s)
         return True
     except ValueError:
         return False
