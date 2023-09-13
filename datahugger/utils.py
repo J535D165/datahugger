@@ -4,6 +4,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
+import requests_cache
 
 from datahugger.exceptions import DataCiteError
 
@@ -97,8 +98,17 @@ def get_datapublisher_from_doi(doi):
     return record["data"]["attributes"]["publisher"]
 
 
-def get_re3data_repositories(url="https://www.re3data.org/api/v1/repositories"):
-    r = requests.get(url)
+def get_re3data_repositories(
+    url="https://www.re3data.org/api/v1/repositories", expire_after=3600
+):
+    # use cached version here
+    session = requests_cache.CachedSession(
+        "datahugger_cache",
+        expire_after=expire_after,
+        backend="filesystem",
+        use_cache_dir=True,
+    )
+    r = session.get(url)
 
     if r.status_code != 200:
         raise Exception("Failed to download Re3data reposities.")
