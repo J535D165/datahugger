@@ -2,6 +2,8 @@ import logging
 import re
 from urllib.parse import urlparse
 
+import requests
+
 from datahugger.config import RE3DATA_SOFTWARE
 from datahugger.config import SERVICES_NETLOC
 from datahugger.config import SERVICES_NETLOC_REGEXP
@@ -51,11 +53,15 @@ def _resolve_service_with_re3data(doi):
         return None
 
     logging.info("Resolve service with datacite and re3data")
-    publisher = get_datapublisher_from_doi(doi)
+    try:
+        publisher = get_datapublisher_from_doi(doi)
+    except requests.HTTPError:
+        return None
     logging.info(f"Datacite publisher of dataset: {publisher}")
 
     if not publisher:
-        raise ValueError("Can't resolve the publisher from the DOI.")
+        logging.info("Can't resolve the publisher from the DOI.")
+        return None
 
     data_repos = get_re3data_repositories()
 
