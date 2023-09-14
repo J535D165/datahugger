@@ -69,4 +69,7 @@ def _resolve_service_with_re3data(doi):
         if publisher.lower() == repo["name"].lower():
             r_software = get_re3data_repository(repo["id"])
 
-            return RE3DATA_SOFTWARE[r_software.lower()]
+            try:
+                return RE3DATA_SOFTWARE[r_software.lower()]
+            except KeyError:
+                return None
