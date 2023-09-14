@@ -6,8 +6,6 @@ from urllib.parse import urlparse
 import requests
 import requests_cache
 
-from datahugger.exceptions import DataCiteError
-
 
 def _is_url(s: str) -> bool:
     """Check if the string is a URL.
@@ -68,10 +66,9 @@ def get_datapublisher_from_doi(doi):
     """
 
     r = requests.get(f"https://api.datacite.org/dois/{doi}")
-    record = r.json()
+    r.raise_for_status()
 
-    if r.status_code != 200:
-        raise DataCiteError(record["errors"][0]["title"])
+    record = r.json()
 
     return record["data"]["attributes"]["publisher"]
 
@@ -87,9 +84,7 @@ def get_re3data_repositories(
         use_cache_dir=True,
     )
     r = session.get(url)
-
-    if r.status_code != 200:
-        raise Exception("Failed to download Re3data reposities.")
+    r.raise_for_status()
 
     tree = ET.fromstring(r.content)
 

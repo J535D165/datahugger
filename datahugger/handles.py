@@ -7,6 +7,8 @@ from datahugger.exceptions import DOIError
 from datahugger.metadata import MetaData
 from datahugger.utils import _is_url
 
+__all__ = ["ArXiv", "DOI", "Handle", "is_doi", "is_handle", "is_arxiv"]
+
 
 class DOI:
     """DOI class"""

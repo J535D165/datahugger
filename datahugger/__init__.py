@@ -1,7 +1,10 @@
 from datahugger.api import get
 from datahugger.api import info
+from datahugger.exceptions import DataCiteError
+from datahugger.exceptions import DOIError
+from datahugger.exceptions import RepositoryNotSupportedError
 
-__all__ = ["get", "info"]
+__all__ = ["get", "info", "DataCiteError", "DOIError", "RepositoryNotSupportedError"]
 
 try:
     from datahugger._version import __version__
