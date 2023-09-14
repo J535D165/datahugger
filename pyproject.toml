@@ -24,7 +24,7 @@ datahugger = "datahugger.__main__:main"
 
 [project.optional-dependencies]
 all = ["datasets"]
-lint = ["ruff"]
+lint = ["ruff", "black", "jupyter-black"]
 test = ["pytest"]
 docs = ["mkdocs-material"]
 
