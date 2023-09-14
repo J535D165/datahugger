@@ -1,6 +1,6 @@
 from datahugger.api import get
 from datahugger.api import info
-from datahugger.exceptions import DataCiteError
+from datahugger.api import parse_resource_identifier
 from datahugger.exceptions import DOIError
 from datahugger.exceptions import RepositoryNotSupportedError
 

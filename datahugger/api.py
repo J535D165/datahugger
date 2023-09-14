@@ -25,7 +25,9 @@ def parse_resource_identifier(resource, resolve=True):
         A parsed and standardised resource handle.
     """
 
-    if isinstance(resource, str) and is_doi(resource):
+    if isinstance(resource, (DOI, Handle, ArXiv)):
+        handle = resource
+    elif isinstance(resource, str) and is_doi(resource):
         handle = DOI.parse(resource)
 
         if resolve:
@@ -41,7 +43,7 @@ def parse_resource_identifier(resource, resolve=True):
         handle = resource
     else:
         raise ValueError(
-            "'{resource}' is not a correct resource "
+            f"'{resource}' is not a correct resource "
             "identifier (e.g. a URL, DOI, Handle)"
         )
 

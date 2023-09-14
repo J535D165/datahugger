@@ -33,7 +33,11 @@ class MetaData:
         return self._get_doi_metadata("application/x-research-info-systems").text
 
     def citation(self, style=None, locale=None):
-        """Return metadata as formatted citation"""
+        """Return metadata as formatted citation.
+
+        See https://editor.citationstyles.org/searchByName/ for
+        an overview of styles.
+        """
         content_type = "text/x-bibliography"
 
         if style:
