@@ -15,7 +15,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11"
 ]
 license = {text = "MIT"}
-dependencies = ["jsonpath_ng", "natsort", "requests", "scitree", "tqdm"]
+dependencies = ["jsonpath_ng", "natsort", "requests", "requests-cache", "scitree", "tqdm"]
 dynamic = ["version"]
 requires-python = ">=3.6"
 
@@ -24,7 +24,7 @@ datahugger = "datahugger.__main__:main"
 
 [project.optional-dependencies]
 all = ["datasets"]
-lint = ["ruff"]
+lint = ["ruff", "black", "jupyter-black"]
 test = ["pytest"]
 docs = ["mkdocs-material"]
 

@@ -9,10 +9,10 @@ repos:
     exclude:
       "mkdocs.yml"
   - id: check-added-large-files
-- repo: https://github.com/psf/black
+- repo: https://github.com/psf/black-pre-commit-mirror
   rev: 23.9.1
   hooks:
-  - id: black
+    - id: black-jupyter
 - repo: https://github.com/charliermarsh/ruff-pre-commit
   rev: v0.0.289
   hooks:
