@@ -339,7 +339,7 @@ class DatasetDownloader:
         output_folder: Union[Path, str],
         **kwargs,
     ):
-        if len(self.files) == 1 and self.files[0]["link"].endswith(".zip") and self.unzip==True:
+        if len(self.files) == 1 and self.files[0]["link"].endswith(".zip") and self.unzip:
             self._unpack_single_folder(self.files[0]["link"], output_folder)
             return
 
