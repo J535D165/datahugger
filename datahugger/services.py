@@ -323,3 +323,21 @@ class HuggingFaceDataset(DatasetDownloader, DatasetResult):
     def files(self):
         # at the moment, .files is not available for HuggingFace
         raise AttributeError("'files' is not available for HuggingFace")
+
+
+class ArXivDataset(DatasetDownloader, DatasetResult):
+    """Downloader for ArXiv publication."""
+
+    REGEXP_ID = r"https://arxiv\.org/abs/(?P<record_id>.*)"
+
+    @property
+    def files(self):
+        return [
+            {
+                "link": f"https://arxiv.org/pdf/{self._params['record_id']}.pdf",
+                "name": self._params["record_id"].split("/")[-1] + ".pdf",
+                "size": None,
+                "hash": None,
+                "hash_type": None,
+            }
+        ]

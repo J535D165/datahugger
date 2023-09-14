@@ -1,3 +1,4 @@
+from datahugger.services import ArXivDataset
 from datahugger.services import DataDryadDataset
 from datahugger.services import DataOneDataset
 from datahugger.services import DataverseDataset
@@ -12,6 +13,7 @@ from datahugger.services import ZenodoDataset
 
 # fast lookup
 SERVICES_NETLOC = {
+    "arxiv.org": ArXivDataset,
     "zenodo.org": ZenodoDataset,
     "github.com": GitHubDataset,
     "datadryad.org": DataDryadDataset,
