@@ -54,7 +54,7 @@ TESTS_URLS = [
         "Aquaporin_1_JAMartin_et_al_MedSport_2009.pdf",
     ),
     # huggingface
-    ("10.57967/hf/0034", "test.csv"),
+    # ("10.57967/hf/0034", "test.csv"),
 ]
 
 

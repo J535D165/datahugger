@@ -237,7 +237,7 @@ class DSpaceDataset(DatasetDownloader, DatasetResult):
         return base_url + record["retrieveLink"]
 
     def _pre_files(self):
-        uri = urlparse(_get_url(self.url))
+        uri = urlparse(_get_url(self.resource))
         base_url = uri.scheme + "://" + uri.netloc
 
         handle_id_url = f"{base_url}/rest/handle/{self._params['record_id']}"
@@ -293,6 +293,11 @@ class GitHubDataset(DatasetDownloader, DatasetResult):
         z = zipfile.ZipFile(io.BytesIO(res.content))
         z.extractall(output_folder)
 
+    @property
+    def files(self):
+        # at the moment, .files is not available for GitHub
+        raise AttributeError("'files' is not available for GitHub")
+
 
 class HuggingFaceDataset(DatasetDownloader, DatasetResult):
     """Downloader for Huggingface repository."""
@@ -313,3 +318,8 @@ class HuggingFaceDataset(DatasetDownloader, DatasetResult):
             ) from err
 
         load_dataset(self._params["record_id"], cache_dir=output_folder, **kwargs)
+
+    @property
+    def files(self):
+        # at the moment, .files is not available for HuggingFace
+        raise AttributeError("'files' is not available for HuggingFace")

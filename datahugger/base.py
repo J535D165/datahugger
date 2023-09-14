@@ -86,7 +86,7 @@ class DatasetDownloader:
         except Exception:
             return None
 
-    def _get_attr_link(self, record):
+    def _get_attr_link(self, record, **kwargs):
         # get the link to the folder
         if self._get_attr_kind(record) == "folder":
             if not hasattr(self, "ATTR_FOLDER_LINK_JSONPATH"):
@@ -261,7 +261,7 @@ class DatasetDownloader:
             if self._get_attr_kind(f) == "folder":
                 result.extend(
                     self._get_files_recursive(
-                        self._get_attr_link(f), folder_name=f_path
+                        self._get_attr_link(f, base_url=base_url), folder_name=f_path
                     )
                 )
             else:

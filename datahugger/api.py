@@ -1,5 +1,3 @@
-import logging
-
 from datahugger.handles import DOI
 from datahugger.handles import ArXiv
 from datahugger.handles import Handle
@@ -60,7 +58,7 @@ def info(
 
     service_class = _resolve_service(handle)
 
-    service = service_class(
+    return service_class(
         handle,
         max_file_size=max_file_size,
         force_download=force_download,
@@ -69,11 +67,6 @@ def info(
         print_only=print_only,
         **kwargs,
     )
-
-    # collect the files
-    logging.info(service.files)
-
-    return service
 
 
 def get(
