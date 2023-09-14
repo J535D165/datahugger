@@ -95,6 +95,7 @@ def get_re3data_repositories(
 def get_re3data_repository(re3data_id):
     namespaces = {"r3d": "http://www.re3data.org/schema/2-2"}
     r = requests.get(f"https://www.re3data.org/api/v1/repository/{re3data_id}")
+    r.raise_for_status()
 
     tree = ET.fromstring(r.content)
 
