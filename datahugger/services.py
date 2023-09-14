@@ -87,7 +87,7 @@ class FigShareDataset(DatasetDownloader, DatasetResult):
     ATTR_HASH_TYPE_VALUE = "md5"
 
 
-class Djehuty(FigShareDataset):
+class DjehutyDataset(FigShareDataset):
     """Downloader for Djehuty repository."""
 
     REGEXP_ID = r"articles\/.*?\/(?P<record_id>\d+)(?:\/(?P<version>\d+)|)"
