@@ -1,7 +1,7 @@
 from datahugger.services import DataDryadDataset
 from datahugger.services import DataOneDataset
 from datahugger.services import DataverseDataset
-from datahugger.services import Djehuty
+from datahugger.services import DjehutyDataset
 from datahugger.services import DSpaceDataset
 from datahugger.services import FigShareDataset
 from datahugger.services import GitHubDataset
@@ -21,7 +21,7 @@ SERVICES_NETLOC = {
     # Figshare download
     "figshare.com": FigShareDataset,
     # Djehuty
-    "data.4tu.nl": Djehuty,
+    "data.4tu.nl": DjehutyDataset,
     # DataOne repositories
     "arcticdata.io": DataOneDataset,
     "knb.ecoinformatics.org": DataOneDataset,
