@@ -11,7 +11,9 @@ def test_resolve_service():
     doi = DOI.parse("10.34894/FXUGHW")
     doi.resolve()
 
-    assert isinstance(_resolve_service(doi), DataverseDataset)
+    service = _resolve_service(doi)(doi)
+
+    assert isinstance(service, DataverseDataset)
 
 
 @pytest.mark.xfail(raises=ValueError)
