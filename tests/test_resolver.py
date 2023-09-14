@@ -8,10 +8,10 @@ from datahugger.services import DataverseDataset
 
 
 def test_resolve_service():
-    url = "https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/FXUGHW"
-    doi = "10.34894/FXUGHW"
+    doi = DOI.parse("10.34894/FXUGHW")
+    doi.resolve()
 
-    assert _resolve_service(url, doi) == DataverseDataset
+    assert isinstance(_resolve_service(doi), DataverseDataset)
 
 
 @pytest.mark.xfail(raises=ValueError)
