@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Union
 from urllib.parse import urlparse
 
-import natsort as ns
 import requests
 from jsonpath_ng import parse
 from scitree import scitree
@@ -16,25 +15,6 @@ from tqdm import tqdm
 from datahugger.utils import _format_filename
 from datahugger.utils import _get_url
 from datahugger.utils import _is_url
-
-FILE_RANKING = [
-    ["readme", "read_me", "read-me"],
-    ["license"],
-    ["installation", "install", "setup"],
-]
-
-
-def _scientific_sort(f, alg=ns.PATH):
-    for rank, names in enumerate(FILE_RANKING):
-        if Path(f).stem.lower() in names:
-            prio = rank
-            break
-    else:
-        prio = len(FILE_RANKING)
-
-    x = (prio,) + ns.natsort_keygen(alg=alg)(f)
-
-    return x
 
 
 class DatasetResult:
