@@ -4,7 +4,14 @@ from datahugger.exceptions import DataCiteError
 from datahugger.exceptions import DOIError
 from datahugger.exceptions import RepositoryNotSupportedError
 
-__all__ = ["get", "info", "DataCiteError", "DOIError", "RepositoryNotSupportedError"]
+__all__ = [
+    "get",
+    "info",
+    "parse_resource_identifier",
+    "DataCiteError",
+    "DOIError",
+    "RepositoryNotSupportedError",
+]
 
 try:
     from datahugger._version import __version__

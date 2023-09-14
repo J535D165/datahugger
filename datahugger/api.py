@@ -5,6 +5,47 @@ from datahugger.handles import is_arxiv
 from datahugger.handles import is_doi
 from datahugger.handles import is_handle
 from datahugger.resolvers import _resolve_service
+from datahugger.utils import _is_url
+
+
+def parse_resource_identifier(resource, resolve=True):
+    """Parse resource identifier or location.
+
+    Arguments
+    ---------
+    resource: str, pathlib.Path
+        The URL, DOI, or Handle of the dataset.
+    resolve: bool
+        Resolve handles (e.g. DOIs and Handles). Default: True.
+
+    Returns
+    -------
+
+    str, DOI, Handle, ArXiv
+        A parsed and standardised resource handle.
+    """
+
+    if isinstance(resource, str) and is_doi(resource):
+        handle = DOI.parse(resource)
+
+        if resolve:
+            handle.resolve()
+    elif isinstance(resource, str) and is_handle(resource):
+        handle = Handle.parse(resource)
+
+        if resolve:
+            handle.resolve()
+    elif isinstance(resource, str) and is_arxiv(resource):
+        handle = ArXiv.parse(resource)
+    elif isinstance(resource, str) and _is_url(resource):
+        handle = resource
+    else:
+        raise ValueError(
+            "'{resource}' is not a correct resource "
+            "identifier (e.g. a URL, DOI, Handle)"
+        )
+
+    return handle
 
 
 def info(
@@ -45,17 +86,7 @@ def info(
         The dataset download object for the specific service.
     """
 
-    if isinstance(resource, str) and is_doi(resource):
-        handle = DOI.parse(resource)
-        handle.resolve()
-    elif isinstance(resource, str) and is_handle(resource):
-        handle = Handle.parse(resource)
-        handle.resolve()
-    elif isinstance(resource, str) and is_arxiv(resource):
-        handle = ArXiv.parse(resource)
-    else:
-        handle = resource
-
+    handle = parse_resource_identifier(resource)
     service_class = _resolve_service(handle)
 
     return service_class(
