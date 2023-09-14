@@ -1,8 +1,17 @@
 from datahugger.api import get
 from datahugger.api import info
-from datahugger.deprecated import load_repository  # noqa
+from datahugger.api import parse_resource_identifier
+from datahugger.exceptions import DOIError
+from datahugger.exceptions import RepositoryNotSupportedError
 
-__all__ = ["get", "info"]
+__all__ = [
+    "get",
+    "info",
+    "parse_resource_identifier",
+    "DataCiteError",
+    "DOIError",
+    "RepositoryNotSupportedError",
+]
 
 try:
     from datahugger._version import __version__
