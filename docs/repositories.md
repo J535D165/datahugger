@@ -1,6 +1,6 @@
 # Supported repositories
 
-Datahugger offers support for more than [150 generic and specific (scientific) repositories](https://j535d165.github.io/datahugger/repositories) (and more to come!).
+Datahugger offers support for more than <!-- count -->376<!-- count --> generic and specific (scientific) repositories (and more to come!).
 
 ![Datahugger support Zenodo, Dataverse, DataOne, GitHub, FigShare, HuggingFace, Mendeley Data, Dryad, OSF, and many more](images/logos.png)
 
