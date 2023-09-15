@@ -7,6 +7,7 @@ import requests
 from datahugger.config import RE3DATA_SOFTWARE
 from datahugger.config import SERVICES_NETLOC
 from datahugger.config import SERVICES_NETLOC_REGEXP
+from datahugger.exceptions import RepositoryNotSupportedError
 from datahugger.handles import DOI
 from datahugger.utils import _get_url
 from datahugger.utils import get_datapublisher_from_doi
@@ -26,7 +27,7 @@ def _resolve_service(resource):
             logging.info(f"Service found: {service_class}")
             return service_class
 
-    raise ValueError(f"Data protocol for {resource} not found.")
+    raise RepositoryNotSupportedError(f"Data protocol for {resource} not found.")
 
 
 def _resolve_service_from_netloc(resource):

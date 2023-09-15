@@ -1,5 +1,6 @@
 
 datahugger/_version.py
+benchmark/benchmark_datasets_tested.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
