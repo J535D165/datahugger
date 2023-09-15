@@ -8,7 +8,6 @@ __all__ = [
     "get",
     "info",
     "parse_resource_identifier",
-    "DataCiteError",
     "DOIError",
     "RepositoryNotSupportedError",
 ]

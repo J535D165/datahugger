@@ -7,9 +7,11 @@ import pandas as pd
 import requests
 
 # from pydatacite import DOIs
-import datahugger as dh
+import datahugger
+from datahugger import RepositoryNotSupportedError
 
 BENCHMARK_FILE = Path("benchmark", "benchmark_datasets.csv")
+BENCHMARK_OUTPUT_FILE = Path("benchmark", "benchmark_datasets_tested.csv")
 
 
 def create_dataset(args):
@@ -44,39 +46,40 @@ def run(args):
     df = pd.read_csv(BENCHMARK_FILE)
 
     df[["service", "error"]] = df.apply(test_repo, axis=1, result_type="expand")
-    df.to_csv("repos_benchmark_tested.csv")
+    df.to_csv(BENCHMARK_OUTPUT_FILE)
 
     print(df)
 
 
 def test_repo(r):
     try:
-        cl = dh.info(r["id"]).__class__.__name__
+        cl = datahugger.info(r["id"]).__class__.__name__
         print(r["id"], f"service found: {cl}")
         return {"service": cl, "error": None}
+    except RepositoryNotSupportedError:
+        # Repository not supported, but no error
+        return {"service": None, "error": None}
     except Exception as err:
         print(r["id"], f"results in: {err}")
         return {"service": None, "error": str(err)}
 
 
 def get_coverage(args):
-    df = pd.read_csv("repos_benchmark_tested.csv")
+    df = pd.read_csv(BENCHMARK_OUTPUT_FILE)
     cov = df["service"].notnull().sum() / len(df)
 
-    print("Dataset coverage", cov * 100)
+    print(f"Dataset coverage: {cov * 100}%")
 
     with open(".datacite_coverage.json", "w") as f:
         json.dump({"datasets": cov * 100}, f)
 
 
 def get_report(args):
-    df = pd.read_csv("repos_benchmark_tested.csv", index_col=0)
+    df = pd.read_csv(BENCHMARK_OUTPUT_FILE, index_col=0)
 
-    perc_supported = df["service"].notnull().sum() / len(df) * 100
-    perc_not_supported = (
-        df["error"].str.startswith("Data protocol").sum() / len(df) * 100
-    )
-    perc_with_error = 100 - perc_supported - perc_not_supported
+    frac_supported = df["service"].notnull().sum() / len(df)
+    frac_with_error = df["error"].notnull().sum() / len(df)
+    frac_not_supported = 1 - frac_supported - frac_with_error
 
     print("## Coverage report")
     print(
@@ -85,18 +88,13 @@ def get_report(args):
     )
     print()
     print("### Percentages")
-    print(f"Percentage of datasets supported: {perc_supported:.1f}%")
-    print(f"Percentage of datasets not supported: {perc_not_supported:.1f}%")
-    print(f"Percentage of datasets with error: {perc_with_error:.1f}%")
+    print(f"Percentage of datasets supported: {frac_supported*100:.1f}%")
+    print(f"Percentage of datasets not supported: {frac_not_supported*100:.1f}%")
+    print(f"Percentage of datasets with error: {frac_with_error*100:.1f}%")
 
     print()
     print("### Table with unexpected errors")
-    print(
-        df[
-            df["error"].notnull()
-            & ~(df["error"].str.startswith("Data protocol", na=True))
-        ].to_markdown()
-    )
+    print(df[df["error"].notnull()].to_markdown())
 
 
 if __name__ == "__main__":
