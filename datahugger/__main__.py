@@ -22,6 +22,20 @@ def print_green(s):
     print(f"\u001b[32m{s}\u001b[0m")
 
 
+class KVAppendAction(argparse.Action):
+    def __call__(self, parser, args, values, option_string=None):
+        try:
+            (k, v) = values[0].split("=", 2)
+        except ValueError as err:
+            raise argparse.ArgumentError(
+                self, f"'{values[0]}' is not a valid key-value pair (key=value)"
+            ) from err
+
+        d = getattr(args, self.dest) or {}
+        d[k] = v
+        setattr(args, self.dest, d)
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="datahugger",
@@ -69,6 +83,16 @@ def main():
         help="Python based log levels. Default: WARNING.",
     )
 
+    parser.add_argument(
+        "-p",
+        "--param",
+        nargs=1,
+        action=KVAppendAction,
+        dest="params",
+        help="Add key=value params to pass to the downloader. "
+        "May appear multiple times.",
+    )
+
     # version
     parser.add_argument(
         "-V",
@@ -91,6 +115,7 @@ def main():
             unzip=args.unzip,
             progress=args.progress,
             print_only=args.print_only,
+            params=args.params,
         )
 
     except DOIError as doi_err:
