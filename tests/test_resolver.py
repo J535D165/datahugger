@@ -27,8 +27,10 @@ def test_resolve_service_via_doi_handle(tmpdir):
     doi = DOI.parse("10.34894/FXUGHW")
     doi.resolve()
 
+    r = datahugger.get(doi, tmpdir)
+
     assert isinstance(doi, DOI)
-    assert isinstance(datahugger.get(doi, tmpdir), DataverseDataset)
+    assert isinstance(r.dataset, DataverseDataset)
 
 
 def test_get_doi_metadata_cls(tmpdir):

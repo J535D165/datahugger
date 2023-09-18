@@ -17,14 +17,18 @@ from datahugger.utils import _get_url
 from datahugger.utils import _is_url
 
 
-class DatasetResult:
+class DownloadResult:
     """Result class after downloading the dataset."""
+
+    def __init__(self, dataset, output_folder):
+        self.dataset = dataset
+        self.output_folder = output_folder
 
     def __str__(self):
         return f"<{self.__class__.__name__} n_files={len(self)} >"
 
     def __len__(self):
-        return len(self.files)
+        return len(self.dataset.files)
 
     def tree(self, **kwargs):
         """Return the folder tree.
@@ -49,6 +53,7 @@ class DatasetDownloader:
         progress=True,
         unzip=True,
         print_only=False,
+        params=None,
     ):
         super().__init__()
         self.resource = resource
@@ -58,6 +63,7 @@ class DatasetDownloader:
         self.progress = progress
         self.unzip = unzip
         self.print_only = print_only
+        self.params = params
 
     def _get_attr_attr(self, record, jsonp):
         try:
@@ -197,20 +203,6 @@ class DatasetDownloader:
             zip_info.filename = os.path.basename(zip_info.filename)
             z.extract(zip_info, output_folder)
 
-    @property
-    def _params(self):
-        if hasattr(self, "__params"):
-            return self.__params
-
-        url = _get_url(self.resource)
-
-        # if isinstance(url, str) and _is_url(url):
-        self.__params = self._parse_url(url)
-        # else:
-        #     self.__params = {"record_id": url, "version": None}
-
-        return self.__params
-
     def _pre_files(self):
         pass
 
@@ -295,14 +287,34 @@ class DatasetDownloader:
         ]
 
     @property
+    def _params(self):
+        """Params including url params."""
+        if hasattr(self, "__params"):
+            return self.__params
+
+        url = _get_url(self.resource)
+        url_params = self._parse_url(url)
+        if self.params:
+            new_params = self.params.copy()
+            new_params.update(url_params)
+            self.__params = new_params
+        else:
+            self.__params = url_params
+
+        return self.__params
+
+    @property
     def files(self):
         if hasattr(self, "_files"):
             return self._files
 
         self._pre_files()
 
-        uri = urlparse(_get_url(self.resource))
+        url = _get_url(self.resource)
+        uri = urlparse(url)
         base_url = uri.scheme + "://" + uri.netloc
+
+        print(self._params)
 
         if hasattr(self, "is_singleton") and self.is_singleton:
             self._files = self._get_single_file(
@@ -324,7 +336,6 @@ class DatasetDownloader:
     def _get(
         self,
         output_folder: Union[Path, str],
-        **kwargs,
     ):
         if (
             len(self.files) == 1
@@ -347,26 +358,16 @@ class DatasetDownloader:
     def download(
         self,
         output_folder: Union[Path, str],
-        **kwargs,
     ):
-        """Download files for the given URL or record id.
+        """Download files.
 
         Arguments
         ---------
-        record_id_or_url: str
-            The identifier of the record or the url to the resource
-            to download.
         output_folder: str
             The folder to store the downloaded results.
-        version: str, int
-            The version of the dataset
 
         """
-        Path(output_folder).mkdir(parents=True, exist_ok=True)
 
-        self._get(output_folder, **kwargs)
+        self._get(output_folder=output_folder)
 
-        # store the location of the last known output folder
-        self.output_folder = output_folder
-
-        return self
+        return DownloadResult(self, output_folder)

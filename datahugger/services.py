@@ -10,11 +10,10 @@ import requests
 from jsonpath_ng import parse
 
 from datahugger.base import DatasetDownloader
-from datahugger.base import DatasetResult
 from datahugger.utils import _get_url
 
 
-class ZenodoDataset(DatasetDownloader, DatasetResult):
+class ZenodoDataset(DatasetDownloader):
     """Downloader for Zenodo repository.
 
     For Zenodo records, new versions have new identifiers.
@@ -42,7 +41,7 @@ class ZenodoDataset(DatasetDownloader, DatasetResult):
         return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(":")[0]
 
 
-class DataverseDataset(DatasetDownloader, DatasetResult):
+class DataverseDataset(DatasetDownloader):
     """Downloader for Dataverse repository."""
 
     REGEXP_ID = r"(?P<type>dataset|file)\.xhtml\?persistentId=(?P<record_id>.*)"
@@ -68,7 +67,7 @@ class DataverseDataset(DatasetDownloader, DatasetResult):
             self.is_singleton = True
 
 
-class FigShareDataset(DatasetDownloader, DatasetResult):
+class FigShareDataset(DatasetDownloader):
     """Downloader for FigShare repository."""
 
     REGEXP_ID = r"articles\/.*?\/.*?\/(?P<record_id>\d+)(?:\/(?P<version>\d+)|)"
@@ -96,7 +95,7 @@ class DjehutyDataset(FigShareDataset):
     API_URL = "https://data.4tu.nl/v2"
 
 
-class OSFDataset(DatasetDownloader, DatasetResult):
+class OSFDataset(DatasetDownloader):
     """Downloader for OSF repository."""
 
     REGEXP_ID = r"osf\.io\/(?P<record_id>.*)/"
@@ -122,7 +121,7 @@ class OSFDataset(DatasetDownloader, DatasetResult):
     ATTR_HASH_TYPE_VALUE = "sha256"
 
 
-class DataDryadDataset(DatasetDownloader, DatasetResult):
+class DataDryadDataset(DatasetDownloader):
     """Downloader for DataDryad repository."""
 
     REGEXP_ID = r"datadryad\.org[\:]*[43]{0,3}\/stash\/dataset\/doi:(?P<record_id>.*)"
@@ -180,7 +179,7 @@ class DataDryadDataset(DatasetDownloader, DatasetResult):
         return "https://datadryad.org" + record["_links"]["stash:file-download"]["href"]
 
 
-class DataOneDataset(DatasetDownloader, DatasetResult):
+class DataOneDataset(DatasetDownloader):
     """Downloader for DataOne repositories."""
 
     REGEXP_ID = r"view/doi:(?P<record_id>.*)"
@@ -218,7 +217,7 @@ class DataOneDataset(DatasetDownloader, DatasetResult):
         return self._files
 
 
-class DSpaceDataset(DatasetDownloader, DatasetResult):
+class DSpaceDataset(DatasetDownloader):
     """Downloader for DSpaceDataset repositories."""
 
     REGEXP_ID = r"handle/(?P<record_id>\d+\/\d+)"
@@ -248,7 +247,7 @@ class DSpaceDataset(DatasetDownloader, DatasetResult):
         self.API_URL_META = base_url + res.json()["link"] + "/bitstreams"
 
 
-class MendeleyDataset(DatasetDownloader, DatasetResult):
+class MendeleyDataset(DatasetDownloader):
     """Downloader for Mendeley repository."""
 
     REGEXP_ID = r"data\.mendeley\.com\/datasets\/(?P<record_id>[0-9a-z]+)(?:\/(?P<version>\d+)|)"  # noqa
@@ -280,7 +279,7 @@ class MendeleyDataset(DatasetDownloader, DatasetResult):
             self.version = r_version.json()[-1]["version"]
 
 
-class GitHubDataset(DatasetDownloader, DatasetResult):
+class GitHubDataset(DatasetDownloader):
     """Downloader for GitHub repository."""
 
     API_URL = "https://github.com/"
@@ -296,10 +295,10 @@ class GitHubDataset(DatasetDownloader, DatasetResult):
     @property
     def files(self):
         # at the moment, .files is not available for GitHub
-        raise AttributeError("'files' is not available for GitHub")
+        raise NotImplementedError("'files' is not available for GitHub")
 
 
-class HuggingFaceDataset(DatasetDownloader, DatasetResult):
+class HuggingFaceDataset(DatasetDownloader):
     """Downloader for Huggingface repository."""
 
     REGEXP_ID = r"huggingface.co/datasets/(?P<record_id>.*)"
@@ -307,7 +306,6 @@ class HuggingFaceDataset(DatasetDownloader, DatasetResult):
     def _get(
         self,
         output_folder: Union[Path, str],
-        **kwargs,
     ):
         try:
             from datasets import load_dataset
@@ -317,15 +315,16 @@ class HuggingFaceDataset(DatasetDownloader, DatasetResult):
                 " or use 'pip install datahugger[all]'"
             ) from err
 
-        load_dataset(self._params["record_id"], cache_dir=output_folder, **kwargs)
+        params = self.params if self.params else {}
+        load_dataset(self._params["record_id"], cache_dir=output_folder, **params)
 
     @property
     def files(self):
         # at the moment, .files is not available for HuggingFace
-        raise AttributeError("'files' is not available for HuggingFace")
+        raise NotImplementedError("'files' is not available for HuggingFace")
 
 
-class ArXivDataset(DatasetDownloader, DatasetResult):
+class ArXivDataset(DatasetDownloader):
     """Downloader for ArXiv publication."""
 
     REGEXP_ID = r"https://arxiv\.org/abs/(?P<record_id>.*)"

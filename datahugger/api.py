@@ -57,7 +57,7 @@ def info(
     unzip=True,
     progress=True,
     print_only=False,
-    **kwargs,
+    params=None,
 ):
     """Get info on the content of the dataset.
 
@@ -65,8 +65,6 @@ def info(
     ---------
     resource: str, pathlib.Path
         The URL, DOI, or Handle of the dataset.
-    output_folder: str, pathlib.Path
-        The folder to download the dataset files to.
     max_file_size: int
         The maximum number of bytes for a single file. If exceeded,
         the file is skipped.
@@ -80,6 +78,8 @@ def info(
     print_only: bool
         Print the output of the dataset download without downloading
         the actual files (Dry run). Default: False.
+    params: dict
+        Extra parameters for the request.
 
     Returns
     -------
@@ -98,7 +98,7 @@ def info(
         unzip=unzip,
         progress=progress,
         print_only=print_only,
-        **kwargs,
+        params=params,
     )
 
 
@@ -110,7 +110,7 @@ def get(
     unzip=True,
     progress=True,
     print_only=False,
-    **kwargs,
+    params=None,
 ):
     """Get the content of repository.
 
@@ -136,6 +136,8 @@ def get(
     print_only: bool
         Print the output of the dataset download without downloading
         the actual files (Dry run). Default: False.
+    params: dict
+        Extra parameters for the request.
 
     Returns
     -------
@@ -151,7 +153,7 @@ def get(
         unzip=unzip,
         progress=progress,
         print_only=print_only,
-        **kwargs,
+        params=params,
     )
 
     return service.download(output_folder)

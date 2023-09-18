@@ -95,4 +95,17 @@ def test_info_without_loading(tmpdir):
 
     dh_info = datahugger.info("https://osf.io/wdzh5/")
 
-    assert dh_get.files == dh_info.files
+    assert dh_get.dataset.files == dh_info.files
+
+
+def test_huggingface(tmpdir):
+    datahugger.get(
+        "https://huggingface.co/datasets/wikitext",
+        tmpdir,
+        params={"name": "wikitext-2-v1"},
+    )
+
+
+def test_huggingface_without_params(tmpdir):
+    with pytest.raises(ValueError):
+        datahugger.get("https://huggingface.co/datasets/wikitext", tmpdir)
