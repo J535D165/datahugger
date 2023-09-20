@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 
 import requests
 from jsonpath_ng.jsonpath import Fields
+from jsonpath_ng.jsonpath import Slice
 
 from datahugger.base import DatasetDownloader
 from datahugger.utils import _get_url
@@ -26,7 +27,7 @@ class ZenodoDataset(DatasetDownloader):
 
     # the files and metadata about the dataset
     API_URL_META = "{api_url}records/{record_id}"
-    META_FILES_JSONPATH = "files"
+    META_FILES_JSONPATH = "files[*]"
 
     # paths to file attributes
     ATTR_NAME_JSONPATH = "key"
@@ -46,24 +47,11 @@ class DataverseDataset(DatasetDownloader):
 
     REGEXP_ID = r"(?P<type>dataset|file)\.xhtml\?persistentId=(?P<record_id>.*)"
 
-    # the files and metadata about the dataset
-    META_FILES_JSONPATH = "data.files"
-
-    API_URL_META_SINGLE = "{base_url}/api/files/:persistentId/?persistentId={record_id}"
-    META_FILES_SINGLE_JSONPATH = "data"
-
     # paths to file attributes
-    ATTR_NAME_JSONPATH = "dataFile.filename"
-    ATTR_SIZE_JSONPATH = "dataFile.filesize"
-    ATTR_HASH_JSONPATH = "dataFile.md5"
+    ATTR_NAME_JSONPATH = "filename"
+    ATTR_SIZE_JSONPATH = "filesize"
+    ATTR_HASH_JSONPATH = "md5"
     ATTR_HASH_TYPE_VALUE = "md5"
-
-    def _get_attr_link(self, record, base_url=None):
-        return "{}/api/access/datafile/{}".format(base_url, record["dataFile"]["id"])
-
-    def _pre_files(self):
-        if "type" in self._params and self._params["type"] == "file":
-            self.is_singleton = True
 
     @property
     def API_URL_META(self):
@@ -72,10 +60,23 @@ class DataverseDataset(DatasetDownloader):
         else:
             v = ":latest-published"
 
-        return (
-            "{base_url}/api/datasets/:persistentId/versions/"
-            f"{v}/?persistentId={{record_id}}"
-        )
+        if self._params.get("type", None) == "file":
+            return "{base_url}/api/files/:persistentId/?persistentId={record_id}"
+        else:
+            return (
+                "{base_url}/api/datasets/:persistentId/versions/"
+                f"{v}/?persistentId={{record_id}}"
+            )
+
+    @property
+    def META_FILES_JSONPATH(self):
+        if self._params.get("type", None) == "file":
+            return "data.dataFile"
+        else:
+            return "data.files[*].dataFile"
+
+    def _get_attr_link(self, record, base_url=None):
+        return f"{base_url}/api/access/datafile/{record['id']}"
 
 
 class FigShareDataset(DatasetDownloader):
@@ -87,7 +88,7 @@ class FigShareDataset(DatasetDownloader):
     API_URL = "https://api.figshare.com/v2"
 
     # the files and metadata about the dataset
-    META_FILES_JSONPATH = "files"
+    META_FILES_JSONPATH = "files[*]"
 
     # paths to file attributes
     ATTR_FILE_LINK_JSONPATH = "download_url"
@@ -125,7 +126,7 @@ class OSFDataset(DatasetDownloader):
 
     # the files and metadata about the dataset
     API_URL_META = "{api_url}{record_id}/files/osfstorage/?format=jsonapi"
-    META_FILES_JSONPATH = "data"
+    META_FILES_JSONPATH = "data[*]"
 
     PAGINATION_JSONPATH = "links.next"
 
@@ -151,7 +152,9 @@ class DataDryadDataset(DatasetDownloader):
 
     # the files and metadata about the dataset
     API_URL_META = "{api_url}{record_id}/files/osfstorage/?format=jsonapi"
-    META_FILES_JSONPATH = Fields("_embedded").child(Fields("stash:files"))
+    META_FILES_JSONPATH = (
+        Fields("_embedded").child(Fields("stash:files")).child(Slice())
+    )
 
     # paths to file attributes
     ATTR_NAME_JSONPATH = "path"
