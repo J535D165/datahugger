@@ -7,7 +7,7 @@ from urllib.parse import quote
 from urllib.parse import urlparse
 
 import requests
-from jsonpath_ng import parse
+from jsonpath_ng.jsonpath import Fields
 
 from datahugger.base import DatasetDownloader
 from datahugger.utils import _get_url
@@ -129,15 +129,16 @@ class DataDryadDataset(DatasetDownloader):
     # the base entry point of the REST API
     API_URL = "https://datadryad.org/api/v2"
 
+    # the files and metadata about the dataset
+    API_URL_META = "{api_url}{record_id}/files/osfstorage/?format=jsonapi"
+    META_FILES_JSONPATH = Fields("_embedded").child(Fields("stash:files"))
+
     # paths to file attributes
     ATTR_NAME_JSONPATH = "path"
     ATTR_SIZE_JSONPATH = "size"
 
     @property
-    def files(self):
-        if hasattr(self, "_files"):
-            return self._files
-
+    def API_URL_META(self):
         doi_safe = quote(f"doi:{self._params['record_id']}", safe="")
         dataset_metadata_url = self.API_URL + "/datasets/" + doi_safe
 
@@ -147,36 +148,10 @@ class DataDryadDataset(DatasetDownloader):
 
         # get the latest version of the dataset
         latest_version = dataset_metadata["_links"]["stash:version"]["href"]
-        url_latest_version = "https://datadryad.org" + latest_version + "/files"
+        return f"https://datadryad.org{latest_version}/files"
 
-        res = requests.get(url_latest_version)
-        res.raise_for_status()
-        res.json()["_embedded"]["stash:files"]
-
-        if hasattr(self, "META_FILES_JSONPATH"):
-            jsonpath_expression = parse(self.META_FILES_JSONPATH)
-            files_raw = jsonpath_expression.find(res.json())[0].value
-        else:
-            files_raw = res.json()
-
-        x = []
-        for f in files_raw["_embedded"]["stash:files"]:
-            x.append(
-                {
-                    "kind": "file",
-                    "link": self._get_attr_link(f),
-                    "name": self._get_attr_name(f),
-                    "size": self._get_attr_size(f),
-                    "hash": self._get_attr_hash(f),
-                    "hash_type": self._get_attr_hash_type(f),
-                }
-            )
-
-        self._files = x
-        return self._files
-
-    def _get_attr_link(self, record):
-        return "https://datadryad.org" + record["_links"]["stash:file-download"]["href"]
+    def _get_attr_link(self, record, base_url):
+        return base_url + record["_links"]["stash:file-download"]["href"]
 
 
 class DataOneDataset(DatasetDownloader):
