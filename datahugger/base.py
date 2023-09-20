@@ -314,8 +314,6 @@ class DatasetDownloader:
         uri = urlparse(url)
         base_url = uri.scheme + "://" + uri.netloc
 
-        print(self._params)
-
         if hasattr(self, "is_singleton") and self.is_singleton:
             self._files = self._get_single_file(
                 self.API_URL_META_SINGLE.format(
