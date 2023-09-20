@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 
 import requests
 from jsonpath_ng.jsonpath import Fields
+from jsonpath_ng.jsonpath import Slice
 
 from datahugger.base import DatasetDownloader
 from datahugger.utils import _get_url
@@ -151,7 +152,9 @@ class DataDryadDataset(DatasetDownloader):
 
     # the files and metadata about the dataset
     API_URL_META = "{api_url}{record_id}/files/osfstorage/?format=jsonapi"
-    META_FILES_JSONPATH = Fields("_embedded").child(Fields("stash:files"))
+    META_FILES_JSONPATH = (
+        Fields("_embedded").child(Fields("stash:files")).child(Slice())
+    )
 
     # paths to file attributes
     ATTR_NAME_JSONPATH = "path"
@@ -171,6 +174,7 @@ class DataDryadDataset(DatasetDownloader):
         return f"https://datadryad.org{latest_version}/files"
 
     def _get_attr_link(self, record, base_url):
+        print(record)
         return base_url + record["_links"]["stash:file-download"]["href"]
 
 
