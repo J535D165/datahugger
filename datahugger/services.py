@@ -67,7 +67,7 @@ class DataverseDataset(DatasetDownloader):
 
     @property
     def API_URL_META(self):
-        if self._params and "version" in self._params:
+        if self._params.get("version", None):
             v = self._params["version"]
         else:
             v = ":latest-published"
@@ -100,7 +100,7 @@ class FigShareDataset(DatasetDownloader):
     def API_URL_META(self):
         s = "{api_url}/articles/{record_id}"
 
-        if self._params and "version" in self._params:
+        if self._params.get("version", None):
             s += "/versions/{version}"
 
         return s
