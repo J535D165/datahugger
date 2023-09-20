@@ -218,7 +218,10 @@ class DatasetDownloader:
 
         # find path to raw files
         if hasattr(self, "META_FILES_JSONPATH"):
-            jsonpath_expression = parse(self.META_FILES_JSONPATH)
+            if isinstance(self.META_FILES_JSONPATH, str):
+                jsonpath_expression = parse(self.META_FILES_JSONPATH)
+            else:
+                jsonpath_expression = self.META_FILES_JSONPATH
             files_raw = jsonpath_expression.find(response)[0].value
         else:
             files_raw = response
