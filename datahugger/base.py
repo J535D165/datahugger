@@ -215,12 +215,15 @@ class DatasetDownloader:
         response = res.json()
 
         # find path to raw files
-        if isinstance(self.META_FILES_JSONPATH, str):
-            jsonpath_expression = parse(self.META_FILES_JSONPATH)
-        else:
-            jsonpath_expression = self.META_FILES_JSONPATH
+        if hasattr(self, "META_FILES_JSONPATH"):
+            if isinstance(self.META_FILES_JSONPATH, str):
+                jsonpath_expression = parse(self.META_FILES_JSONPATH)
+            else:
+                jsonpath_expression = self.META_FILES_JSONPATH
 
-        files_raw = [x.value for x in jsonpath_expression.find(response)]
+            files_raw = [x.value for x in jsonpath_expression.find(response)]
+        else:
+            files_raw = response
 
         for f in files_raw:
             # create the file or folder path
