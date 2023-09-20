@@ -174,7 +174,6 @@ class DataDryadDataset(DatasetDownloader):
         return f"https://datadryad.org{latest_version}/files"
 
     def _get_attr_link(self, record, base_url):
-        print(record)
         return base_url + record["_links"]["stash:file-download"]["href"]
 
 
