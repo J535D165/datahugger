@@ -14,32 +14,22 @@ from datahugger.base import DatasetDownloader
 from datahugger.utils import _get_url
 
 
-class ZenodoDataset(DatasetDownloader):
-    """Downloader for Zenodo repository.
+class ArXivDataset(DatasetDownloader):
+    """Downloader for ArXiv publication."""
 
-    For Zenodo records, new versions have new identifiers.
-    """
+    REGEXP_ID = r"https://arxiv\.org/abs/(?P<record_id>.*)"
 
-    REGEXP_ID = r"zenodo\.org\/record\/(?P<record_id>\d+).*"
-
-    # the base entry point of the REST API
-    API_URL = "https://zenodo.org/api/"
-
-    # the files and metadata about the dataset
-    API_URL_META = "{api_url}records/{record_id}"
-    META_FILES_JSONPATH = "files[*]"
-
-    # paths to file attributes
-    ATTR_NAME_JSONPATH = "key"
-    ATTR_FILE_LINK_JSONPATH = "links.self"
-    ATTR_SIZE_JSONPATH = "size"
-    ATTR_HASH_JSONPATH = "checksum"
-
-    def _get_attr_hash(self, record):
-        return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(":")[1]
-
-    def _get_attr_hash_type(self, record):
-        return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(":")[0]
+    @property
+    def files(self):
+        return [
+            {
+                "link": f"https://arxiv.org/pdf/{self._params['record_id']}.pdf",
+                "name": self._params["record_id"].split("/")[-1] + ".pdf",
+                "size": None,
+                "hash": None,
+                "hash_type": None,
+            }
+        ]
 
 
 class DataverseDataset(DatasetDownloader):
@@ -77,69 +67,6 @@ class DataverseDataset(DatasetDownloader):
 
     def _get_attr_link(self, record, base_url=None):
         return f"{base_url}/api/access/datafile/{record['id']}"
-
-
-class FigShareDataset(DatasetDownloader):
-    """Downloader for FigShare repository."""
-
-    REGEXP_ID = r"articles\/.*?\/.*?\/(?P<record_id>\d+)(?:\/(?P<version>\d+)|)"
-
-    # the base entry point of the REST API
-    API_URL = "https://api.figshare.com/v2"
-
-    # the files and metadata about the dataset
-    META_FILES_JSONPATH = "files[*]"
-
-    # paths to file attributes
-    ATTR_FILE_LINK_JSONPATH = "download_url"
-    ATTR_NAME_JSONPATH = "name"
-    ATTR_SIZE_JSONPATH = "size"
-    ATTR_HASH_JSONPATH = "computed_md5"
-    ATTR_HASH_TYPE_VALUE = "md5"
-
-    @property
-    def API_URL_META(self):
-        s = "{api_url}/articles/{record_id}"
-
-        if self._params.get("version", None):
-            s += "/versions/{version}"
-
-        return s
-
-
-class DjehutyDataset(FigShareDataset):
-    """Downloader for Djehuty repository."""
-
-    REGEXP_ID = r"articles\/.*?\/(?P<record_id>\d+)(?:\/(?P<version>\d+)|)"
-
-    # the base entry point of the REST API
-    API_URL = "https://data.4tu.nl/v2"
-
-
-class OSFDataset(DatasetDownloader):
-    """Downloader for OSF repository."""
-
-    REGEXP_ID = r"osf\.io\/(?P<record_id>.*)/"
-
-    # the base entry point of the REST API
-    API_URL = "https://api.osf.io/v2/registrations/"
-
-    # the files and metadata about the dataset
-    API_URL_META = "{api_url}{record_id}/files/osfstorage/?format=jsonapi"
-    META_FILES_JSONPATH = "data[*]"
-
-    PAGINATION_JSONPATH = "links.next"
-
-    # paths to file attributes
-    ATTR_KIND_JSONPATH = "attributes.kind"
-
-    ATTR_FILE_LINK_JSONPATH = "links.download"
-    ATTR_FOLDER_LINK_JSONPATH = "relationships.files.links.related.href"
-
-    ATTR_NAME_JSONPATH = "attributes.name"
-    ATTR_SIZE_JSONPATH = "attributes.size"
-    ATTR_HASH_JSONPATH = "attributes.extra.hashes.sha256"
-    ATTR_HASH_TYPE_VALUE = "sha256"
 
 
 class DataDryadDataset(DatasetDownloader):
@@ -245,28 +172,41 @@ class DSpaceDataset(DatasetDownloader):
         return base_url + res.json()["link"] + "/bitstreams"
 
 
-class MendeleyDataset(DatasetDownloader):
-    """Downloader for Mendeley repository."""
+class FigShareDataset(DatasetDownloader):
+    """Downloader for FigShare repository."""
 
-    REGEXP_ID = r"data\.mendeley\.com\/datasets\/(?P<record_id>[0-9a-z]+)(?:\/(?P<version>\d+)|)"  # noqa
+    REGEXP_ID = r"articles\/.*?\/.*?\/(?P<record_id>\d+)(?:\/(?P<version>\d+)|)"
 
     # the base entry point of the REST API
-    API_URL = "https://data.mendeley.com/public-api/"
-
-    # version url
-    API_URL_VERSION = "{api_url}datasets/{record_id}/versions"
+    API_URL = "https://api.figshare.com/v2"
 
     # the files and metadata about the dataset
-    API_URL_META = (
-        "{api_url}datasets/{record_id}/files?folder_id=root&version={version}"
-    )
+    META_FILES_JSONPATH = "files[*]"
 
     # paths to file attributes
-    ATTR_FILE_LINK_JSONPATH = "content_details.download_url"
-    ATTR_NAME_JSONPATH = "filename"
+    ATTR_FILE_LINK_JSONPATH = "download_url"
+    ATTR_NAME_JSONPATH = "name"
     ATTR_SIZE_JSONPATH = "size"
-    ATTR_HASH_JSONPATH = "content_details.sha256_hash"
-    ATTR_HASH_TYPE_VALUE = "sha256"
+    ATTR_HASH_JSONPATH = "computed_md5"
+    ATTR_HASH_TYPE_VALUE = "md5"
+
+    @property
+    def API_URL_META(self):
+        s = "{api_url}/articles/{record_id}"
+
+        if self._params.get("version", None):
+            s += "/versions/{version}"
+
+        return s
+
+
+class DjehutyDataset(FigShareDataset):
+    """Downloader for Djehuty repository."""
+
+    REGEXP_ID = r"articles\/.*?\/(?P<record_id>\d+)(?:\/(?P<version>\d+)|)"
+
+    # the base entry point of the REST API
+    API_URL = "https://data.4tu.nl/v2"
 
 
 class GitHubDataset(DatasetDownloader):
@@ -314,19 +254,79 @@ class HuggingFaceDataset(DatasetDownloader):
         raise NotImplementedError("'files' is not available for HuggingFace")
 
 
-class ArXivDataset(DatasetDownloader):
-    """Downloader for ArXiv publication."""
+class MendeleyDataset(DatasetDownloader):
+    """Downloader for Mendeley repository."""
 
-    REGEXP_ID = r"https://arxiv\.org/abs/(?P<record_id>.*)"
+    REGEXP_ID = r"data\.mendeley\.com\/datasets\/(?P<record_id>[0-9a-z]+)(?:\/(?P<version>\d+)|)"  # noqa
 
-    @property
-    def files(self):
-        return [
-            {
-                "link": f"https://arxiv.org/pdf/{self._params['record_id']}.pdf",
-                "name": self._params["record_id"].split("/")[-1] + ".pdf",
-                "size": None,
-                "hash": None,
-                "hash_type": None,
-            }
-        ]
+    # the base entry point of the REST API
+    API_URL = "https://data.mendeley.com/public-api/"
+
+    # version url
+    API_URL_VERSION = "{api_url}datasets/{record_id}/versions"
+
+    # the files and metadata about the dataset
+    API_URL_META = (
+        "{api_url}datasets/{record_id}/files?folder_id=root&version={version}"
+    )
+
+    # paths to file attributes
+    ATTR_FILE_LINK_JSONPATH = "content_details.download_url"
+    ATTR_NAME_JSONPATH = "filename"
+    ATTR_SIZE_JSONPATH = "size"
+    ATTR_HASH_JSONPATH = "content_details.sha256_hash"
+    ATTR_HASH_TYPE_VALUE = "sha256"
+
+
+class OSFDataset(DatasetDownloader):
+    """Downloader for OSF repository."""
+
+    REGEXP_ID = r"osf\.io\/(?P<record_id>.*)/"
+
+    # the base entry point of the REST API
+    API_URL = "https://api.osf.io/v2/registrations/"
+
+    # the files and metadata about the dataset
+    API_URL_META = "{api_url}{record_id}/files/osfstorage/?format=jsonapi"
+    META_FILES_JSONPATH = "data[*]"
+
+    PAGINATION_JSONPATH = "links.next"
+
+    # paths to file attributes
+    ATTR_KIND_JSONPATH = "attributes.kind"
+
+    ATTR_FILE_LINK_JSONPATH = "links.download"
+    ATTR_FOLDER_LINK_JSONPATH = "relationships.files.links.related.href"
+
+    ATTR_NAME_JSONPATH = "attributes.name"
+    ATTR_SIZE_JSONPATH = "attributes.size"
+    ATTR_HASH_JSONPATH = "attributes.extra.hashes.sha256"
+    ATTR_HASH_TYPE_VALUE = "sha256"
+
+
+class ZenodoDataset(DatasetDownloader):
+    """Downloader for Zenodo repository.
+
+    For Zenodo records, new versions have new identifiers.
+    """
+
+    REGEXP_ID = r"zenodo\.org\/record\/(?P<record_id>\d+).*"
+
+    # the base entry point of the REST API
+    API_URL = "https://zenodo.org/api/"
+
+    # the files and metadata about the dataset
+    API_URL_META = "{api_url}records/{record_id}"
+    META_FILES_JSONPATH = "files[*]"
+
+    # paths to file attributes
+    ATTR_NAME_JSONPATH = "key"
+    ATTR_FILE_LINK_JSONPATH = "links.self"
+    ATTR_SIZE_JSONPATH = "size"
+    ATTR_HASH_JSONPATH = "checksum"
+
+    def _get_attr_hash(self, record):
+        return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(":")[1]
+
+    def _get_attr_hash_type(self, record):
+        return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(":")[0]
