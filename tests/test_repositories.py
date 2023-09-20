@@ -14,6 +14,9 @@ TESTS_URLS = [
         "tutorial1.py",
     ),
     ("https://doi.org/10.7910/DVN/KBHLOD", "tutorial1.py"),
+    ("https://hdl.handle.net/10622/NHJZUD", "ERRHS_7_01_data_1795.tab"),
+    # Dataverse single file
+    ("10.7910/DVN/HZBYG7/RQ26H2", "Table 2.do"),
     # Figshare
     ("https://doi.org/10.6084/m9.figshare.8851784.v1", "cross_year_data2.csv"),
     (
@@ -50,6 +53,8 @@ TESTS_URLS = [
         "https://repositorioinstitucional.ceu.es/handle/10637/2741",
         "Aquaporin_1_JAMartin_et_al_MedSport_2009.pdf",
     ),
+    # huggingface
+    # ("10.57967/hf/0034", "test.csv"),
 ]
 
 
@@ -90,4 +95,17 @@ def test_info_without_loading(tmpdir):
 
     dh_info = datahugger.info("https://osf.io/wdzh5/")
 
-    assert dh_get.files == dh_info.files
+    assert dh_get.dataset.files == dh_info.files
+
+
+def test_huggingface(tmpdir):
+    datahugger.get(
+        "https://huggingface.co/datasets/wikitext",
+        tmpdir,
+        params={"name": "wikitext-2-v1"},
+    )
+
+
+def test_huggingface_without_params(tmpdir):
+    with pytest.raises(ValueError):
+        datahugger.get("https://huggingface.co/datasets/wikitext", tmpdir)

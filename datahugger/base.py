@@ -5,44 +5,30 @@ import re
 import zipfile
 from pathlib import Path
 from typing import Union
+from urllib.parse import urlparse
 
-import natsort as ns
 import requests
 from jsonpath_ng import parse
 from scitree import scitree
 from tqdm import tqdm
 
 from datahugger.utils import _format_filename
+from datahugger.utils import _get_url
 from datahugger.utils import _is_url
 
-FILE_RANKING = [
-    ["readme", "read_me", "read-me"],
-    ["license"],
-    ["installation", "install", "setup"],
-]
 
-
-def _scientific_sort(f, alg=ns.PATH):
-    for rank, names in enumerate(FILE_RANKING):
-        if Path(f).stem.lower() in names:
-            prio = rank
-            break
-    else:
-        prio = len(FILE_RANKING)
-
-    x = (prio,) + ns.natsort_keygen(alg=alg)(f)
-
-    return x
-
-
-class DatasetResult:
+class DownloadResult:
     """Result class after downloading the dataset."""
+
+    def __init__(self, dataset, output_folder):
+        self.dataset = dataset
+        self.output_folder = output_folder
 
     def __str__(self):
         return f"<{self.__class__.__name__} n_files={len(self)} >"
 
     def __len__(self):
-        return len(self.files)
+        return len(self.dataset.files)
 
     def tree(self, **kwargs):
         """Return the folder tree.
@@ -60,24 +46,22 @@ class DatasetDownloader:
 
     def __init__(
         self,
-        url: Union[str, int],
-        version=None,
-        base_url=None,
+        resource,
         max_file_size=None,
         force_download=False,
         progress=True,
         unzip=True,
         print_only=False,
+        params=None,
     ):
         super().__init__()
-        self.url = url
-        self.version = version
-        self.base_url = base_url
+        self.resource = resource
         self.max_file_size = max_file_size
         self.force_download = force_download
         self.progress = progress
         self.unzip = unzip
         self.print_only = print_only
+        self.params = params
 
     def _get_attr_attr(self, record, jsonp):
         try:
@@ -86,7 +70,7 @@ class DatasetDownloader:
         except Exception:
             return None
 
-    def _get_attr_link(self, record):
+    def _get_attr_link(self, record, **kwargs):
         # get the link to the folder
         if self._get_attr_kind(record) == "folder":
             if not hasattr(self, "ATTR_FOLDER_LINK_JSONPATH"):
@@ -201,23 +185,11 @@ class DatasetDownloader:
         if not isinstance(url, str) or not _is_url(url):
             raise ValueError("Not a valid URL.")
 
-        # first try to parse with version number
-        if hasattr(self, "REGEXP_ID_AND_VERSION"):
-            match = re.search(self.REGEXP_ID_AND_VERSION, url)
-
-            if match and match.group(1):
-                if match.group(2) == "":
-                    return match.group(1), None
-                return match.group(1), match.group(2)
-
-        # then try to parse without version number
-        if hasattr(self, "REGEXP_ID"):
+        try:
             match = re.search(self.REGEXP_ID, url)
-
-            if match and match.group(1):
-                return match.group(1), None
-
-        raise ValueError(f"Failed to parse record identifier from URL '{url}'")
+            return match.groupdict()
+        except Exception as err:
+            raise ValueError(f"Failed to parse URL '{url}'") from err
 
     def _unpack_single_folder(self, zip_url, output_folder):
         r = requests.get(zip_url)
@@ -229,22 +201,10 @@ class DatasetDownloader:
             zip_info.filename = os.path.basename(zip_info.filename)
             z.extract(zip_info, output_folder)
 
-    @property
-    def api_record_id(self):
-        if hasattr(self, "_api_record_id"):
-            return self._api_record_id
-
-        if isinstance(self.url, str) and _is_url(self.url):
-            self._api_record_id, self.version = self._parse_url(self.url)
-        else:
-            self._api_record_id, self.version = self.url, self.version
-
-        return self._api_record_id
-
     def _pre_files(self):
         pass
 
-    def _get_files_recursive(self, url, folder_name=None):
+    def _get_files_recursive(self, url, folder_name=None, base_url=None):
         if not isinstance(url, str):
             ValueError(f"Expected url to be string type, got {type(url)}")
 
@@ -256,8 +216,12 @@ class DatasetDownloader:
 
         # find path to raw files
         if hasattr(self, "META_FILES_JSONPATH"):
-            jsonpath_expression = parse(self.META_FILES_JSONPATH)
-            files_raw = jsonpath_expression.find(response)[0].value
+            if isinstance(self.META_FILES_JSONPATH, str):
+                jsonpath_expression = parse(self.META_FILES_JSONPATH)
+            else:
+                jsonpath_expression = self.META_FILES_JSONPATH
+
+            files_raw = [x.value for x in jsonpath_expression.find(response)]
         else:
             files_raw = response
 
@@ -271,13 +235,13 @@ class DatasetDownloader:
             if self._get_attr_kind(f) == "folder":
                 result.extend(
                     self._get_files_recursive(
-                        self._get_attr_link(f), folder_name=f_path
+                        self._get_attr_link(f, base_url=base_url), folder_name=f_path
                     )
                 )
             else:
                 result.append(
                     {
-                        "link": self._get_attr_link(f),
+                        "link": self._get_attr_link(f, base_url=base_url),
                         "name": f_path,
                         "size": self._get_attr_size(f),
                         "hash": self._get_attr_hash(f),
@@ -297,19 +261,38 @@ class DatasetDownloader:
         return result
 
     @property
+    def _params(self):
+        """Params including url params."""
+        if hasattr(self, "__params"):
+            return self.__params
+
+        url = _get_url(self.resource)
+        url_params = self._parse_url(url)
+        if self.params:
+            new_params = self.params.copy()
+            new_params.update(url_params)
+            self.__params = new_params
+        else:
+            self.__params = url_params
+
+        return self.__params
+
+    @property
     def files(self):
         if hasattr(self, "_files"):
             return self._files
 
         self._pre_files()
 
+        url = _get_url(self.resource)
+        uri = urlparse(url)
+        base_url = uri.scheme + "://" + uri.netloc
+
         self._files = self._get_files_recursive(
             self.API_URL_META.format(
-                api_url=self.API_URL,
-                api_record_id=self.api_record_id,
-                version=self.version,
-                base_url=self.base_url,
-            )
+                api_url=self.API_URL, base_url=base_url, **self._params
+            ),
+            base_url=base_url,
         )
 
         return self._files
@@ -317,9 +300,12 @@ class DatasetDownloader:
     def _get(
         self,
         output_folder: Union[Path, str],
-        **kwargs,
     ):
-        if len(self.files) == 1 and self.files[0]["link"].endswith(".zip"):
+        if (
+            len(self.files) == 1
+            and self.files[0]["link"].endswith(".zip")
+            and self.unzip
+        ):
             self._unpack_single_folder(self.files[0]["link"], output_folder)
             return
 
@@ -336,26 +322,16 @@ class DatasetDownloader:
     def download(
         self,
         output_folder: Union[Path, str],
-        **kwargs,
     ):
-        """Download files for the given URL or record id.
+        """Download files.
 
         Arguments
         ---------
-        record_id_or_url: str
-            The identifier of the record or the url to the resource
-            to download.
         output_folder: str
             The folder to store the downloaded results.
-        version: str, int
-            The version of the dataset
 
         """
-        Path(output_folder).mkdir(parents=True, exist_ok=True)
 
-        self._get(output_folder, **kwargs)
+        self._get(output_folder=output_folder)
 
-        # store the location of the last known output folder
-        self.output_folder = output_folder
-
-        return self
+        return DownloadResult(self, output_folder)

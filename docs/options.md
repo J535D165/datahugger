@@ -36,7 +36,7 @@ Disable auto unzip function
 
 
     ``` python
-    datahugger.get("10.5061/dryad.x3ffbg7m8", "data", auto_unzip=False)
+    datahugger.get("10.5061/dryad.x3ffbg7m8", "data", unzip=False)
     ```
 
 

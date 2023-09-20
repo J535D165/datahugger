@@ -6,7 +6,7 @@ authors = [
 ]
 readme = "README.md"
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
@@ -15,7 +15,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11"
 ]
 license = {text = "MIT"}
-dependencies = ["jsonpath_ng", "natsort", "requests", "scitree", "tqdm"]
+dependencies = ["jsonpath_ng", "requests", "requests-cache", "scitree", "tqdm"]
 dynamic = ["version"]
 requires-python = ">=3.6"
 
@@ -24,7 +24,7 @@ datahugger = "datahugger.__main__:main"
 
 [project.optional-dependencies]
 all = ["datasets"]
-lint = ["ruff"]
+lint = ["ruff", "black", "jupyter-black"]
 test = ["pytest"]
 docs = ["mkdocs-material"]
 
@@ -36,6 +36,7 @@ requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
 packages = ["datahugger"]
 
 [tool.setuptools_scm]
+write_to = "datahugger/_version.py"
 
 [tool.ruff]
 select = ["E", "F", "UP", "I", "B"]

@@ -2,5 +2,5 @@ class DOIError(ValueError):
     pass
 
 
-class DataCiteError(Exception):
+class RepositoryNotSupportedError(Exception):
     pass
