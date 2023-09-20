@@ -73,7 +73,7 @@ class DataverseDataset(DatasetDownloader):
             v = ":latest-published"
 
         return (
-            "{{base_url}}/api/datasets/versions/"
+            "{base_url}/api/datasets/versions/"
             f"{v}/:persistentId/?persistentId={{record_id}}"
         )
 
