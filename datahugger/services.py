@@ -72,15 +72,9 @@ class DataverseDataset(DatasetDownloader):
         else:
             v = ":latest-published"
 
-        record_id = self._params["record_id"]
-
-        url = _get_url(self.resource)
-        uri = urlparse(url)
-        base_url = uri.scheme + "://" + uri.netloc
-
         return (
-            f"{base_url}/api/datasets/versions/"
-            f"{v}/:persistentId/?persistentId={record_id}"
+            "{{base_url}}/api/datasets/versions/"
+            f"{v}/:persistentId/?persistentId={{record_id}}"
         )
 
 
