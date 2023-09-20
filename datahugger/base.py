@@ -215,14 +215,12 @@ class DatasetDownloader:
         response = res.json()
 
         # find path to raw files
-        if hasattr(self, "META_FILES_JSONPATH"):
-            if isinstance(self.META_FILES_JSONPATH, str):
-                jsonpath_expression = parse(self.META_FILES_JSONPATH)
-            else:
-                jsonpath_expression = self.META_FILES_JSONPATH
-            files_raw = jsonpath_expression.find(response)[0].value
+        if isinstance(self.META_FILES_JSONPATH, str):
+            jsonpath_expression = parse(self.META_FILES_JSONPATH)
         else:
-            files_raw = response
+            jsonpath_expression = self.META_FILES_JSONPATH
+
+        files_raw = [x.value for x in jsonpath_expression.find(response)]
 
         for f in files_raw:
             # create the file or folder path
@@ -259,34 +257,6 @@ class DatasetDownloader:
 
         return result
 
-    def _get_single_file(self, url, folder_name=None, base_url=None):
-        if not isinstance(url, str):
-            ValueError(f"Expected url to be string type, got {type(url)}")
-
-        # get the data from URL
-        res = requests.get(url)
-        response = res.json()
-
-        # find path to raw files
-        if hasattr(self, "META_FILES_SINGLE_JSONPATH"):
-            jsonpath_expression = parse(self.META_FILES_SINGLE_JSONPATH)
-            file_raw = jsonpath_expression.find(response)[0].value
-
-        if folder_name is None:
-            f_path = self._get_attr_name(file_raw)
-        else:
-            f_path = str(Path(folder_name, self._get_attr_name(file_raw)))
-
-        return [
-            {
-                "link": self._get_attr_link(file_raw, base_url=base_url),
-                "name": f_path,
-                "size": self._get_attr_size(file_raw),
-                "hash": self._get_attr_hash(file_raw),
-                "hash_type": self._get_attr_hash_type(file_raw),
-            }
-        ]
-
     @property
     def _params(self):
         """Params including url params."""
@@ -315,20 +285,12 @@ class DatasetDownloader:
         uri = urlparse(url)
         base_url = uri.scheme + "://" + uri.netloc
 
-        if hasattr(self, "is_singleton") and self.is_singleton:
-            self._files = self._get_single_file(
-                self.API_URL_META_SINGLE.format(
-                    api_url=self.API_URL, base_url=base_url, **self._params
-                ),
-                base_url=base_url,
-            )
-        else:
-            self._files = self._get_files_recursive(
-                self.API_URL_META.format(
-                    api_url=self.API_URL, base_url=base_url, **self._params
-                ),
-                base_url=base_url,
-            )
+        self._files = self._get_files_recursive(
+            self.API_URL_META.format(
+                api_url=self.API_URL, base_url=base_url, **self._params
+            ),
+            base_url=base_url,
+        )
 
         return self._files
 
