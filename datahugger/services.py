@@ -47,8 +47,7 @@ class DataverseDataset(DatasetDownloader):
     REGEXP_ID = r"(?P<type>dataset|file)\.xhtml\?persistentId=(?P<record_id>.*)"
 
     # the files and metadata about the dataset
-    API_URL_META = "{base_url}/api/datasets/:persistentId/?persistentId={record_id}"
-    META_FILES_JSONPATH = "data.latestVersion.files"
+    META_FILES_JSONPATH = "data.files"
 
     API_URL_META_SINGLE = "{base_url}/api/files/:persistentId/?persistentId={record_id}"
     META_FILES_SINGLE_JSONPATH = "data"
@@ -66,6 +65,24 @@ class DataverseDataset(DatasetDownloader):
         if "type" in self._params and self._params["type"] == "file":
             self.is_singleton = True
 
+    @property
+    def API_URL_META(self):
+        if self._params and "version" in self._params:
+            v = self._params["version"]
+        else:
+            v = ":latest-published"
+
+        record_id = self._params["record_id"]
+
+        url = _get_url(self.resource)
+        uri = urlparse(url)
+        base_url = uri.scheme + "://" + uri.netloc
+
+        return (
+            f"{base_url}/api/datasets/versions/"
+            f"{v}/:persistentId/?persistentId={record_id}"
+        )
+
 
 class FigShareDataset(DatasetDownloader):
     """Downloader for FigShare repository."""
@@ -76,7 +93,7 @@ class FigShareDataset(DatasetDownloader):
     API_URL = "https://api.figshare.com/v2"
 
     # the files and metadata about the dataset
-    API_URL_META = "{api_url}/articles/{record_id}/files"
+    META_FILES_JSONPATH = "files"
 
     # paths to file attributes
     ATTR_FILE_LINK_JSONPATH = "download_url"
@@ -84,6 +101,15 @@ class FigShareDataset(DatasetDownloader):
     ATTR_SIZE_JSONPATH = "size"
     ATTR_HASH_JSONPATH = "computed_md5"
     ATTR_HASH_TYPE_VALUE = "md5"
+
+    @property
+    def API_URL_META(self):
+        s = "{api_url}/articles/{record_id}"
+
+        if self._params and "version" in self._params:
+            s += "/versions/{version}"
+
+        return s
 
 
 class DjehutyDataset(FigShareDataset):
@@ -269,14 +295,6 @@ class MendeleyDataset(DatasetDownloader):
     ATTR_SIZE_JSONPATH = "size"
     ATTR_HASH_JSONPATH = "content_details.sha256_hash"
     ATTR_HASH_TYPE_VALUE = "sha256"
-
-    def _pre_files(self):
-        if self.version is None:
-            r_version = requests.get(
-                self.API_URL_VERSION.format(api_url=self.API_URL, **self._params)
-            )
-            r_version.raise_for_status()
-            self.version = r_version.json()[-1]["version"]
 
 
 class GitHubDataset(DatasetDownloader):

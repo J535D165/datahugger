@@ -47,7 +47,6 @@ class DatasetDownloader:
     def __init__(
         self,
         resource,
-        version=None,
         max_file_size=None,
         force_download=False,
         progress=True,
@@ -57,7 +56,6 @@ class DatasetDownloader:
     ):
         super().__init__()
         self.resource = resource
-        self.version = version
         self.max_file_size = max_file_size
         self.force_download = force_download
         self.progress = progress
