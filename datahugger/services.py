@@ -244,7 +244,6 @@ class DSpaceDataset(DatasetDownloader):
         res = requests.get(handle_id_url)
         res.raise_for_status()
 
-        # set the API_URL_META
         return base_url + res.json()["link"] + "/bitstreams"
 
 
