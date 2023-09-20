@@ -230,7 +230,8 @@ class DSpaceDataset(DatasetDownloader):
     def _get_attr_link(self, record, base_url):
         return base_url + record["retrieveLink"]
 
-    def _pre_files(self):
+    @property
+    def API_URL_META(self):
         uri = urlparse(_get_url(self.resource))
         base_url = uri.scheme + "://" + uri.netloc
 
@@ -238,8 +239,7 @@ class DSpaceDataset(DatasetDownloader):
         res = requests.get(handle_id_url)
         res.raise_for_status()
 
-        # set the API_URL_META
-        self.API_URL_META = base_url + res.json()["link"] + "/bitstreams"
+        return base_url + res.json()["link"] + "/bitstreams"
 
 
 class MendeleyDataset(DatasetDownloader):
