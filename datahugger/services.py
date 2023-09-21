@@ -145,7 +145,7 @@ class DataOneDataset(DatasetDownloader):
 class PangaeaDataset(DataOneDataset):
     """Downloader for PangaeaDataset repository."""
 
-    REGEXP_ID = r"doi\.pangaea\.de/(.*)"
+    REGEXP_ID = r"doi\.pangaea\.de/(?P<record_id>.*)"
 
 
 class DSpaceDataset(DatasetDownloader):
