@@ -1,10 +1,23 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+title: >-
+  Datahugger - One downloader for many scientific
+  repositories
+message: 'If you use this software, please cite it as instructed.'
+type: software
 authors:
-- family-names: "De Bruin"
-  given-names: "Jonathan"
-  orcid: "https://orcid.org/0000-0002-4297-0502"
-title: "Datahugger"
-version: 0.3
-date-released: 2022-08-17
-url: "https://github.com/J535D165/datahugger"
+  - family-names: De Bruin
+    given-names: Jonathan
+    orcid: 'https://orcid.org/0000-0002-4297-0502'
+repository-code: 'https://github.com/J535D165/datahugger'
+url: 'https://github.com/J535D165/datahugger'
+repository-artifact: 'https://pypi.org/project/datahugger/'
+abstract: >-
+  Datahugger is a tool to download scientific datasets,
+  software, and code from a large number of repositories
+  based on their DOI (wiki) or URL. With Datahugger, you can
+  automate the downloading of data and improve the
+  reproducibility of your research. Datahugger provides a
+  straightforward Python interface and an intuitive Command
+  Line Interface (CLI).
+license: MIT
+
