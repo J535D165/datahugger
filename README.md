@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Datahugger - Where DOI hugs Data" src="https://github.com/J535D165/datahugger/raw/main/datahugger_repocard_tagline.svg">
+  <img width="640px" alt="Datahugger - Where DOI hugs Data" src="https://github.com/J535D165/datahugger/raw/main/datahugger_logo.svg">
 </p>
 
 # Datahugger - Where DOI :open_hands: Data
