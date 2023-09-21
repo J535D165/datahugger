@@ -16,6 +16,7 @@ def count_repos():
         "dryad": 1,
         "github": 1,
         "huggingface": 1,
+        "pangaea": 1,
     }
 
     print(counts)
