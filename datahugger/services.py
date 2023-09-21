@@ -1,4 +1,5 @@
 import io
+import re
 import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
@@ -142,10 +143,43 @@ class DataOneDataset(DatasetDownloader):
         return self._files
 
 
-class PangaeaDataset(DataOneDataset):
+class PangaeaDataset(DatasetDownloader):
     """Downloader for PangaeaDataset repository."""
 
     REGEXP_ID = r"doi\.pangaea\.de/(?P<record_id>.*)"
+
+    # the base entry point of the REST API
+    API_URL = "https://doi.pangaea.de/"
+
+    @property
+    def files(self):
+        # get the difference between collection and file
+        r = requests.get(
+            f"{self.API_URL}{self._params['record_id']}?format=metadata_jsonld"
+        )
+        r.raise_for_status()
+        dists = r.json()["distribution"]
+
+        if isinstance(dists, dict):
+            dists = [dists]
+
+        files = []
+        for d in dists:
+            if d["encodingFormat"] in ["text/tab-separated-values", "application/zip"]:
+                r_filename = requests.head(d["contentUrl"])
+                content_d = r_filename.headers["content-disposition"]
+
+                files.append(
+                    {
+                        "link": d["contentUrl"],
+                        "name": re.findall("filename=(.+)", content_d)[0],
+                        "size": None,
+                        "hash": None,
+                        "hash_type": None,
+                    }
+                )
+
+        return files
 
 
 class DSpaceDataset(DatasetDownloader):
