@@ -9,6 +9,7 @@ from datahugger.services import GitHubDataset
 from datahugger.services import HuggingFaceDataset
 from datahugger.services import MendeleyDataset
 from datahugger.services import OSFDataset
+from datahugger.services import PangaeaDataset
 from datahugger.services import ZenodoDataset
 
 # fast lookup
@@ -40,7 +41,7 @@ SERVICES_NETLOC = {
     "get.iedadata.org": DataOneDataset,
     "usap-dc.org": DataOneDataset,
     "iys.hakai.org": DataOneDataset,
-    # "doi.pangaea.de": DataOneDataset,
+    "doi.pangaea.de": PangaeaDataset,
     "rvdata.us": DataOneDataset,
     "sead-published.ncsa.illinois.edu": DataOneDataset,
     # DataVerse repositories (extracted from re3data)

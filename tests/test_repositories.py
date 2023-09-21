@@ -55,6 +55,9 @@ TESTS_URLS = [
     ),
     # huggingface
     # ("10.57967/hf/0034", "test.csv"),
+    # Pangaea
+    ("https://doi.org/10.1594/PANGAEA.954547", "Gubbio_age.tab"),
+    ("https://doi.pangaea.de/10.1594/PANGAEA.954543", "AA_age.tab"),
 ]
 
 
