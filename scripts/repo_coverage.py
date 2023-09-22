@@ -1,7 +1,9 @@
 import argparse
 import datetime
 import json
+import multiprocessing as mp
 from pathlib import Path
+from urllib.parse import urlparse
 
 import pandas as pd
 import requests
@@ -44,23 +46,32 @@ def merge_datasets(args):
 
 def run(args):
     df = pd.read_csv(BENCHMARK_FILE)
+    pid_list = df["id"].to_list()
 
-    df[["service", "error"]] = df.apply(test_repo, axis=1, result_type="expand")
+    cpus = mp.cpu_count()
+    print("Number of cpus", cpus)
+
+    # use many more processes because of the slow server responses
+    pool = mp.Pool(cpus * 4)
+    results = pool.map(test_repo, pid_list)
+    pool.close()
+
+    df[["service", "error"]] = pd.DataFrame(results)
     df.to_csv(BENCHMARK_OUTPUT_FILE)
 
     print(df)
 
 
-def test_repo(r):
+def test_repo(pid):
     try:
-        cl = datahugger.info(r["id"]).__class__.__name__
-        print(r["id"], f"service found: {cl}")
+        cl = datahugger.info(pid).__class__.__name__
+        print(pid, f"service found: {cl}")
         return {"service": cl, "error": None}
     except RepositoryNotSupportedError:
         # Repository not supported, but no error
         return {"service": None, "error": None}
     except Exception as err:
-        print(r["id"], f"results in: {err}")
+        print(pid, f"results in: {err}")
         return {"service": None, "error": str(err)}
 
 
@@ -72,6 +83,13 @@ def get_coverage(args):
 
     with open(".datacite_coverage.json", "w") as f:
         json.dump({"datasets": cov * 100}, f)
+
+
+def get_urls(df):
+    df_unsupported = df[df["error"].notnull() | df["service"].isnull()].copy()
+    df_unsupported["netloc"] = df_unsupported["url"].map(lambda x: urlparse(x).netloc)
+
+    return df_unsupported["netloc"].value_counts()
 
 
 def get_report(args):
@@ -95,6 +113,10 @@ def get_report(args):
     print()
     print("### Table with unexpected errors")
     print(df[df["error"].notnull()].to_markdown())
+
+    print()
+    print("### Table with unsupported repositories")
+    print(get_urls(df).to_markdown())
 
 
 if __name__ == "__main__":
