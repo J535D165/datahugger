@@ -21,7 +21,7 @@ def create_dataset(args):
         x
         for y in range(1)
         for x in requests.get(
-            "https://api.datacite.org/dois?random=true&page[size]=100"
+            "https://api.datacite.org/dois?resource-type-id=dataset&random=true&page[size]=100"
         ).json()["data"]
     ]
 
@@ -38,7 +38,7 @@ def create_dataset(args):
 def merge_datasets(args):
     datasets = Path("benchmark", "datacite").glob("*")
 
-    df = pd.concat([pd.read_csv(d) for d in datasets], axis=0)
+    df = pd.concat([pd.read_csv(d, encoding="ISO-8859-1") for d in datasets], axis=0)
     df.drop_duplicates(inplace=True)
 
     df.to_csv(BENCHMARK_FILE, index=False)
