@@ -350,7 +350,7 @@ class ZenodoDataset(DatasetDownloader):
     For Zenodo records, new versions have new identifiers.
     """
 
-    REGEXP_ID = r"zenodo\.org\/record\/(?P<record_id>\d+).*"
+    REGEXP_ID = r"zenodo\.org\/record(s*)\/(?P<record_id>\d+).*"
 
     # the base entry point of the REST API
     API_URL = "https://zenodo.org/api/"
