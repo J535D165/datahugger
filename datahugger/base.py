@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import re
+import time
 import zipfile
 from pathlib import Path
 from typing import Union
@@ -233,11 +234,13 @@ class DatasetDownloader:
                     df2 = df[df['name'] == file].reset_index()
                     try:
                         hash = df2['hash'][0]
-                    except:
+                    except Exception as e:
+                        logging.info(f"Setting hash to None: {e}")
                         hash = None
                     try:
                         hash_type = df2['hash_type'][0]
-                    except:
+                    except Exception as e:
+                        logging.info(f"Setting hash_type to None: {e}")
                         hash_type = None
                     newhash = None
                     with open(filepath, "rb") as f:
