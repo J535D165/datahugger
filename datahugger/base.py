@@ -1,3 +1,4 @@
+import hashlib
 import io
 import json
 import logging
@@ -9,16 +10,13 @@ from pathlib import Path
 from typing import Union
 from urllib.parse import urlparse
 
+import pandas as pd
 import requests
 from jsonpath_ng import parse
 from scitree import scitree
 from tqdm import tqdm
-import pandas as pd
-import hashlib
 
-from datahugger.utils import _format_filename
-from datahugger.utils import _get_url
-from datahugger.utils import _is_url
+from datahugger.utils import _format_filename, _get_url, _is_url
 
 
 class DownloadResult:
@@ -207,7 +205,6 @@ class DatasetDownloader:
             zip_info.filename = os.path.basename(zip_info.filename)
             z.extract(zip_info, output_folder)
 
-
     def _check_checksums(self, output_folder, files_info):
         """Will compare the checksum values in the files_info with the checksums
         of the downloaded files and will create a file in a new 'generated'
@@ -224,7 +221,7 @@ class DatasetDownloader:
         """
         try:
             checksums = {}
-            
+
             df = pd.DataFrame(files_info)
 
             # loop through the downloaded files in the output_folder
@@ -232,40 +229,40 @@ class DatasetDownloader:
                 logging.info(f"Not using the dirs: {dirs}")
                 for file in files:
                     filepath = os.path.join(subdir, file)
-                    df2 = df[df['name'] == file].reset_index()
+                    df2 = df[df["name"] == file].reset_index()
                     try:
-                        hash = df2['hash'][0]
+                        hash = df2["hash"][0]
                     except Exception as e:
                         logging.info(f"Setting hash to None: {e}")
                         hash = None
                     try:
-                        hash_type = df2['hash_type'][0]
+                        hash_type = df2["hash_type"][0]
                     except Exception as e:
                         logging.info(f"Setting hash_type to None: {e}")
                         hash_type = None
                     newhash = None
                     with open(filepath, "rb") as f:
-                        if hash_type == 'md5':
+                        if hash_type == "md5":
                             newhash = hashlib.md5(f.read()).hexdigest()
-                        if hash_type == 'sha1':
+                        if hash_type == "sha1":
                             newhash = hashlib.sha1(f.read()).hexdigest()
-                        if hash_type == 'sha224':
+                        if hash_type == "sha224":
                             newhash = hashlib.sha224(f.read()).hexdigest()
-                        if hash_type == 'sha256':
+                        if hash_type == "sha256":
                             newhash = hashlib.sha256(f.read()).hexdigest()
-                        if hash_type == 'sha384':
+                        if hash_type == "sha384":
                             newhash = hashlib.sha384(f.read()).hexdigest()
-                        if hash_type == 'sha512':
+                        if hash_type == "sha512":
                             newhash = hashlib.sha512(f.read()).hexdigest()
-                    hash_match = (hash == newhash)
+                    hash_match = hash == newhash
                     if hash is not None and hash_type is not None:
                         status = f"---> Checksum match: {hash_match} - {file}"
                         print(status)
                         logging.info(status)
                         checksums[file] = hash_match
-                    
+
             try:
-                timestamp = str(time.time()).split('.')[0]
+                timestamp = str(time.time()).split(".")[0]
             except Exception as e:
                 logging.info(f"Setting timestamp to empty string: {e}")
                 timestamp = ""
@@ -331,7 +328,8 @@ class DatasetDownloader:
 
             if next_url:
                 result.extend(
-                    self._get_files_recursive(next_url, folder_name=folder_name)
+                    self._get_files_recursive(
+                        next_url, folder_name=folder_name)
                 )
 
         return result
@@ -401,8 +399,8 @@ class DatasetDownloader:
             )
         # if checksum==True do checking of checksum
         if self.checksum:
-            self._check_checksums(output_folder=output_folder,
-                                files_info=files_info)
+            self._check_checksums(
+                output_folder=output_folder, files_info=files_info)
 
     def download(
         self,
