@@ -55,6 +55,7 @@ def info(
     max_file_size=None,
     force_download=False,
     unzip=True,
+    checksum=False,
     progress=True,
     print_only=False,
     params=None,
@@ -73,6 +74,8 @@ def info(
         files in the destination folder. Default: False.
     unzip: bool
         Unzip is the output is a single zip file. Default: True.
+    checksum: bool
+        Checksum will check the checksum of downloaded files. Default: False.
     progress: bool
         Print the progress of the download. Default: True.
     print_only: bool
@@ -96,6 +99,7 @@ def info(
         max_file_size=max_file_size,
         force_download=force_download,
         unzip=unzip,
+        checksum=checksum,
         progress=progress,
         print_only=print_only,
         params=params,
@@ -108,6 +112,7 @@ def get(
     max_file_size=None,
     force_download=False,
     unzip=True,
+    checksum=False,
     progress=True,
     print_only=False,
     params=None,
@@ -131,6 +136,8 @@ def get(
         files in the destination folder. Default: False.
     unzip: bool
         Unzip is the output is a single zip file. Default: True.
+    checksum: bool
+        Checksum will check the checksum of downloaded files Default: False.
     progress: bool
         Print the progress of the download. Default: True.
     print_only: bool
@@ -151,6 +158,7 @@ def get(
         max_file_size=max_file_size,
         force_download=force_download,
         unzip=unzip,
+        checksum=checksum,
         progress=progress,
         print_only=print_only,
         params=params,

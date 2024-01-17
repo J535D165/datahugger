@@ -1,4 +1,5 @@
 import io
+import json
 import logging
 import os
 import re
@@ -11,6 +12,8 @@ import requests
 from jsonpath_ng import parse
 from scitree import scitree
 from tqdm import tqdm
+import pandas as pd
+import hashlib
 
 from datahugger.utils import _format_filename
 from datahugger.utils import _get_url
@@ -51,6 +54,7 @@ class DatasetDownloader:
         force_download=False,
         progress=True,
         unzip=True,
+        checksum=False,
         print_only=False,
         params=None,
     ):
@@ -60,6 +64,7 @@ class DatasetDownloader:
         self.force_download = force_download
         self.progress = progress
         self.unzip = unzip
+        self.checksum = checksum
         self.print_only = print_only
         self.params = params
 
@@ -201,6 +206,72 @@ class DatasetDownloader:
             zip_info.filename = os.path.basename(zip_info.filename)
             z.extract(zip_info, output_folder)
 
+
+    def _check_checksums(self, output_folder, files_info):
+        """Will compare the checksum values in the files_info with the checksums
+        of the downloaded files and will create a file in a new 'generated'
+        folder with the results.
+
+        Args:
+            output_folder (str): output_folder to push the data to
+            files_info (list): information on all the files
+
+        Example file output:
+            file name: generated/checksums.json
+            file content:
+                {"BTCBRL_final.csv": true}
+        """
+        try:
+            checksums = {}
+            
+            df = pd.DataFrame(files_info)
+
+            # loop through the downloaded files in the output_folder
+            for subdir, dirs, files in os.walk(output_folder):
+                for file in files:
+                    filepath = os.path.join(subdir, file)
+                    df2 = df[df['name'] == file].reset_index()
+                    try:
+                        hash = df2['hash'][0]
+                    except:
+                        hash = None
+                    try:
+                        hash_type = df2['hash_type'][0]
+                    except:
+                        hash_type = None
+                    newhash = None
+                    with open(filepath, "rb") as f:
+                        if hash_type == 'md5':
+                            newhash = hashlib.md5(f.read()).hexdigest()
+                        if hash_type == 'sha1':
+                            newhash = hashlib.sha1(f.read()).hexdigest()
+                        if hash_type == 'sha224':
+                            newhash = hashlib.sha224(f.read()).hexdigest()
+                        if hash_type == 'sha256':
+                            newhash = hashlib.sha256(f.read()).hexdigest()
+                        if hash_type == 'sha384':
+                            newhash = hashlib.sha384(f.read()).hexdigest()
+                        if hash_type == 'sha512':
+                            newhash = hashlib.sha512(f.read()).hexdigest()
+                    hash_match = (hash == newhash)
+                    if hash is not None and hash_type is not None:
+                        status = f"---> Checksum match: {hash_match} - {file}"
+                        print(status)
+                        logging.info(status)
+                        checksums[file] = hash_match
+                    
+            try:
+                timestamp = str(time.time()).split('.')[0]
+            except:
+                timestamp = ""
+            generated_path = f"{output_folder}/generated"
+            if not os.path.isdir(generated_path):
+                os.mkdir(generated_path)
+            with open(f"{generated_path}/checksums{timestamp}.json", "w") as f:
+                json.dump(checksums, f)
+        except Exception as e:
+            logging.error(f"Failed at checksum: {e}")
+
     def _pre_files(self):
         pass
 
@@ -312,7 +383,9 @@ class DatasetDownloader:
             self._unpack_single_folder(self.files[0]["link"], output_folder)
             return
 
+        files_info = []
         for f in self.files:
+            files_info.append(f)
             self.download_file(
                 f["link"],
                 output_folder,
@@ -321,6 +394,10 @@ class DatasetDownloader:
                 file_hash=f["hash"],
                 file_hash_type=f["hash_type"],
             )
+        # if checksum==True do checking of checksum
+        if self.checksum:
+            self._check_checksums(output_folder=output_folder,
+                                files_info=files_info)
 
     def download(
         self,
