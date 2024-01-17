@@ -229,6 +229,7 @@ class DatasetDownloader:
 
             # loop through the downloaded files in the output_folder
             for subdir, dirs, files in os.walk(output_folder):
+                logging.info(f"Not using the dirs: {dirs}")
                 for file in files:
                     filepath = os.path.join(subdir, file)
                     df2 = df[df['name'] == file].reset_index()
@@ -265,7 +266,8 @@ class DatasetDownloader:
                     
             try:
                 timestamp = str(time.time()).split('.')[0]
-            except:
+            except Exception as e:
+                logging.info(f"Setting timestamp to empty string: {e}")
                 timestamp = ""
             generated_path = f"{output_folder}/generated"
             if not os.path.isdir(generated_path):
