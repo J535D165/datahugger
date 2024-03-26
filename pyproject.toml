@@ -39,8 +39,10 @@ packages = ["datahugger"]
 write_to = "datahugger/_version.py"
 
 [tool.ruff]
-select = ["E", "F", "UP", "I", "B"]
 extend-include = ["*.ipynb"]
 
-[tool.ruff.isort]
+[tool.ruff.lint]
+select = ["E", "F", "UP", "I", "B"]
+
+[tool.ruff.lint.isort]
 force-single-line = true
