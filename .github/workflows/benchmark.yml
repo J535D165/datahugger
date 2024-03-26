@@ -15,8 +15,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r benchmark/requirements.txt
-        pip install .
+        pip install .[benchmark]
     - name: Run benchmark
       run: |
         python scripts/repo_coverage.py run
