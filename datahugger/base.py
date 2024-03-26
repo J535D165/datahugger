@@ -16,7 +16,9 @@ from jsonpath_ng import parse
 from scitree import scitree
 from tqdm import tqdm
 
-from datahugger.utils import _format_filename, _get_url, _is_url
+from datahugger.utils import _format_filename
+from datahugger.utils import _get_url
+from datahugger.utils import _is_url
 
 
 class DownloadResult:
@@ -328,8 +330,7 @@ class DatasetDownloader:
 
             if next_url:
                 result.extend(
-                    self._get_files_recursive(
-                        next_url, folder_name=folder_name)
+                    self._get_files_recursive(next_url, folder_name=folder_name)
                 )
 
         return result
@@ -399,8 +400,7 @@ class DatasetDownloader:
             )
         # if checksum==True do checking of checksum
         if self.checksum:
-            self._check_checksums(
-                output_folder=output_folder, files_info=files_info)
+            self._check_checksums(output_folder=output_folder, files_info=files_info)
 
     def download(
         self,
