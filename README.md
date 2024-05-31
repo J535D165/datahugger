@@ -23,7 +23,7 @@ tracker. Pull Requests are very welcome as well.
 Datahugger requires Python 3.6 or later.
 
 ```
-pip install datahugger
+pip install git+https://github.com/micafer/datahugger
 ```
 
 ## Getting started
