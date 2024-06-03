@@ -324,10 +324,10 @@ class OSFDataset(DatasetDownloader):
     REGEXP_ID = r"osf\.io\/(?P<record_id>.*)/{0,1}"
 
     # the base entry point of the REST API
-    API_URL = "https://api.osf.io/v2/registrations/"
+    API_URL = "https://api.osf.io/v2/nodes/"
 
     # the files and metadata about the dataset
-    API_URL_META = "{api_url}{record_id}/files/osfstorage/?format=jsonapi"
+    API_URL_META = "{api_url}{record_id}files/"
     META_FILES_JSONPATH = "data[*]"
 
     PAGINATION_JSONPATH = "links.next"
@@ -342,6 +342,23 @@ class OSFDataset(DatasetDownloader):
     ATTR_SIZE_JSONPATH = "attributes.size"
     ATTR_HASH_JSONPATH = "attributes.extra.hashes.sha256"
     ATTR_HASH_TYPE_VALUE = "sha256"
+
+    def _get_node_providers(self):
+        """Get the providers of a node."""
+        record_id = self._params["record_id"]
+        res = requests.get(f"{self.API_URL}/{record_id}/files/")
+        return set([prov["attributes"]["provider"] for prov in res.json()["data"]])
+
+    def _get_files_recursive(self, url, folder_name=None, base_url=None):
+        files = []
+        # In case of the top-level folder, we need to get first the providers
+        if folder_name is None:
+            for provider in self._get_node_providers():
+                # and then the files of each provider
+                files.extend(super()._get_files_recursive(f"{url}{provider}/", None, base_url))
+        else:
+            files = super()._get_files_recursive(url, folder_name, base_url)
+        return files
 
 
 class ZenodoDataset(DatasetDownloader):
