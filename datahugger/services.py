@@ -355,7 +355,9 @@ class OSFDataset(DatasetDownloader):
         if folder_name is None:
             for provider in self._get_node_providers():
                 # and then the files of each provider
-                files.extend(super()._get_files_recursive(f"{url}{provider}/", None, base_url))
+                files.extend(
+                    super()._get_files_recursive(f"{url}{provider}/", None, base_url)
+                )
         else:
             files = super()._get_files_recursive(url, folder_name, base_url)
         return files
