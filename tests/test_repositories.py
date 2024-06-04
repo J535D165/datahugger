@@ -84,10 +84,12 @@ def test_load_dyno(url_or_id, output_file, tmpdir):
     ],
 )
 def test_load_zenodo_6614829(url_or_id, tmpdir):
-    datahugger.get(url_or_id, tmpdir, max_file_size=1e6)
+    datahugger.get(url_or_id, tmpdir, max_file_size=1e6, filter_files=r"quasiperiod.*")
 
     assert Path(tmpdir, "quasiperiod.m").exists()
     assert not Path(tmpdir, "quasiperiod.txt.gz").exists()
+    assert not Path(tmpdir, "README.txt").exists()
+    assert not Path(tmpdir, "rational_dimension.ipynb").exists()
 
 
 def test_load_github_cbsodata(tmpdir):
