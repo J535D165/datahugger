@@ -66,8 +66,7 @@ def main():
     parser.add_argument("--no-unzip", dest="unzip", action="store_false")
     parser.set_defaults(unzip=True)
 
-    parser.add_argument("--checksum", dest="checksum", action="store_false")
-    parser.set_defaults(checksum=False)
+    parser.add_argument("--checksum", dest="checksum", action="store_true")
 
     parser.add_argument("--no-progress", dest="progress", action="store_false")
     parser.set_defaults(progress=True)
