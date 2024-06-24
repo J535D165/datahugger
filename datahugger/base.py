@@ -162,6 +162,7 @@ class DatasetDownloader:
         if not self.print_only:
             logging.info(f"Downloading file {file_link}")
             res = requests.get(file_link, stream=True)
+            res.raise_for_status()
 
             output_fp = Path(output_folder, file_name)
             Path(output_fp).parent.mkdir(parents=True, exist_ok=True)
@@ -199,6 +200,8 @@ class DatasetDownloader:
 
     def _unpack_single_folder(self, zip_url, output_folder):
         r = requests.get(zip_url)
+        r.raise_for_status()
+
         z = zipfile.ZipFile(io.BytesIO(r.content))
 
         for zip_info in z.infolist():
@@ -287,6 +290,7 @@ class DatasetDownloader:
 
         # get the data from URL
         res = requests.get(url)
+        res.raise_for_status()
         response = res.json()
 
         # find path to raw files
