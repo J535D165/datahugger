@@ -54,8 +54,6 @@ TESTS_URLS = [
         "https://repositorioinstitucional.ceu.es/handle/10637/2741",
         "Aquaporin_1_JAMartin_et_al_MedSport_2009.pdf",
     ),
-    # huggingface
-    # ("10.57967/hf/0034", "test.csv"),
     # Pangaea
     ("https://doi.org/10.1594/PANGAEA.954547", "Gubbio_age.tab"),
     ("https://doi.pangaea.de/10.1594/PANGAEA.954543", "AA_age.tab"),
@@ -100,16 +98,3 @@ def test_info_without_loading(tmpdir):
     dh_info = datahugger.info("https://osf.io/wdzh5/")
 
     assert dh_get.dataset.files == dh_info.files
-
-
-def test_huggingface(tmpdir):
-    datahugger.get(
-        "https://huggingface.co/datasets/wikitext",
-        tmpdir,
-        params={"name": "wikitext-2-v1"},
-    )
-
-
-def test_huggingface_without_params(tmpdir):
-    with pytest.raises(ValueError):
-        datahugger.get("https://huggingface.co/datasets/wikitext", tmpdir)

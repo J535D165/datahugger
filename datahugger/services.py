@@ -102,7 +102,7 @@ class DataDryadDataset(DatasetDownloader):
         return f"https://datadryad.org{latest_version}/files"
 
     def _get_attr_link(self, record, base_url):
-        return base_url + record["_links"]["stash:file-download"]["href"]
+        return base_url + record["_links"]["stash:download"]["href"]
 
 
 class DataOneDataset(DatasetDownloader):
