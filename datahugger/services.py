@@ -327,7 +327,7 @@ class OSFDataset(DatasetDownloader):
     API_URL = "https://api.osf.io/v2/nodes/"
 
     # the files and metadata about the dataset
-    API_URL_META = "{api_url}{record_id}files/"
+    API_URL_META = "{api_url}{record_id}/files/"
     META_FILES_JSONPATH = "data[*]"
 
     PAGINATION_JSONPATH = "links.next"
