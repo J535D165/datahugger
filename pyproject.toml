@@ -24,7 +24,7 @@ datahugger = "datahugger.__main__:main"
 
 [project.optional-dependencies]
 all = ["datasets"]
-benchmark = ["pandas", "requests", "tabulate"]
+benchmark = ["pandas", "tabulate"]
 lint = ["ruff"]
 test = ["pytest"]
 docs = ["mkdocs-material"]

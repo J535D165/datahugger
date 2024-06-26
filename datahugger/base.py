@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import Union
 from urllib.parse import urlparse
 
-import pandas as pd
 import requests
 from jsonpath_ng import parse
 from scitree import scitree
@@ -227,24 +226,22 @@ class DatasetDownloader:
         try:
             checksums = {}
 
-            df = pd.DataFrame(files_info)
-
             # loop through the downloaded files in the output_folder
             for subdir, dirs, files in os.walk(output_folder):
                 logging.info(f"Not using the dirs: {dirs}")
                 for file in files:
                     filepath = os.path.join(subdir, file)
-                    df2 = df[df["name"] == file].reset_index()
+
+                    file_comp = list(filter(lambda x: x["name"] == file, files_info))
+
                     try:
-                        hash = df2["hash"][0]
-                    except Exception as e:
-                        logging.info(f"Setting hash to None: {e}")
+                        hash = file_comp[0]["hash"]
+                        hash_type = file_comp[0]["hash_type"]
+                    except IndexError:
+                        logging.info("Setting hash and hash_type to None")
                         hash = None
-                    try:
-                        hash_type = df2["hash_type"][0]
-                    except Exception as e:
-                        logging.info(f"Setting hash_type to None: {e}")
                         hash_type = None
+
                     newhash = None
                     with open(filepath, "rb") as f:
                         if hash_type == "md5":
@@ -260,10 +257,10 @@ class DatasetDownloader:
                         if hash_type == "sha512":
                             newhash = hashlib.sha512(f.read()).hexdigest()
                     hash_match = hash == newhash
+
                     if hash is not None and hash_type is not None:
-                        status = f"---> Checksum match: {hash_match} - {file}"
-                        print(status)
-                        logging.info(status)
+                        print(f"Checksum match: {hash_match} - {file}")
+                        logging.info(f"Checksum match: {hash_match} - {file}")
                         checksums[file] = hash_match
 
             try:
@@ -402,7 +399,7 @@ class DatasetDownloader:
                 file_hash=f["hash"],
                 file_hash_type=f["hash_type"],
             )
-        # if checksum==True do checking of checksum
+
         if self.checksum:
             self._check_checksums(output_folder=output_folder, files_info=files_info)
 
