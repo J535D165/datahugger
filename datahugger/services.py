@@ -79,7 +79,6 @@ class DataDryadDataset(DatasetDownloader):
     API_URL = "https://datadryad.org/api/v2"
 
     # the files and metadata about the dataset
-    API_URL_META = "{api_url}{record_id}/files/osfstorage/?format=jsonapi"
     META_FILES_JSONPATH = (
         Fields("_embedded").child(Fields("stash:files")).child(Slice())
     )
