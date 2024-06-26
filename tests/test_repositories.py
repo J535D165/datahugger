@@ -36,6 +36,7 @@ TESTS_URLS = [
     ),
     ("https://doi.org/10.5061/dryad.31zcrjdm5", "ReadmeFile.txt"),
     # OSF
+    ("https://osf.io/ews27/", "Cross-comparison/amarlt1"),
     ("https://osf.io/kq573/", "nest_area_data.xlsx"),
     ("https://doi.org/10.17605/OSF.IO/KQ573", "nest_area_data.xlsx"),
     ("https://doi.org/10.17605/OSF.IO/9X6CA", "jobs.sh"),
