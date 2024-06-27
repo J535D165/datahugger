@@ -1,0 +1,111 @@
+[[zenodo]]
+location = "10.5281/zenodo.6625880"
+files = "README.md"
+
+[[zenodo]]
+location = "10.5281/zenodo.6614829"
+files = "quasiperiod.m"
+ignored_files="quasiperiod.txt.gz"
+
+    [zenodo.options]
+    max_file_size=1000000
+
+[[zenodo]]
+location = "https://zenodo.org/record/6614829"
+files = "quasiperiod.m"
+ignored_files="quasiperiod.txt.gz"
+
+    [zenodo.options]
+    max_file_size=1000000
+
+[[zenodo]]
+location = "https://doi.org/10.5281/zenodo.6614829"
+files = "quasiperiod.m"
+ignored_files="quasiperiod.txt.gz"
+
+    [zenodo.options]
+    max_file_size=1000000
+
+[[dataverse]]
+location = "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/KBHLOD"
+files = "tutorial1.py"
+
+[[dataverse]]
+location = "https://doi.org/10.7910/DVN/KBHLOD"
+files = "tutorial1.py"
+
+[[dataverse]]
+location = "https://hdl.handle.net/10622/NHJZUD"
+files = "ERRHS_7_01_data_1795.tab"
+
+[[figshare]]
+location = "https://doi.org/10.6084/m9.figshare.8851784.v1"
+files = "cross_year_data2.csv"
+
+[[figshare]]
+location = "https://figshare.com/articles/dataset/Long-term_behavioral_repeatability_in_wild_adult_and_captive_juvenile_turtles_implications_for_personality_development/8851784"
+files = "cross_year_data2.csv"
+
+[[figshare]]
+location = "https://doi.org/10.15131/shef.data.22010159.v2"
+files = "ScHARR QUIT evaluation statistical and health economic analysis plan.pdf"
+
+[[djehuty]]
+location = "https://doi.org/10.4121/21989216.v1"
+files = "README.txt"
+
+[[dryad]]
+location = "https://datadryad.org/stash/dataset/doi:10.5061/dryad.31zcrjdm5"
+files = "ReadmeFile.txt"
+
+[[dryad]]
+location = "https://doi.org/10.5061/dryad.31zcrjdm5"
+files = "ReadmeFile.txt"
+
+[[osf]]
+location = "https://osf.io/ews27/"
+files = "Cross-comparison/amarlt1"
+
+[[osf]]
+location = "https://osf.io/kq573/"
+files = "nest_area_data.xlsx"
+
+[[osf]]
+location = "https://doi.org/10.17605/OSF.IO/KQ573"
+files = "nest_area_data.xlsx"
+
+[[osf]]
+location = "https://doi.org/10.17605/OSF.IO/9X6CA"
+files = "jobs.sh"
+
+[[mendeley]]
+location = "https://doi.org/10.17632/p6wmtv6t5g.2"
+files = "READMI Stranding Sea Turtle records.pdf"
+
+[[mendeley]]
+location = "https://doi.org/10.17632/p6wmtv6t5g"
+files = "READMI Stranding Sea Turtle records.pdf"
+
+[[dataone]]
+location = "https://doi.org/10.18739/A2KH0DZ42"
+files = "2012F_Temperature_Data.csv"
+
+[[dspace]]
+location = "https://uhra.herts.ac.uk/handle/2299/26087"
+files = "pdf.pdf"
+
+[[dspace]]
+location = "https://repositorioinstitucional.ceu.es/handle/10637/2741"
+files = "Aquaporin_1_JAMartin_et_al_MedSport_2009.pdf"
+
+[[pangaea]]
+location = "https://doi.org/10.1594/PANGAEA.954547"
+files = "Gubbio_age.tab"
+
+[[pangaea]]
+location = "https://doi.pangaea.de/10.1594/PANGAEA.954543"
+files = "AA_age.tab"
+
+[[github]]
+location = "https://github.com/j535d165/cbsodata"
+files = "README.md"
