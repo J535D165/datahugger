@@ -39,8 +39,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.12"]
         service: ["zenodo", "dataverse", "figshare", "djehuty", "dryad", "osf", "mendeley", "dataone", "dspace", "pangaea", "github"]
+        python-version: ["3.8", "3.12"]
 
     steps:
     - uses: actions/checkout@v3
