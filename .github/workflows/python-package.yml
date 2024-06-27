@@ -22,8 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install .
-        python -m pip install pytest pytest-xdist
+        python -m pip install ".[test]"
     - name: Test with pytest
       run: |
         pytest -n 4 --ignore=tests/test_repositories_plus.py --ignore=tests/test_repositories.py
@@ -46,8 +45,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install .
-        python -m pip install pytest
+        python -m pip install ".[test]"
     - name: Test with pytest
       run: |
         pytest tests/test_repositories.py --service ${{ matrix.service }}
@@ -69,8 +67,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install .[all]
-        python -m pip install pytest pytest-xdist
+        python -m pip install ".[all]"
+        python -m pip install ".[test]"
     - name: Test with pytest
       run: |
         pytest -n 4 tests/test_repositories_plus.py
