@@ -11,7 +11,7 @@ def _parse_repositories(test_config):
         test_config["location"],
         test_config.get("files", []),
         test_config.get("ignored_files", []),
-        test_config.get("dh_kwargs", {}),
+        test_config.get("options", {}),
     )
 
 
