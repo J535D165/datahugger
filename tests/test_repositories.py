@@ -1,5 +1,7 @@
 from pathlib import PosixPath
 
+import pytest
+
 import datahugger
 
 
@@ -13,10 +15,8 @@ def test_get_repositories(location, files, ignored_files, dh_kwargs, tmpdir):
         assert not PosixPath(tmpdir, ignored_files).exists()
 
 
-# def test_info_without_loading(tmpdir):
-#     dh_get = datahugger.get(
-#         "https://osf.io/wdzh5/", output_folder=".", print_only=True)
+@pytest.mark.skip("Not implemented")
+def test_info(location, files, ignored_files, dh_kwargs, tmpdir):
+    dh_info = datahugger.info(location)
 
-#     dh_info = datahugger.info("https://osf.io/wdzh5/")
-
-#     assert dh_get.dataset.files == dh_info.files
+    assert files in dh_info.files
