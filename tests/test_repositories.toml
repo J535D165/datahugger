@@ -108,4 +108,4 @@ files = "AA_age.tab"
 
 [[github]]
 location = "https://github.com/j535d165/cbsodata"
-files = "README.md"
+files = "cbsodata-main/README.md"

@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib import PosixPath
 
 import datahugger
 
@@ -7,10 +7,10 @@ def test_get_repositories(location, files, ignored_files, dh_kwargs, tmpdir):
     datahugger.get(location, tmpdir, **dh_kwargs)
 
     if files:
-        assert Path(tmpdir, files).exists()
+        assert PosixPath(tmpdir, files).exists()
 
     if ignored_files:
-        assert not Path(tmpdir, ignored_files).exists()
+        assert not PosixPath(tmpdir, ignored_files).exists()
 
 
 # def test_info_without_loading(tmpdir):
