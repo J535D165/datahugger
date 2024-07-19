@@ -10,6 +10,7 @@ from datahugger.services import HuggingFaceDataset
 from datahugger.services import MendeleyDataset
 from datahugger.services import OSFDataset
 from datahugger.services import PangaeaDataset
+from datahugger.services import SeaNoeDataset
 from datahugger.services import ZenodoDataset
 
 # fast lookup
@@ -112,6 +113,7 @@ SERVICES_NETLOC = {
     "researchdata.ntu.edu.sg": DataverseDataset,
     "rin.lipi.go.id": DataverseDataset,
     "ssri.is": DataverseDataset,
+    "www.seanoe.org": SeaNoeDataset,
     "trolling.uit.no": DataverseDataset,
     "www.sodha.be": DataverseDataset,
     "www.uni-hildesheim.de": DataverseDataset,
