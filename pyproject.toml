@@ -24,9 +24,9 @@ datahugger = "datahugger.__main__:main"
 
 [project.optional-dependencies]
 all = ["datasets"]
-benchmark = ["pandas", "requests", "tabulate"]
+benchmark = ["pandas", "tabulate"]
 lint = ["ruff"]
-test = ["pytest"]
+test = ["pytest", "tomli; python_version < '3.11'", "pytest-xdist"]
 docs = ["mkdocs-material"]
 
 [build-system]

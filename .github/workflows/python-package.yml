@@ -1,17 +1,23 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python package
-on: [push, pull_request]
+name: Test repositories
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
 
 jobs:
-  build:
+  test-api:
 
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.12"]
 
     steps:
     - uses: actions/checkout@v3
@@ -22,8 +28,53 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install .[all]
-        python -m pip install pytest pytest-xdist
+        python -m pip install ".[test]"
     - name: Test with pytest
       run: |
-        pytest -n 4
+        pytest -n 4 --ignore=tests/test_repositories_plus.py --ignore=tests/test_repositories.py
+
+  test-repositories:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ["zenodo", "dataverse", "figshare", "djehuty", "dryad", "osf", "mendeley", "dataone", "dspace", "pangaea", "github"]
+        python-version: ["3.8", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install ".[test]"
+    - name: Test with pytest
+      run: |
+        pytest tests/test_repositories.py --service ${{ matrix.service }}
+
+  test-repositories-plus:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install ".[all]"
+        python -m pip install ".[test]"
+    - name: Test with pytest
+      run: |
+        pytest -n 4 tests/test_repositories_plus.py
