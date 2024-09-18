@@ -11,7 +11,7 @@ from typing import Union
 from urllib.parse import urlparse
 
 import requests
-from jsonpath_ng import parse
+from jsonpath_ng.ext import parse
 from scitree import scitree
 from tqdm import tqdm
 

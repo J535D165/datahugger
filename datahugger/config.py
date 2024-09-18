@@ -4,6 +4,7 @@ from datahugger.services import DataOneDataset
 from datahugger.services import DataverseDataset
 from datahugger.services import DjehutyDataset
 from datahugger.services import DSpaceDataset
+from datahugger.services import DataEuropaDataset
 from datahugger.services import FigShareDataset
 from datahugger.services import GitHubDataset
 from datahugger.services import HuggingFaceDataset
@@ -115,6 +116,7 @@ SERVICES_NETLOC = {
     "trolling.uit.no": DataverseDataset,
     "www.sodha.be": DataverseDataset,
     "www.uni-hildesheim.de": DataverseDataset,
+    "data.europa.eu": DataEuropaDataset,
 }
 
 # regexp lookup

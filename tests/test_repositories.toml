@@ -109,3 +109,7 @@ files = "AA_age.tab"
 [[github]]
 location = "https://github.com/j535d165/cbsodata"
 files = "cbsodata-main/README.md"
+
+[[dataeuropa]]
+location = "https://data.europa.eu/data/datasets/65e092e4009f18f050b14216"
+files = "consolidation-wattzhub-schema-irve-dynamic-20240918-033000.csv"
