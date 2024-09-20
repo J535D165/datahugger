@@ -320,7 +320,7 @@ class MendeleyDataset(DatasetDownloader):
 class OSFDataset(DatasetDownloader):
     """Downloader for OSF repository."""
 
-    REGEXP_ID = r"osf\.io\/(?P<record_id>.*)/{0,1}"
+    REGEXP_ID = r"osf\.io\/(?P<record_id>[^\/]*)\/{0,1}"
 
     # the base entry point of the REST API
     API_URL = "https://api.osf.io/v2/nodes/"
