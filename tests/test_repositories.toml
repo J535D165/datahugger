@@ -113,3 +113,12 @@ files = "cbsodata-main/README.md"
 [[b2share]]
 location = "https://b2share.eudat.eu/records/db2ef5890fa44c7a85af366a50de73b9"
 files = "2024-02-13.sav"
+
+[[seanoe]]
+location = "https://doi.org/10.17882/101042"
+files = "111609.xlsx"
+
+[[dataeuropa]]
+location = "https://data.europa.eu/data/datasets/65e092e4009f18f050b14216"
+files = "consolidation-wattzhub-schema-irve-dynamic-20240918-033000.csv"
+
