@@ -109,3 +109,7 @@ files = "AA_age.tab"
 [[github]]
 location = "https://github.com/j535d165/cbsodata"
 files = "cbsodata-main/README.md"
+
+[[b2share]]
+location = "https://b2share.eudat.eu/records/db2ef5890fa44c7a85af366a50de73b9"
+files = "2024-02-13.sav"
