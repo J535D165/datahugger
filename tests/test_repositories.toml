@@ -47,8 +47,8 @@ location = "https://figshare.com/articles/dataset/Long-term_behavioral_repeatabi
 files = "cross_year_data2.csv"
 
 [[figshare]]
-location = "https://doi.org/10.15131/shef.data.22010159.v2"
-files = "ScHARR QUIT evaluation statistical and health economic analysis plan.pdf"
+location = "https://doi.org/10.15131/shef.data.25233514.v1"
+files = "Machaka2021ML_Data.csv"
 
 [[djehuty]]
 location = "https://doi.org/10.4121/21989216.v1"
