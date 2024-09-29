@@ -1,5 +1,6 @@
 from datahugger.services import ArXivDataset
 from datahugger.services import DataDryadDataset
+from datahugger.services import DataEuropaDataset
 from datahugger.services import DataOneDataset
 from datahugger.services import DataverseDataset
 from datahugger.services import DjehutyDataset
@@ -10,6 +11,7 @@ from datahugger.services import HuggingFaceDataset
 from datahugger.services import MendeleyDataset
 from datahugger.services import OSFDataset
 from datahugger.services import PangaeaDataset
+from datahugger.services import SeaNoeDataset
 from datahugger.services import ZenodoDataset
 
 # fast lookup
@@ -112,9 +114,11 @@ SERVICES_NETLOC = {
     "researchdata.ntu.edu.sg": DataverseDataset,
     "rin.lipi.go.id": DataverseDataset,
     "ssri.is": DataverseDataset,
+    "www.seanoe.org": SeaNoeDataset,
     "trolling.uit.no": DataverseDataset,
     "www.sodha.be": DataverseDataset,
     "www.uni-hildesheim.de": DataverseDataset,
+    "data.europa.eu": DataEuropaDataset,
 }
 
 # regexp lookup
