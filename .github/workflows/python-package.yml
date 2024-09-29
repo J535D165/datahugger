@@ -11,8 +11,8 @@ on:
     - main
 
 jobs:
-  test-api:
-    name: Test API
+  api:
+    name: API
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -47,8 +47,8 @@ jobs:
         run: |
           python -c "import tomllib; r = tomllib.loads(open('tests/test_repositories.toml').read());print('repository=' + str({'repository': list(r.keys())}))" >> "$GITHUB_OUTPUT"
 
-  test-repositories:
-    name: Test repositories
+  repository:
+    name: Repository
     needs: prepare
     runs-on: ubuntu-latest
     strategy:
@@ -68,8 +68,8 @@ jobs:
       run: |
         pytest tests/test_repositories.py --service ${{ matrix.repository }}
 
-  test-repositories-plus:
-    name: Test repositories plus
+  repositories-plus:
+    name: Repositories plus
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
