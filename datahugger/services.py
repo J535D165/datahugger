@@ -390,6 +390,23 @@ class ZenodoDataset(DatasetDownloader):
         return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(":")[0]
 
 
+class DataEuropaDataset(DatasetDownloader):
+    """Downloader for European data repository."""
+
+    REGEXP_ID = r"data\.europa\.eu\/data\/datasets\/(?P<record_id>.+)"
+
+    # the base entry point of the REST API
+    API_URL = "https://data.europa.eu/api/hub/repo/"
+
+    API_URL_META = "{api_url}datasets/{record_id}"
+    META_FILES_JSONPATH = '$.@graph[?(@.@type == "dcat:Distribution")]'
+
+    # paths to file attributes
+    ATTR_FILE_LINK_JSONPATH = "'dcat:accessURL'.@id"
+    ATTR_NAME_JSONPATH = "'dct:title'"
+    ATTR_SIZE_JSONPATH = "'dcat:byteSize'.@value"
+
+
 class SeaNoeDataset(DatasetDownloader):
     """Downloader for SeaNoe publication."""
 
