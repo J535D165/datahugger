@@ -405,3 +405,23 @@ class DataEuropaDataset(DatasetDownloader):
     ATTR_FILE_LINK_JSONPATH = "'dcat:accessURL'.@id"
     ATTR_NAME_JSONPATH = "'dct:title'"
     ATTR_SIZE_JSONPATH = "'dcat:byteSize'.@value"
+
+   
+class SeaNoeDataset(DatasetDownloader):
+    """Downloader for SeaNoe publication."""
+
+    REGEXP_ID = r"https://www.seanoe\.org/data/[0-9]+/(?P<record_id>.*)/"
+
+    # the base entry point of the REST API
+    API_URL = "https://www.seanoe.org/api/"
+
+    # the files and metadata about the dataset
+    API_URL_META = "{api_url}find-by-id/{record_id}"
+    META_FILES_JSONPATH = "files[*]"
+
+    # paths to file attributes
+    ATTR_NAME_JSONPATH = "fileName"
+    ATTR_FILE_LINK_JSONPATH = "fileUrl"
+    ATTR_SIZE_JSONPATH = "size"
+    ATTR_HASH_JSONPATH = "checksum"
+    ATTR_HASH_TYPE_VALUE = "sha256"
