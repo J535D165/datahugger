@@ -53,8 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        service: ${{ fromJson(needs.prepare.outputs.repository) }}
+      matrix: ${{ fromJson(needs.prepare.outputs.repository) }}
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python
@@ -67,7 +66,7 @@ jobs:
         python -m pip install ".[test]"
     - name: Test with pytest
       run: |
-        pytest tests/test_repositories.py --service ${{ matrix.service }}
+        pytest tests/test_repositories.py --service ${{ matrix.repository }}
 
   test-repositories-plus:
     name: Test repositories plus
