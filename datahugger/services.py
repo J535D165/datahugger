@@ -406,7 +406,7 @@ class DataEuropaDataset(DatasetDownloader):
     ATTR_NAME_JSONPATH = "'dct:title'"
     ATTR_SIZE_JSONPATH = "'dcat:byteSize'.@value"
 
-   
+
 class SeaNoeDataset(DatasetDownloader):
     """Downloader for SeaNoe publication."""
 
