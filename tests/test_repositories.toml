@@ -63,10 +63,6 @@ location = "https://doi.org/10.5061/dryad.31zcrjdm5"
 files = "ReadmeFile.txt"
 
 [[osf]]
-location = "https://osf.io/ews27/"
-files = "Cross-comparison/amarlt1"
-
-[[osf]]
 location = "https://osf.io/kq573/"
 files = "nest_area_data.xlsx"
 
