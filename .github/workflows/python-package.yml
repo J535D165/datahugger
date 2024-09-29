@@ -45,7 +45,7 @@ jobs:
       - name: load test repositories
         id: load
         run: |
-          python -c "import tomllib; r = tomllib.loads(open('tests/test_repositories.toml').read());print('repository=' + str({'repository': list(r.keys())}))" > "$GITHUB_OUTPUT"
+          python -c "import tomllib; r = tomllib.loads(open('tests/test_repositories.toml').read());print('repository=' + str({'repository': list(r.keys())}))" >> "$GITHUB_OUTPUT"
 
   test-repositories:
     name: Test repositories
