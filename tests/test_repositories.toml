@@ -87,8 +87,16 @@ location = "https://doi.org/10.18739/A2KH0DZ42"
 files = "2012F_Temperature_Data.csv"
 
 [[dspace]]
+location = "https://doi.org/10.17863/CAM.111909"
+files = "README.md"
+
+[[dspace]]
 location = "https://uhra.herts.ac.uk/handle/2299/26087"
 files = "pdf.pdf"
+
+[[dspace]]
+location = "http://dx.doi.org/10.21994/loar8554"
+files = "terms_and_conditions_for_the_use_of_open_geographic_data.pdf"
 
 [[dspace]]
 location = "https://repositorioinstitucional.ceu.es/handle/10637/2741"
