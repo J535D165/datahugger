@@ -439,7 +439,6 @@ class B2shareDataset(DatasetDownloader):
     API_URL_META = "{api_url}records/{record_id}"
     META_FILES_JSONPATH = "files[*]"
 
-
     # paths to file attributes
     ATTR_NAME_JSONPATH = "key"
     ATTR_FILE_LINK_JSONPATH = "ePIC_PID"
