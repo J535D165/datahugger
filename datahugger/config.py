@@ -1,4 +1,5 @@
 from datahugger.services import ArXivDataset
+from datahugger.services import B2shareDataset
 from datahugger.services import DataDryadDataset
 from datahugger.services import DataEuropaDataset
 from datahugger.services import DataOneDataset
@@ -118,6 +119,7 @@ SERVICES_NETLOC = {
     "trolling.uit.no": DataverseDataset,
     "www.sodha.be": DataverseDataset,
     "www.uni-hildesheim.de": DataverseDataset,
+    "b2share.eudat.eu": B2shareDataset,
     "data.europa.eu": DataEuropaDataset,
 }
 

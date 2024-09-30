@@ -320,7 +320,7 @@ class MendeleyDataset(DatasetDownloader):
 class OSFDataset(DatasetDownloader):
     """Downloader for OSF repository."""
 
-    REGEXP_ID = r"osf\.io\/(?P<record_id>.*)/"
+    REGEXP_ID = r"osf\.io\/(?P<record_id>[^\/]*)\/{0,1}"
 
     # the base entry point of the REST API
     API_URL = "https://api.osf.io/v2/nodes/"
@@ -425,3 +425,23 @@ class SeaNoeDataset(DatasetDownloader):
     ATTR_SIZE_JSONPATH = "size"
     ATTR_HASH_JSONPATH = "checksum"
     ATTR_HASH_TYPE_VALUE = "sha256"
+
+
+class B2shareDataset(DatasetDownloader):
+    """Downloader for B2Share repository."""
+
+    REGEXP_ID = r"b2share\.eudat\.eu\/records\/(?P<record_id>[0-9a-z]+)"
+
+    # the base entry point of the REST API
+    API_URL = "https://b2share.eudat.eu/api/"
+
+    # the files and metadata about the dataset
+    API_URL_META = "{api_url}records/{record_id}"
+    META_FILES_JSONPATH = "files[*]"
+
+    # paths to file attributes
+    ATTR_NAME_JSONPATH = "key"
+    ATTR_FILE_LINK_JSONPATH = "ePIC_PID"
+    ATTR_SIZE_JSONPATH = "size"
+    ATTR_HASH_JSONPATH = "checksum"
+    ATTR_HASH_TYPE_VALUE = "md5"
