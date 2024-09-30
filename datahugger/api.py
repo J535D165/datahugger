@@ -53,7 +53,6 @@ def parse_resource_identifier(resource, resolve=True):
 def info(
     resource,
     max_file_size=None,
-    filter_files=None,
     force_download=False,
     unzip=True,
     checksum=False,
@@ -70,8 +69,6 @@ def info(
     max_file_size: int
         The maximum number of bytes for a single file. If exceeded,
         the file is skipped.
-    filter_files string
-        A regex pattern to filter files by name.
     force_download: bool
         Force the download of the dataset even if there are already
         files in the destination folder. Default: False.
@@ -100,7 +97,6 @@ def info(
     return service_class(
         handle,
         max_file_size=max_file_size,
-        filter_files=filter_files,
         force_download=force_download,
         unzip=unzip,
         checksum=checksum,
@@ -114,7 +110,6 @@ def get(
     resource,
     output_folder,
     max_file_size=None,
-    filter_files=None,
     force_download=False,
     unzip=True,
     checksum=False,
@@ -136,8 +131,6 @@ def get(
     max_file_size: int
         The maximum number of bytes for a single file. If exceeded,
         the file is skipped.
-    filter_files string
-        A regex pattern to filter files by name.
     force_download: bool
         Force the download of the dataset even if there are already
         files in the destination folder. Default: False.
@@ -163,7 +156,6 @@ def get(
     service = info(
         resource,
         max_file_size=max_file_size,
-        filter_files=filter_files,
         force_download=force_download,
         unzip=unzip,
         checksum=checksum,
