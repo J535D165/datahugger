@@ -19,8 +19,7 @@ def test_huggingface_without_params(tmpdir):
 
 
 def test_filter(tmpdir):
-    datahugger.get("https://zenodo.org/records/6614829", tmpdir,
-                   filter_files=r".*\.m")
+    datahugger.get("https://zenodo.org/records/6614829", tmpdir, filter_files=r".*\.m")
 
     files = [file for file in Path(tmpdir).iterdir()]
     assert len(files) == 1
