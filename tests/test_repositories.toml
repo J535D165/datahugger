@@ -35,8 +35,8 @@ location = "https://doi.org/10.7910/DVN/KBHLOD"
 files = "tutorial1.py"
 
 [[dataverse]]
-location = "https://hdl.handle.net/10622/NHJZUD"
-files = "ERRHS_7_01_data_1795.tab"
+location = "https://hdl.handle.net/10622/6IWVTB"
+files = "Micro_Ethiopia_1941-2018.xlsx"
 
 [[figshare]]
 location = "https://doi.org/10.6084/m9.figshare.8851784.v1"
@@ -86,9 +86,17 @@ files = "READMI Stranding Sea Turtle records.pdf"
 location = "https://doi.org/10.18739/A2KH0DZ42"
 files = "2012F_Temperature_Data.csv"
 
-[[dspace]]
-location = "https://uhra.herts.ac.uk/handle/2299/26087"
-files = "pdf.pdf"
+# [[dspace]]
+# location = "https://doi.org/10.17863/CAM.111909"
+# files = "README.md"
+
+# [[dspace]]
+# location = "https://uhra.herts.ac.uk/handle/2299/26087"
+# files = "pdf.pdf"
+
+# [[dspace]]
+# location = "http://dx.doi.org/10.21994/loar8554"
+# files = "terms_and_conditions_for_the_use_of_open_geographic_data.pdf"
 
 [[dspace]]
 location = "https://repositorioinstitucional.ceu.es/handle/10637/2741"
