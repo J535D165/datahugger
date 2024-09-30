@@ -59,13 +59,6 @@ def main():
     )
 
     parser.add_argument(
-        "--filter-files",
-        default=None,
-        type=str,
-        help="A regex pattern to filter files by name.",
-    )
-
-    parser.add_argument(
         "-f", "--force-download", dest="force_download", action="store_true"
     )
     parser.set_defaults(force_download=False)
@@ -120,7 +113,6 @@ def main():
             args.url_or_doi,
             args.output_dir,
             max_file_size=args.max_file_size,
-            filter_files=args.filter_files,
             force_download=args.force_download,
             unzip=args.unzip,
             checksum=args.checksum,
