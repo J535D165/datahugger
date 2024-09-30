@@ -390,26 +390,21 @@ class ZenodoDataset(DatasetDownloader):
         return self._get_attr_attr(record, self.ATTR_HASH_JSONPATH).split(":")[0]
 
 
-class B2shareDataset(DatasetDownloader):
-    """Downloader for B2Share repository."""
+class DataEuropaDataset(DatasetDownloader):
+    """Downloader for European data repository."""
 
-    REGEXP_ID = r"b2share\.eudat\.eu\/records\/(?P<record_id>[0-9a-z]+)"
+    REGEXP_ID = r"data\.europa\.eu\/data\/datasets\/(?P<record_id>.+)"
 
     # the base entry point of the REST API
-    API_URL = "https://b2share.eudat.eu/api/"
+    API_URL = "https://data.europa.eu/api/hub/repo/"
 
-    # the files and metadata about the dataset
-    API_URL_META = "{api_url}records/{record_id}"
-    META_FILES_JSONPATH = "files[*]"
+    API_URL_META = "{api_url}datasets/{record_id}"
+    META_FILES_JSONPATH = '$.@graph[?(@.@type == "dcat:Distribution")]'
 
     # paths to file attributes
-    ATTR_NAME_JSONPATH = "key"
-    ATTR_SIZE_JSONPATH = "size"
-    ATTR_HASH_JSONPATH = "checksum"
-    ATTR_HASH_TYPE_VALUE = "md5"
-
-    def _get_attr_link(self, record, base_url=None):
-        return f"{base_url}/files/{self._params['record_id']}/{record['key']}"
+    ATTR_FILE_LINK_JSONPATH = "'dcat:accessURL'.@id"
+    ATTR_NAME_JSONPATH = "'dct:title'"
+    ATTR_SIZE_JSONPATH = "'dcat:byteSize'.@value"
 
 
 class SeaNoeDataset(DatasetDownloader):
@@ -432,18 +427,23 @@ class SeaNoeDataset(DatasetDownloader):
     ATTR_HASH_TYPE_VALUE = "sha256"
 
 
-class DataEuropaDataset(DatasetDownloader):
-    """Downloader for European data repository."""
+class B2shareDataset(DatasetDownloader):
+    """Downloader for B2Share repository."""
 
-    REGEXP_ID = r"data\.europa\.eu\/data\/datasets\/(?P<record_id>.+)"
+    REGEXP_ID = r"b2share\.eudat\.eu\/records\/(?P<record_id>[0-9a-z]+)"
 
     # the base entry point of the REST API
-    API_URL = "https://data.europa.eu/api/hub/repo/"
+    API_URL = "https://b2share.eudat.eu/api/"
 
-    API_URL_META = "{api_url}datasets/{record_id}"
-    META_FILES_JSONPATH = '$.@graph[?(@.@type == "dcat:Distribution")]'
+    # the files and metadata about the dataset
+    API_URL_META = "{api_url}records/{record_id}"
+    META_FILES_JSONPATH = "files[*]"
 
     # paths to file attributes
-    ATTR_FILE_LINK_JSONPATH = "'dcat:accessURL'.@id"
-    ATTR_NAME_JSONPATH = "'dct:title'"
-    ATTR_SIZE_JSONPATH = "'dcat:byteSize'.@value"
+    ATTR_NAME_JSONPATH = "key"
+    ATTR_SIZE_JSONPATH = "size"
+    ATTR_HASH_JSONPATH = "checksum"
+    ATTR_HASH_TYPE_VALUE = "md5"
+
+    def _get_attr_link(self, record, base_url=None):
+        return f"{base_url}/files/{self._params['record_id']}/{record['key']}"
