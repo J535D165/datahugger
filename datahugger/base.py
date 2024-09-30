@@ -159,12 +159,8 @@ class DatasetDownloader:
             if self.progress:
                 print(f"{_format_filename(file_name)}: SKIPPED")
             return
-        
-        if (
-            self.filter_files and
-            not re.match(self.filter_files, file_name)
-            ):
-            
+
+        if self.filter_files and not re.match(self.filter_files, file_name):
             logging.info(f"Skipping file by filter {file_link}")
             if self.progress:
                 print(f"{_format_filename(file_name)}: SKIPPED")
