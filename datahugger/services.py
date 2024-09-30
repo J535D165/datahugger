@@ -439,11 +439,10 @@ class B2shareDataset(DatasetDownloader):
     API_URL_META = "{api_url}records/{record_id}"
     META_FILES_JSONPATH = "files[*]"
 
+
     # paths to file attributes
     ATTR_NAME_JSONPATH = "key"
+    ATTR_FILE_LINK_JSONPATH = "ePIC_PID"
     ATTR_SIZE_JSONPATH = "size"
     ATTR_HASH_JSONPATH = "checksum"
     ATTR_HASH_TYPE_VALUE = "md5"
-
-    def _get_attr_link(self, record, base_url=None):
-        return f"{base_url}/files/{self._params['record_id']}/{record['key']}"
