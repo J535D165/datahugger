@@ -81,10 +81,6 @@ Dataset successfully downloaded.
 - No need to struggle with DOIs versus DOI URLs. They both work (and more). Example: The values `10.5061/dryad.x3ffbg7m8`, `doi:10.5061/dryad.x3ffbg7m8`, [`https://doi.org/10.5061/dryad.x3ffbg7m8`](https://doi.org/10.5061/dryad.x3ffbg7m8), and [`https://datadryad.org/stash/dataset/doi:10.5061/dryad.x3ffbg7m8`](https://datadryad.org/stash/dataset/doi:10.5061/dryad.x3ffbg7m8) all point to the same dataset.
 - Do not republish the dataset when uploading your data to a scientific data repository. These storage resources can be used better :)
 
-## License
-
-[MIT](/LICENSE)
-
 ## Contact
 
 Please feel free to reach out with questions, comments, and suggestions. The

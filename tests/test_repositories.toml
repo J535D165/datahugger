@@ -47,8 +47,8 @@ location = "https://figshare.com/articles/dataset/Long-term_behavioral_repeatabi
 files = "cross_year_data2.csv"
 
 [[figshare]]
-location = "https://doi.org/10.15131/shef.data.22010159.v2"
-files = "ScHARR QUIT evaluation statistical and health economic analysis plan.pdf"
+location = "https://doi.org/10.15131/shef.data.25233514.v1"
+files = "Machaka2021ML_Data.csv"
 
 [[djehuty]]
 location = "https://doi.org/10.4121/21989216.v1"
@@ -61,10 +61,6 @@ files = "ReadmeFile.txt"
 [[dryad]]
 location = "https://doi.org/10.5061/dryad.31zcrjdm5"
 files = "ReadmeFile.txt"
-
-[[osf]]
-location = "https://osf.io/ews27/"
-files = "Cross-comparison/amarlt1"
 
 [[osf]]
 location = "https://osf.io/kq573/"
@@ -114,10 +110,10 @@ files = "cbsodata-main/README.md"
 location = "https://b2share.eudat.eu/records/db2ef5890fa44c7a85af366a50de73b9"
 files = "2024-02-13.sav"
 
+[[dataeuropa]]
+location = "https://data.europa.eu/data/datasets/65e092e4009f18f050b14216"
+files = "consolidation-wattzhub-schema-irve-statique-20240220-152202.csv"
+
 [[seanoe]]
 location = "https://doi.org/10.17882/101042"
 files = "111609.xlsx"
-
-[[dataeuropa]]
-location = "https://data.europa.eu/data/datasets/65e092e4009f18f050b14216"
-files = "consolidation-wattzhub-schema-irve-dynamic-20240918-033000.csv"

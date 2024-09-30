@@ -11,14 +11,13 @@ on:
     - main
 
 jobs:
-  test-api:
-
+  api:
+    name: API
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.8", "3.12"]
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -33,43 +32,51 @@ jobs:
       run: |
         pytest -n 4 --ignore=tests/test_repositories_plus.py --ignore=tests/test_repositories.py
 
-  test-repositories:
+  prepare:
+    name: Prepare test repositories
+    runs-on: ubuntu-latest
+    outputs:
+      repository: ${{ steps.load.outputs.repository }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.12"
+      - name: load test repositories
+        id: load
+        run: |
+          python -c "import tomllib; r = tomllib.loads(open('tests/test_repositories.toml').read());print('repository=' + str({'repository': list(r.keys())}))" >> "$GITHUB_OUTPUT"
 
+  repository:
+    name: Repository
+    needs: prepare
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        service: ["zenodo", "dataverse", "figshare", "djehuty", "dryad", "osf", "mendeley", "dataone", "dspace", "pangaea", "github"]
-        python-version: ["3.8", "3.12"]
-
+      matrix: ${{ fromJson(needs.prepare.outputs.repository) }}
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python
       uses: actions/setup-python@v3
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: "3.12"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install ".[test]"
     - name: Test with pytest
       run: |
-        pytest tests/test_repositories.py --service ${{ matrix.service }}
+        pytest tests/test_repositories.py --service ${{ matrix.repository }}
 
-  test-repositories-plus:
-
+  repositories-plus:
+    name: Repositories plus
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.8", "3.12"]
-
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python
       uses: actions/setup-python@v3
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: "3.12"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
