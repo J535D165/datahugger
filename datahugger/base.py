@@ -284,7 +284,6 @@ class DatasetDownloader:
 
         # get the data from URL
         res = requests.get(url)
-        res.raise_for_status()
         response = res.json()
 
         # find path to raw files
