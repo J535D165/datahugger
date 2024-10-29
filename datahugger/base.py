@@ -57,6 +57,7 @@ class DatasetDownloader:
         checksum=False,
         print_only=False,
         params=None,
+        token=None,
     ):
         super().__init__()
         self.resource = resource
@@ -67,8 +68,11 @@ class DatasetDownloader:
         self.checksum = checksum
         self.print_only = print_only
         self.params = params
+        self.token = token
 
         self.session = requests.Session()
+        if self.token:
+            self.session.headers["Authorization"] = f"Bearer {self.token}"
 
     def _get_attr_attr(self, record, jsonp):
         try:
