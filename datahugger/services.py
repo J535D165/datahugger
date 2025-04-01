@@ -458,15 +458,14 @@ class YodaDataset(DatasetDownloader):
 
     def _get_contents_url(self):
         """Resolve the root folder of the contents of a Yoda data package."""
-        url_to_use = (self.resource if isinstance(self.resource, str)
-                      else self.resource.resolve())
+        url_to_use = (
+            self.resource if isinstance(self.resource, str) else self.resource.resolve()
+        )
         res = requests.get(url_to_use)
         res.raise_for_status()
         soup = BeautifulSoup(res.content, "html.parser")
-        contents_link = soup.find('a', string=re.compile(r'View contents'))
-        return (contents_link.get('href') + "/original"
-            if contents_link else None)
-
+        contents_link = soup.find("a", string=re.compile(r"View contents"))
+        return contents_link.get("href") + "/original" if contents_link else None
 
     @property
     def files(self):
@@ -490,64 +489,75 @@ class YodaDataset(DatasetDownloader):
     def _get_full_url(self, base_url, relative_collection, object_name):
         result = base_url
         if relative_collection != "":
-            result = urljoin(result if result.endswith("/") else result + "/",
-                             relative_collection)
-        result = urljoin(result if result.endswith("/")
-                         else result + "/", object_name)
+            result = urljoin(
+                result if result.endswith("/") else result + "/", relative_collection
+            )
+        result = urljoin(result if result.endswith("/") else result + "/", object_name)
         return result
 
     def _get_relative_path(self, collection_name, dataobject_name):
-        separator = ( "/" if collection_name != ""
-                      and not collection_name.endswith("/")
-                      else "")
+        separator = (
+            "/" if collection_name != "" and not collection_name.endswith("/") else ""
+        )
         return f"{collection_name}{separator}{dataobject_name}"
-
 
     def _harvest_files(self):
         contents_url = self._get_contents_url()
         if contents_url is None:
-            raise ValueError("Data package contents link not found. " +
-                  "This can happen if the Yoda data package is not open access.\n")
+            raise ValueError(
+                "Data package contents link not found. "
+                + "This can happen if the Yoda data package is not open access.\n"
+            )
 
-        folders_to_process = [ contents_url ]
+        folders_to_process = [contents_url]
         files_to_download = []
 
         while True:
-            if (len(folders_to_process) == 0):
-                 break
+            if len(folders_to_process) == 0:
+                break
             folder = folders_to_process.pop(0)
 
             res = requests.get(folder)
             res.raise_for_status()
-            soup = BeautifulSoup(res.content, 'html.parser')
+            soup = BeautifulSoup(res.content, "html.parser")
 
             collection_name = self._get_collection_name_from_folder_url(
-                    contents_url, folder)
+                contents_url, folder
+            )
 
-            data_object_parts = soup.find_all('tr', class_="data-object")
-            data_objects = [a['href'] for data_object_part in
-                            data_object_parts
-                            for a in data_object_part.find_all('a')]
+            data_object_parts = soup.find_all("tr", class_="data-object")
+            data_objects = [
+                a["href"]
+                for data_object_part in data_object_parts
+                for a in data_object_part.find_all("a")
+            ]
             for data_object in data_objects:
                 data_object_url = self._get_full_url(
-                        contents_url, collection_name, data_object)
-                data_object_relative_path = unquote(self._get_relative_path(
-                        collection_name, data_object))
+                    contents_url, collection_name, data_object
+                )
+                data_object_relative_path = unquote(
+                    self._get_relative_path(collection_name, data_object)
+                )
                 files_to_download.append(
                     {
-                         "link": data_object_url,
-                         "name": data_object_relative_path,
-                         "size": None,
-                         "hash": None,
-                         "hash_type": None,
-                    })
+                        "link": data_object_url,
+                        "name": data_object_relative_path,
+                        "size": None,
+                        "hash": None,
+                        "hash_type": None,
+                    }
+                )
 
-            collection_parts = soup.find_all('tr', class_="collection")
-            collections = [a['href'] for collection_part in collection_parts
-                           for a in collection_part.find_all('a')]
+            collection_parts = soup.find_all("tr", class_="collection")
+            collections = [
+                a["href"]
+                for collection_part in collection_parts
+                for a in collection_part.find_all("a")
+            ]
             for collection in collections:
                 subcollection_url = self._get_full_url(
-                        contents_url, collection_name, collection)
+                    contents_url, collection_name, collection
+                )
                 folders_to_process.append(subcollection_url)
 
-        return(files_to_download)
+        return files_to_download
