@@ -125,3 +125,7 @@ files = "consolidation-wattzhub-schema-irve-statique-20240220-152202.csv"
 [[seanoe]]
 location = "https://doi.org/10.17882/101042"
 files = "111609.xlsx"
+
+[[desy]]
+location = "https://doi.org/10.60717/17114434-6bb9-4f3c-865f-59395b7c38c3"
+files = "10.5281_zenodo.6497438/conda_env.yml"
