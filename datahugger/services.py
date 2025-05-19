@@ -463,7 +463,7 @@ class DESYDataset(DatasetDownloader):
         headers = {"Accept": "application/metalink4+xml"}
         res = requests.get(self.API_URL + self._params["record_id"], headers=headers)
         res.raise_for_status()
-        ns = {'ml': 'urn:ietf:params:xml:ns:metalink'}
+        ns = {"ml": "urn:ietf:params:xml:ns:metalink"}
         meta_tree = ET.fromstring(res.content.decode("utf-8"))
 
         x = []
@@ -472,12 +472,12 @@ class DESYDataset(DatasetDownloader):
                 "link": file.find("ml:url", ns).text,
                 "name": file.attrib.get("name"),
             }
-            if file.find('ml:size', ns) is not None:
-                elem["size"] = int(file.find('ml:size', ns).text)
-            hash_elem = file.find('ml:hash', ns)
+            if file.find("ml:size", ns) is not None:
+                elem["size"] = int(file.find("ml:size", ns).text)
+            hash_elem = file.find("ml:hash", ns)
             if hash_elem is not None:
                 elem["hash"] = hash_elem.text
-                elem["hash_type"] = hash_elem.attrib.get('type')
+                elem["hash_type"] = hash_elem.attrib.get("type")
             x.append(elem)
 
         self._files = x

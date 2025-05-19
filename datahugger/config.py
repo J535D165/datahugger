@@ -4,6 +4,7 @@ from datahugger.services import DataDryadDataset
 from datahugger.services import DataEuropaDataset
 from datahugger.services import DataOneDataset
 from datahugger.services import DataverseDataset
+from datahugger.services import DESYDataset
 from datahugger.services import DjehutyDataset
 from datahugger.services import DSpaceDataset
 from datahugger.services import FigShareDataset
@@ -14,7 +15,6 @@ from datahugger.services import OSFDataset
 from datahugger.services import PangaeaDataset
 from datahugger.services import SeaNoeDataset
 from datahugger.services import ZenodoDataset
-from datahugger.services import DESYDataset
 
 # fast lookup
 SERVICES_NETLOC = {
