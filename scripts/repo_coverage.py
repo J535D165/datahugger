@@ -106,9 +106,9 @@ def get_report(args):
     )
     print()
     print("### Percentages")
-    print(f"Percentage of datasets supported: {frac_supported*100:.1f}%")
-    print(f"Percentage of datasets not supported: {frac_not_supported*100:.1f}%")
-    print(f"Percentage of datasets with error: {frac_with_error*100:.1f}%")
+    print(f"Percentage of datasets supported: {frac_supported * 100:.1f}%")
+    print(f"Percentage of datasets not supported: {frac_not_supported * 100:.1f}%")
+    print(f"Percentage of datasets with error: {frac_with_error * 100:.1f}%")
 
     print()
     print("### Table with unexpected errors")
