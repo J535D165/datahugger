@@ -73,7 +73,7 @@ class DataverseDataset(DatasetDownloader):
 class DataDryadDataset(DatasetDownloader):
     """Downloader for DataDryad repository."""
 
-    REGEXP_ID = r"datadryad\.org[\:]*[43]{0,3}\/stash\/dataset\/doi:(?P<record_id>.*)"
+    REGEXP_ID = r"datadryad\.org[\:]*[43]{0,3}\/dataset\/doi:(?P<record_id>.*)"
 
     # the base entry point of the REST API
     API_URL = "https://datadryad.org/api/v2"

@@ -55,7 +55,7 @@ location = "https://doi.org/10.4121/21989216.v1"
 files = "README.txt"
 
 [[dryad]]
-location = "https://datadryad.org/stash/dataset/doi:10.5061/dryad.31zcrjdm5"
+location = "https://datadryad.org/dataset/doi:10.5061/dryad.31zcrjdm5"
 files = "ReadmeFile.txt"
 
 [[dryad]]
