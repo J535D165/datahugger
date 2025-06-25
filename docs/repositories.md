@@ -49,6 +49,14 @@ DataOne software is supported by Datahugger.
 - [Rolling Deck to Repository (R2R)](https://rvdata.us)
 - [SEAD](https://sead-published.ncsa.illinois.edu)
 
+### Yoda repositories
+
+The following Yoda repositories are supported:
+
+- [Utrecht University Yoda repository](https://public.yoda.uu.nl)
+- [Vrije Universiteit Amsterdam Yoda repository](https://publication.yoda.vu.nl)
+- [Wageningen University & Research Yoda repository](https://publication.yoda.wur.nl)
+
 ### DataVerse repositories
 
 See [https://dataverse.org/institutions](https://dataverse.org/institutions) and [DataVerse on Re3data.org](https://www.re3data.org/search?query=&software%5B%5D=DataVerse) for an overview of DataVerse repositories.
