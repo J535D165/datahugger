@@ -445,3 +445,40 @@ class B2shareDataset(DatasetDownloader):
     ATTR_SIZE_JSONPATH = "size"
     ATTR_HASH_JSONPATH = "checksum"
     ATTR_HASH_TYPE_VALUE = "md5"
+
+
+class DESYDataset(DatasetDownloader):
+    """Downloader for DESY repository."""
+
+    REGEXP_ID = r"https://public-doi\.desy\.de/detail/(?P<record_id>.+)"
+
+    # the base entry point of the REST API
+    API_URL = "https://public-doi.desy.de/detail/"
+
+    @property
+    def files(self):
+        if hasattr(self, "_files"):
+            return self._files
+
+        headers = {"Accept": "application/metalink4+xml"}
+        res = requests.get(self.API_URL + self._params["record_id"], headers=headers)
+        res.raise_for_status()
+        ns = {"ml": "urn:ietf:params:xml:ns:metalink"}
+        meta_tree = ET.fromstring(res.content.decode("utf-8"))
+
+        x = []
+        for file in meta_tree.findall("ml:file", ns):
+            elem = {
+                "link": file.find("ml:url", ns).text,
+                "name": file.attrib.get("name"),
+            }
+            if file.find("ml:size", ns) is not None:
+                elem["size"] = int(file.find("ml:size", ns).text)
+            hash_elem = file.find("ml:hash", ns)
+            if hash_elem is not None:
+                elem["hash"] = hash_elem.text
+                elem["hash_type"] = hash_elem.attrib.get("type")
+            x.append(elem)
+
+        self._files = x
+        return self._files

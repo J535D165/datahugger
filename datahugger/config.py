@@ -4,6 +4,7 @@ from datahugger.services import DataDryadDataset
 from datahugger.services import DataEuropaDataset
 from datahugger.services import DataOneDataset
 from datahugger.services import DataverseDataset
+from datahugger.services import DESYDataset
 from datahugger.services import DjehutyDataset
 from datahugger.services import DSpaceDataset
 from datahugger.services import FigShareDataset
@@ -121,6 +122,7 @@ SERVICES_NETLOC = {
     "www.uni-hildesheim.de": DataverseDataset,
     "b2share.eudat.eu": B2shareDataset,
     "data.europa.eu": DataEuropaDataset,
+    "public-doi.desy.de": DESYDataset,
 }
 
 # regexp lookup
