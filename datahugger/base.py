@@ -51,6 +51,7 @@ class DatasetDownloader:
         self,
         resource,
         max_file_size=None,
+        filter_files=None,
         force_download=False,
         progress=True,
         unzip=True,
@@ -61,6 +62,7 @@ class DatasetDownloader:
         super().__init__()
         self.resource = resource
         self.max_file_size = max_file_size
+        self.filter_files = filter_files
         self.force_download = force_download
         self.progress = progress
         self.unzip = unzip
@@ -154,6 +156,12 @@ class DatasetDownloader:
             and file_size >= self.max_file_size
         ):
             logging.info(f"Skipping large file {file_link}")
+            if self.progress:
+                print(f"{_format_filename(file_name)}: SKIPPED")
+            return
+
+        if self.filter_files and not re.match(self.filter_files, file_name):
+            logging.info(f"Skipping file by filter {file_link}")
             if self.progress:
                 print(f"{_format_filename(file_name)}: SKIPPED")
             return
