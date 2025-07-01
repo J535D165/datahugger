@@ -1,7 +1,5 @@
 import io
-import os
 import re
-import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
@@ -463,11 +461,13 @@ class YodaDataset(DatasetDownloader):
         res = requests.get(url_to_use)
         res.raise_for_status()
         soup = BeautifulSoup(res.content, "html.parser")
-        contents_link = soup.find('a', class_="btn btn-primary access-btn view-contents")
+        contents_link = soup.find(
+            "a", class_="btn btn-primary access-btn view-contents"
+        )
         if not contents_link:
             # Older Yoda versions have a different class
-            contents_link = soup.find('a', class_="btn btn-primary access-btn")
-        return (contents_link.get('href') + "/original" if contents_link else None)
+            contents_link = soup.find("a", class_="btn btn-primary access-btn")
+        return contents_link.get("href") + "/original" if contents_link else None
 
     @property
     def files(self):
