@@ -13,6 +13,7 @@ from datahugger.services import MendeleyDataset
 from datahugger.services import OSFDataset
 from datahugger.services import PangaeaDataset
 from datahugger.services import SeaNoeDataset
+from datahugger.services import YodaDataset
 from datahugger.services import ZenodoDataset
 
 # fast lookup
@@ -102,6 +103,9 @@ SERVICES_NETLOC = {
     "mxrdr.icm.edu.pl": DataverseDataset,
     "osnadata.ub.uni-osnabrueck.de": DataverseDataset,
     "planetary-data-portal.org": DataverseDataset,
+    "publication.yoda.vu.nl": YodaDataset,
+    "publication.yoda.wur.nl": YodaDataset,
+    "public.yoda.uu.nl": YodaDataset,
     "qdr.syr.edu": DataverseDataset,
     "rdm.aau.edu.et": DataverseDataset,
     "rdr.kuleuven.be": DataverseDataset,

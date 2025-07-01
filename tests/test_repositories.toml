@@ -125,3 +125,7 @@ files = "consolidation-wattzhub-schema-irve-statique-20240220-152202.csv"
 [[seanoe]]
 location = "https://doi.org/10.17882/101042"
 files = "111609.xlsx"
+
+[[yoda]]
+location = "https://doi.org/10.24416/uu01-hesuhs"
+files = "University policy framework for research data Utrecht University - January 2016.pdf"
