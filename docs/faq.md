@@ -10,7 +10,7 @@ A: To report bugs or request new features, please open an issue on Datahugger's 
 
 ## Q: Which repositories are currently supported by Datahugger?
 
-A: Datahugger supports data retrieval from hundreds of repositories and millions of DOIs. You can find a list of supported repositories in the documentation. However, please note that not all repositories may be supported. We encourage maintainers of unsupported repositories to contribute to Datahugger.
+A: Datahugger supports data retrieval from hundreds of repositories and millions of DOIs. You can find a [list of supported repositories in the documentation](../repositories/). However, please note that not all repositories may be supported. We encourage maintainers of unsupported repositories to contribute to Datahugger.
 
 ## Q: Can I customize Datahugger to work with my institution's specific repositories?
 
