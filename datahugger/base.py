@@ -6,6 +6,7 @@ import os
 import re
 import time
 import zipfile
+from functools import lru_cache
 from pathlib import Path
 from typing import Union
 from urllib.parse import urlparse
@@ -68,12 +69,46 @@ class DatasetDownloader:
         self.print_only = print_only
         self.params = params
 
+    # Helper function to check if the json path is simple.
+    # i.e., does not contain wildcards, recursive descent, or filter expressions.
+    # This allows us to optimize simple paths by manually traversing the JSON structure.
+    # The check resulr is cached for performance.
+    # The method is static so self is not cached.
+    @staticmethod
+    @lru_cache(maxsize=128)
+    def _is_simple_path(json_path):
+        # Check for wildcard, recursive descent, or filter expressions
+        result = all(c.isalnum() or c in "._" for c in json_path) and "*" not in json_path and ".." not in json_path and "[" not in json_path and "]" not in json_path
+        return result
+    
+    # Helper function to get value from JSON using either manual traversal or JSONPath.
+    # find() is slow for simple paths, so we optimize those cases.
+    # This can result in speedups of 30x e.g. for doi "10.17026/DANS-XGB-TW5U"
+    def _get_json_value(self, record, json_path):
+        if DatasetDownloader._is_simple_path(json_path):
+            # Manual walk
+            try:
+                current = record
+                for part in json_path.split('.'):
+                    # handle numeric indices for arrays
+                    if part.isdigit():
+                        current = current[int(part)]
+                    else:
+                        current = current[part]
+                return current
+            except (KeyError, IndexError, TypeError):
+                return None
+        else:
+            # JSONPath find
+            try:
+                expr = parse(json_path)
+                matches = expr.find(record)
+                return matches[0].value if matches else None
+            except Exception:
+                return None
+
     def _get_attr_attr(self, record, jsonp):
-        try:
-            jsonpath_expression = parse(jsonp)
-            return jsonpath_expression.find(record)[0].value
-        except Exception:
-            return None
+        return self._get_json_value(record, jsonp)
 
     def _get_attr_link(self, record, **kwargs):
         # get the link to the folder
@@ -326,9 +361,7 @@ class DatasetDownloader:
                 )
 
         if hasattr(self, "PAGINATION_JSONPATH"):
-            jsonpath_expression = parse(self.PAGINATION_JSONPATH)
-            next_url = jsonpath_expression.find(response)[0].value
-
+            next_url = self._get_json_value(response, self.PAGINATION_JSONPATH)
             if next_url:
                 result.extend(
                     self._get_files_recursive(next_url, folder_name=folder_name)
