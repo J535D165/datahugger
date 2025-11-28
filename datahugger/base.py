@@ -82,7 +82,8 @@ class DatasetDownloader:
     
     # Helper function to get value from JSON using either manual traversal or JSONPath.
     # find() is slow for simple paths, so we optimize those cases.
-    # This can result in speedups of 30x e.g. for doi "10.17026/DANS-XGB-TW5U"
+    # This results in speedups of 30x in some cases
+    # e.g. for doi "10.17026/DANS-XGB-TW5U"
     def _get_json_value(self, record, json_path):
         if DatasetDownloader._is_simple_path(json_path):
             # Manual walk
