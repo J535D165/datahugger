@@ -78,7 +78,13 @@ class DatasetDownloader:
     @lru_cache(maxsize=128)
     def _is_simple_path(json_path):
         # Check for wildcard, recursive descent, or filter expressions
-        return all(c.isalnum() or c in "._" for c in json_path) and "*" not in json_path and ".." not in json_path and "[" not in json_path and "]" not in json_path
+        return (
+                all(c.isalnum() or c in "._" for c in json_path) 
+                and "*" not in json_path 
+                and ".." not in json_path 
+                and "[" not in json_path 
+                and "]" not in json_path
+        )
     
     # Helper function to get value from JSON using either manual traversal or JSONPath.
     # find() is slow for simple paths, so we optimize those cases.
