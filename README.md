@@ -10,7 +10,7 @@ Datahugger is a tool to download scientific datasets, software, and code from a 
 
 Datahugger offers support for more than [<!-- count -->377<!-- count --> generic and specific (scientific) repositories](https://j535d165.github.io/datahugger/repositories) (and more to come!).
 
-[![Datahugger support Zenodo, Dataverse, DataOne, GitHub, FigShare, HuggingFace, Mendeley Data, Dryad, OSF, and many more](https://github.com/J535D165/datahugger/raw/main/docs/images/logos.png)](https://j535d165.github.io/datahugger/repositories)
+[![Datahugger support Zenodo, Dataverse, DataOne, GitHub, FigShare, HuggingFace, Mendeley Data, Dryad, OSF, Yoda, and many more](https://github.com/J535D165/datahugger/raw/main/docs/images/logos.png)](https://j535d165.github.io/datahugger/repositories)
 
 We are still expanding Datahugger with support for more repositories. You can
 help by [requesting support for a repository](https://github.com/J535D165/datahugger/issues/new/choose) in the issue
