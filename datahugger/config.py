@@ -12,6 +12,7 @@ from datahugger.services import HuggingFaceDataset
 from datahugger.services import MendeleyDataset
 from datahugger.services import OSFDataset
 from datahugger.services import PangaeaDataset
+from datahugger.services import RadboudDataRepositoryDataset
 from datahugger.services import SeaNoeDataset
 from datahugger.services import ZenodoDataset
 
@@ -121,6 +122,9 @@ SERVICES_NETLOC = {
     "www.uni-hildesheim.de": DataverseDataset,
     "b2share.eudat.eu": B2shareDataset,
     "data.europa.eu": DataEuropaDataset,
+    # Radboud Data Repository (formerly Donders): DOI/landing-page hosts
+    "data.ru.nl": RadboudDataRepositoryDataset,
+    "data.donders.ru.nl": RadboudDataRepositoryDataset,
 }
 
 # regexp lookup
@@ -128,6 +132,8 @@ SERVICES_NETLOC_REGEXP = {
     r".*\/articles\/.*\/.*\/\d+": FigShareDataset,
     r".*\/handle\/\d+\/\d+": DSpaceDataset,
     r".*\/dataset\.xhtml\?persistentId\=.*": DataverseDataset,
+    # Direct Radboud Data Repository WebDAV / public collection URLs
+    r".*(?:public|webdav)\.data(?:\.donders)?\.ru\.nl/.+": RadboudDataRepositoryDataset,
 }
 
 # add keys in lower-case for fast case-insensitive lookups

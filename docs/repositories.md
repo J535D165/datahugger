@@ -2,7 +2,7 @@
 
 Datahugger offers support for more than <!-- count -->377<!-- count --> generic and specific (scientific) repositories (and more to come!).
 
-![Datahugger support Zenodo, Dataverse, DataOne, GitHub, FigShare, HuggingFace, Mendeley Data, Dryad, OSF, and many more](images/logos.png)
+![Datahugger support Zenodo, Dataverse, DataOne, GitHub, FigShare, HuggingFace, Mendeley Data, Dryad, OSF, Radboud Data Repository, and many more](images/logos.png)
 
 We are still expanding Datahugger with support for more repositories. You can
 help by [requesting support for a repository](https://github.com/J535D165/datahugger/issues/new/choose) in the issue tracker. Pull Requests are very
@@ -23,6 +23,7 @@ by Datahugger.
 - [Hugging Face](https://huggingface.co)
 - [Open Science Framework (OSF)](https://osf.io)
 - [Mendeley Data](https://data.mendeley.com)
+- [Radboud Data Repository (Donders)](https://data.ru.nl)
 
 
 ### DataOne repositories
@@ -52,3 +53,13 @@ DataOne software is supported by Datahugger.
 ### DataVerse repositories
 
 See [https://dataverse.org/institutions](https://dataverse.org/institutions) and [DataVerse on Re3data.org](https://www.re3data.org/search?query=&software%5B%5D=DataVerse) for an overview of DataVerse repositories.
+
+### Radboud Data Repository
+
+The [Radboud Data Repository](https://data.ru.nl) (RDR, formerly the Donders
+Data Repository) is supported through a DOI, a landing-page URL, or a direct
+WebDAV collection URL. Open-access collections download anonymously. Restricted
+collections require data-access credentials (obtained from the data.ru.nl
+portal, distinct from the institutional login), supplied either through the
+`RDR_USERNAME` and `RDR_PASSWORD` environment variables or with
+`-p username=... -p password=...` on the command line.

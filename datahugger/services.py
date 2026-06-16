@@ -1,10 +1,12 @@
 import io
+import os
 import re
 import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 from typing import Union
 from urllib.parse import quote
+from urllib.parse import unquote
 from urllib.parse import urlparse
 
 import requests
@@ -445,3 +447,173 @@ class B2shareDataset(DatasetDownloader):
     ATTR_SIZE_JSONPATH = "size"
     ATTR_HASH_JSONPATH = "checksum"
     ATTR_HASH_TYPE_VALUE = "md5"
+
+
+class RadboudDataRepositoryDataset(DatasetDownloader):
+    """Downloader for the Radboud Data Repository (RDR).
+
+    The RDR (formerly the Donders Data Repository, https://data.ru.nl, legacy
+    https://data.donders.ru.nl) serves data over WebDAV. "Open access"
+    collections download anonymously through the public mirror; restricted
+    collections require HTTP Basic authentication with RDR *data access*
+    credentials (obtained from the data.ru.nl portal -- these are distinct
+    from the institutional SSO password).
+
+    Credentials are read, in order of precedence, from the ``username`` /
+    ``password`` params (``-p username=... -p password=...`` on the CLI) or
+    from the ``RDR_USERNAME`` / ``RDR_PASSWORD`` environment variables. When
+    neither is set, access is anonymous via the public mirror.
+
+    Files are enumerated from the per-collection ``MANIFEST.txt`` (one
+    ``<sha256> <relative/path>`` entry per line); the WebDAV PROPFIND listing
+    is used only to discover the version (``_vN``) suffix when it is not
+    otherwise known.
+    """
+
+    # Matches the host in every accepted form (DOI-resolved/pasted landing
+    # page on data(.donders).ru.nl, or a direct public/webdav collection URL).
+    # No named groups: the real parsing happens in ``_collection_url`` so that
+    # ``_params`` keeps the credentials passed via ``-p`` untouched.
+    REGEXP_ID = r"(?:public\.|webdav\.)?data(?:\.donders)?\.ru\.nl"
+
+    PUBLIC_BASE = "https://public.data.ru.nl"
+    WEBDAV_BASE = "https://webdav.data.ru.nl"
+
+    DAV = "{DAV:}"  # ElementTree namespace prefix (XML uses the 'a:' alias)
+
+    def _auth(self):
+        user = self._params.get("username") or os.environ.get("RDR_USERNAME")
+        password = self._params.get("password") or os.environ.get("RDR_PASSWORD")
+        if user and password:
+            return (user, password)
+        return None
+
+    @property
+    def _base_host(self):
+        # Authenticated access needs the full WebDAV host; anonymous access
+        # uses the public mirror (published collections only).
+        return self.WEBDAV_BASE if self._auth() else self.PUBLIC_BASE
+
+    def download_file(self, file_link, *args, **kwargs):
+        try:
+            return super().download_file(file_link, *args, **kwargs)
+        except requests.HTTPError as err:
+            response = getattr(err, "response", None)
+            if response is not None and response.status_code in (401, 403):
+                raise PermissionError(
+                    f"Access to {file_link} was denied (HTTP "
+                    f"{response.status_code}). This collection requires Radboud "
+                    "Data Repository data-access credentials; set the "
+                    "RDR_USERNAME and RDR_PASSWORD environment variables, or pass "
+                    "'-p username=... -p password=...'."
+                ) from err
+            raise
+
+    def _collection_url(self):
+        """Resolve the input to a versioned WebDAV collection URL."""
+        url = _get_url(self.resource)
+        parsed = urlparse(url)
+        host = parsed.hostname or ""
+        parts = parsed.path.strip("/").split("/")
+
+        if host.startswith(("public.", "webdav.")):
+            # Direct WebDAV URL: {ou}/{COLLECTION}_vN[/...] (version present).
+            ou, collection = parts[0], parts[1]
+            if not re.search(r"_v\d+$", collection):
+                collection = self._resolve_version(ou, collection)
+        else:
+            # Landing page: collections/{org}/{ou}/{COLLECTION} (no version).
+            ou, collection = parts[2], parts[3]
+            collection = self._resolve_version(ou, collection)
+
+        return f"{self._base_host}/{ou}/{collection}"
+
+    def _resolve_version(self, ou, collection):
+        """Return ``{collection}_vN`` for the requested version.
+
+        Precedence: explicit ``-p version=N`` > the exact version pinned by
+        the DOI (via DataCite) > the highest version found by listing the
+        parent organisational unit over WebDAV.
+        """
+        version = self._params.get("version")
+        if version:
+            return f"{collection}_v{version}"
+
+        from_doi = self._version_from_datacite(collection)
+        if from_doi:
+            return from_doi
+
+        return self._version_from_propfind(ou, collection)
+
+    def _version_from_datacite(self, collection):
+        doi = getattr(self.resource, "doi", None)
+        if not doi:
+            return None
+        try:
+            res = self.session.get(f"https://api.datacite.org/dois/{doi}")
+            res.raise_for_status()
+            identifiers = res.json()["data"]["attributes"].get("identifiers", [])
+        except (requests.RequestException, KeyError, ValueError):
+            return None
+        for ident in identifiers:
+            if ident.get("identifierType") == "URL":
+                name = ident.get("identifier", "").rstrip("/").rsplit("/", 1)[-1]
+                if name.startswith(f"{collection}_v"):
+                    return name
+        return None
+
+    def _version_from_propfind(self, ou, collection):
+        ou_url = f"{self._base_host}/{ou}/"
+        res = self.session.request("PROPFIND", ou_url, headers={"Depth": "1"})
+        res.raise_for_status()
+        names = self._parse_propfind_names(res.content, ou_url)
+        matches = [n for n in names if n.startswith(f"{collection}_v")]
+        if not matches:
+            raise ValueError(
+                f"No versioned collection for '{collection}' found under {ou_url}"
+            )
+        return max(matches, key=lambda n: int(n.rsplit("_v", 1)[-1]))
+
+    def _parse_propfind_names(self, content, parent_url):
+        """Return the immediate child names from a PROPFIND multistatus body."""
+        tree = ET.fromstring(content)
+        parent_path = urlparse(parent_url).path
+        names = []
+        for href in tree.iter(f"{self.DAV}href"):
+            if not href.text:
+                continue
+            path = unquote(urlparse(href.text).path)
+            rel = path[len(parent_path) :].strip("/")
+            if rel:
+                names.append(rel.split("/")[0])
+        return names
+
+    @property
+    def files(self):
+        if hasattr(self, "_files"):
+            return self._files
+
+        base = self._collection_url()
+        res = self.session.get(f"{base}/MANIFEST.txt")
+        res.raise_for_status()
+
+        self._files = []
+        for line in res.text.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            file_hash, _, name = line.partition(" ")
+            name = name.strip()
+            if not name:
+                continue
+            self._files.append(
+                {
+                    "link": f"{base}/{quote(name)}",
+                    "name": name,
+                    "size": None,  # MANIFEST.txt carries no file sizes
+                    "hash": file_hash,
+                    "hash_type": "sha256",
+                }
+            )
+
+        return self._files

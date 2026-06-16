@@ -68,6 +68,31 @@ class DatasetDownloader:
         self.print_only = print_only
         self.params = params
 
+    def _auth(self):
+        """Authentication for the HTTP session.
+
+        Returns an object accepted by ``requests`` as its ``auth`` argument
+        (e.g. an ``(username, password)`` tuple for HTTP Basic auth) or
+        ``None`` for anonymous access. Services that require authentication
+        override this; the default is anonymous.
+        """
+        return None
+
+    @property
+    def session(self):
+        """Lazily-built :class:`requests.Session` carrying any auth.
+
+        Used for every HTTP request (listing, download, unzip) so that
+        authentication, when provided by :meth:`_auth`, applies uniformly.
+        An anonymous session is behaviourally identical to ``requests.get``.
+        """
+        if getattr(self, "_session", None) is None:
+            self._session = requests.Session()
+            auth = self._auth()
+            if auth is not None:
+                self._session.auth = auth
+        return self._session
+
     def _get_attr_attr(self, record, jsonp):
         try:
             jsonpath_expression = parse(jsonp)
@@ -160,7 +185,7 @@ class DatasetDownloader:
 
         if not self.print_only:
             logging.info(f"Downloading file {file_link}")
-            res = requests.get(file_link, stream=True)
+            res = self.session.get(file_link, stream=True)
             res.raise_for_status()
 
             output_fp = Path(output_folder, file_name)
@@ -198,7 +223,7 @@ class DatasetDownloader:
             raise ValueError(f"Failed to parse URL '{url}'") from err
 
     def _unpack_single_folder(self, zip_url, output_folder):
-        r = requests.get(zip_url)
+        r = self.session.get(zip_url)
         r.raise_for_status()
 
         z = zipfile.ZipFile(io.BytesIO(r.content))
@@ -286,7 +311,7 @@ class DatasetDownloader:
         result = []
 
         # get the data from URL
-        res = requests.get(url)
+        res = self.session.get(url)
         res.raise_for_status()
         response = res.json()
 
