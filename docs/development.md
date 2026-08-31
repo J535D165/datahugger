@@ -12,6 +12,7 @@ the `BaseRepoDownloader` class. The class of Open Science Framework
 from datahugger.base import DatasetDownloader
 from datahugger.base import DatasetResult
 
+
 class OSFDataset(DatasetDownloader, DatasetResult):
     """Downloader for OSF repository."""
 
@@ -30,7 +31,6 @@ class OSFDataset(DatasetDownloader, DatasetResult):
     ATTR_SIZE_JSONPATH = "attributes.size"
     ATTR_HASH_JSONPATH = "attributes.extra.hashes.sha256"
     ATTR_HASH_TYPE_VALUE = "sha256"
-
 ```
 
 - The `API_URL` is the entry point for the URL. This URL serves the API.
