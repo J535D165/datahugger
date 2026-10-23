@@ -80,6 +80,14 @@ def main():
     )
 
     parser.add_argument(
+        "--allow-unknown-hosts",
+        dest="allow_unknown_hosts",
+        action="store_true",
+        help="Also accept URLs on hosts that are not a known data repository, "
+        "based on the URL path only. Only use with trusted URLs.",
+    )
+
+    parser.add_argument(
         "--log-level",
         default="WARNING",
         help="Python based log levels. Default: WARNING.",
@@ -119,6 +127,7 @@ def main():
             progress=args.progress,
             print_only=args.print_only,
             params=args.params,
+            allow_unknown_hosts=args.allow_unknown_hosts,
         )
 
     except DOIError as doi_err:

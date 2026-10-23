@@ -15,12 +15,17 @@ from datahugger.utils import get_re3data_repositories
 from datahugger.utils import get_re3data_repository
 
 
-def _resolve_service(resource):
-    for resolver in [
-        _resolve_service_from_netloc,
-        _resolve_service_from_url_pattern,
-        _resolve_service_with_re3data,
-    ]:
+def _resolve_service(resource, allow_unknown_hosts=False):
+    resolvers = [_resolve_service_from_netloc]
+
+    # URL patterns match on the path only, so any host would be accepted.
+    # Only use them when the caller explicitly trusts unknown hosts.
+    if allow_unknown_hosts:
+        resolvers.append(_resolve_service_from_url_pattern)
+
+    resolvers.append(_resolve_service_with_re3data)
+
+    for resolver in resolvers:
         service_class = resolver(resource)
 
         if service_class is not None:
@@ -42,10 +47,15 @@ def _resolve_service_from_netloc(resource):
 
 
 def _resolve_service_from_url_pattern(resource):
-    url = _get_url(resource)
+    uri = urlparse(_get_url(resource))
 
-    for netloc_re, service in SERVICES_NETLOC_REGEXP.items():
-        if re.match(netloc_re, url):
+    if uri.scheme not in ("http", "https") or not uri.hostname:
+        return None
+
+    target = uri.path + (f"?{uri.query}" if uri.query else "")
+
+    for path_re, service in SERVICES_NETLOC_REGEXP.items():
+        if re.fullmatch(path_re, target):
             return service
 
 

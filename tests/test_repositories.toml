@@ -100,6 +100,7 @@ files = "2012F_Temperature_Data.csv"
 
 [[dspace]]
 location = "https://repositorioinstitucional.ceu.es/handle/10637/2741"
+options = { allow_unknown_hosts = true }
 files = "Aquaporin_1_JAMartin_et_al_MedSport_2009.pdf"
 
 [[pangaea]]
