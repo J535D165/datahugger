@@ -2,6 +2,7 @@ import pytest
 
 import datahugger
 from datahugger.api import _resolve_service
+from datahugger.exceptions import RepositoryNotSupportedError
 from datahugger.handles import DOI
 from datahugger.handles import ArXiv
 from datahugger.services import DataverseDataset
@@ -70,3 +71,29 @@ def test_get_doi_metadata_from_instance(tmpdir):
     m2 = doi.metadata.citation()
 
     assert m1 == m2 is not None
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://evil.example.org/dataset.xhtml?persistentId=doi:10.1234",
+        "https://evil.example.org/handle/123/456",
+        "https://evil.example.org/articles/dataset/name/123",
+    ],
+)
+def test_unknown_host_not_supported(url):
+    with pytest.raises(RepositoryNotSupportedError):
+        _resolve_service(url)
+
+
+def test_unknown_host_pattern_must_match_path():
+    url = "https://evil.example.org/?next=/dataset.xhtml?persistentId=doi:10.1234"
+
+    with pytest.raises(RepositoryNotSupportedError):
+        _resolve_service(url, allow_unknown_hosts=True)
+
+
+def test_unknown_host_allowed_when_opted_in():
+    url = "https://dataverse.example.org/dataset.xhtml?persistentId=doi:10.1234"
+
+    assert _resolve_service(url, allow_unknown_hosts=True) is DataverseDataset

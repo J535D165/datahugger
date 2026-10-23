@@ -59,6 +59,7 @@ def info(
     progress=True,
     print_only=False,
     params=None,
+    allow_unknown_hosts=False,
 ):
     """Get info on the content of the dataset.
 
@@ -83,6 +84,10 @@ def info(
         the actual files (Dry run). Default: False.
     params: dict
         Extra parameters for the request.
+    allow_unknown_hosts: bool
+        Also accept URLs on hosts that are not a known data repository,
+        based on the URL path only (e.g. a self-hosted Dataverse). Only
+        enable this for trusted input. Default: False.
 
     Returns
     -------
@@ -92,7 +97,7 @@ def info(
     """
 
     handle = parse_resource_identifier(resource)
-    service_class = _resolve_service(handle)
+    service_class = _resolve_service(handle, allow_unknown_hosts=allow_unknown_hosts)
 
     return service_class(
         handle,
@@ -116,6 +121,7 @@ def get(
     progress=True,
     print_only=False,
     params=None,
+    allow_unknown_hosts=False,
 ):
     """Get the content of repository.
 
@@ -145,6 +151,10 @@ def get(
         the actual files (Dry run). Default: False.
     params: dict
         Extra parameters for the request.
+    allow_unknown_hosts: bool
+        Also accept URLs on hosts that are not a known data repository,
+        based on the URL path only (e.g. a self-hosted Dataverse). Only
+        enable this for trusted input. Default: False.
 
     Returns
     -------
@@ -162,6 +172,7 @@ def get(
         progress=progress,
         print_only=print_only,
         params=params,
+        allow_unknown_hosts=allow_unknown_hosts,
     )
 
     return service.download(output_folder)

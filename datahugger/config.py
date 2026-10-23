@@ -26,6 +26,7 @@ SERVICES_NETLOC = {
     "data.mendeley.com": MendeleyDataset,
     # Figshare download
     "figshare.com": FigShareDataset,
+    "orda.shef.ac.uk": FigShareDataset,
     # Djehuty
     "data.4tu.nl": DjehutyDataset,
     # DataOne repositories
@@ -123,11 +124,12 @@ SERVICES_NETLOC = {
     "data.europa.eu": DataEuropaDataset,
 }
 
-# regexp lookup
+# regexp lookup on the URL path (and query), only used for unknown hosts
+# when allow_unknown_hosts=True
 SERVICES_NETLOC_REGEXP = {
-    r".*\/articles\/.*\/.*\/\d+": FigShareDataset,
-    r".*\/handle\/\d+\/\d+": DSpaceDataset,
-    r".*\/dataset\.xhtml\?persistentId\=.*": DataverseDataset,
+    r"[^?]*/articles/[^/?]+/[^/?]+/\d+(?:/[^?]*)?(?:\?.*)?": FigShareDataset,
+    r"[^?]*/handle/\d+/\d+(?:/[^?]*)?(?:\?.*)?": DSpaceDataset,
+    r"[^?]*/dataset\.xhtml\?persistentId=.+": DataverseDataset,
 }
 
 # add keys in lower-case for fast case-insensitive lookups
