@@ -37,5 +37,7 @@ folder `data`.
     ``` python
     import datahugger
 
-    datahugger.get("https://datadryad.org/stash/dataset/doi:10.5061/dryad.x3ffbg7m8", "data")
+    datahugger.get(
+        "https://datadryad.org/stash/dataset/doi:10.5061/dryad.x3ffbg7m8", "data"
+    )
     ```
